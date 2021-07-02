@@ -1,0 +1,58 @@
+version: 0.0
+os: linux
+files:
+  - source: /app
+    destination: /var/www/phplaravel/app/
+  - source: /bootstrap
+    destination: /var/www/phplaravel/bootstrap/
+  - source: /config
+    destination: /var/www/phplaravel/config/
+  - source: /database
+    destination: /var/www/phplaravel/database/
+  - source: /public
+    destination: /var/www/phplaravel/public/
+  - source: /resources
+    destination: /var/www/phplaravel/resources/
+  - source: /routes
+    destination: /var/www/phplaravel/routes/
+  - source: /storage
+    destination: /var/www/phplaravel/storage/
+  - source: /tests
+    destination: /var/www/phplaravel/tests/
+  - source: /.env.example
+    destination: /var/www/phplaravel/
+  - source: /.gitattributes
+    destination: /var/www/phplaravel/
+  - source: /.gitignore
+    destination: /var/www/phplaravel/
+  - source: /artisan
+    destination: /var/www/phplaravel/
+  - source: /composer.json
+    destination: /var/www/phplaravel/
+  - source: /composer.lock
+    destination: /var/www/phplaravel/
+  - source: /gulpfile.js
+    destination: /var/www/phplaravel/
+  - source: /index.php
+    destination: /var/www/phplaravel/
+  - source: /package.json
+    destination: /var/www/phplaravel/
+  - source: /phpunit.xml
+    destination: /var/www/phplaravel/
+  - source: /server.php
+    destination: /var/www/phplaravel/
+hooks:
+  AfterInstall:
+    - location: scripts/install_dependencies
+      timeout: 900
+      runas: root
+    - location: scripts/codestar_remote_access
+      timeout: 300
+      runas: root
+    - location: scripts/start_server
+      timeout: 300
+      runas: root
+  ApplicationStop:
+    - location: scripts/stop_server
+      timeout: 300
+      runas: root

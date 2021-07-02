@@ -1,0 +1,45 @@
+.flash_message {
+  background: #fff;
+  color: #666;
+  margin: 0 auto 20px;
+  padding: 0.5rem 1rem;
+  border-bottom: 3px solid #007bff;
+  box-shadow: 0 0 5px #ccc; }
+
+.flash_message.error {
+  background: #fce9e9;
+  color: #cc3014;
+  border-bottom: 3px solid #cc3014; }
+
+.maintenance-status a {
+  color: #212529; }
+
+.select-shop {
+  min-width: 100px; }
+
+.table-index tbody tr {
+  cursor: pointer; }
+
+.content-admin-maintenance-detail .card-header {
+  background: #6c757d;
+  color: #fff; }
+.content-admin-maintenance-detail .card-footer {
+  text-align: right; }
+.content-admin-maintenance-detail table th,
+.content-admin-maintenance-detail table td {
+  height: 33px;
+  border-color: #dbdbdb; }
+.content-admin-maintenance-detail table th {
+  width: 10%;
+  background: #e9ecef;
+  color: #333;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap; }
+.content-admin-maintenance-detail label {
+  font-weight: normal; }
+  .content-admin-maintenance-detail label + label {
+    margin-left: 10%; }
+
+/*# sourceMappingURL=admin.css.map */

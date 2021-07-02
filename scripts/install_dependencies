@@ -1,0 +1,14 @@
+#!/bin/bash
+cd /var/www/phplaravel
+yum -y update
+yum -y install httpd24 php73 php73-mbstring php73-mysql php73-pdo php73-mcrypt php73-devel
+curl -s https://getcomposer.org/installer | php
+php composer.phar install
+mv composer.phar /usr/local/bin/composer
+sed -i "s|AllowOverride None|AllowOverride All|g"  /etc/httpd/conf/httpd.conf
+sed -i "s|/var/www/html|/var/www/phplaravel/public|g"  /etc/httpd/conf/httpd.conf
+#cp .env.example .env
+chown -R ec2-user:ec2-user /var/www/phplaravel
+userAdd -G ec2-user apache
+chgrp -R apache storage bootstrap/cache
+chmod -R ug+rwx storage bootstrap/cache

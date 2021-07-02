@@ -1,0 +1,42 @@
+ErrorDocument 503 /maintenance.html
+
+RewriteEngine On
+
+RewriteCond %{HTTP:X-Forwarded-For} !^103\.30\.240\.77$
+RewriteCond %{HTTP:X-Forwarded-For} !^157\.14\.210\.149$
+RewriteCond %{TIME_YEAR}%{TIME_MON}%{TIME_DAY}%{TIME_HOUR}%{TIME_MIN}%{TIME_SEC} "<20210315080000"
+RewriteCond %{TIME_YEAR}%{TIME_MON}%{TIME_DAY}%{TIME_HOUR}%{TIME_MIN}%{TIME_SEC} ">20210312125959"
+RewriteCond %{REQUEST_URI} !=/maintenance.html
+RewriteRule ^.*$ - [R=503,L]
+
+
+# authenticate(Basic)
+AuthUserFile /var/www/phplaravel/public/.htpasswd
+AuthGroupFile /dev/null
+AuthName "Please enter your ID and password"
+AuthType Basic
+require valid-user
+
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews
+    </IfModule>
+
+    RewriteEngine On
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+    # Handle Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule>
+
+php_value post_max_size 100M
+php_value upload_max_filesize 100M
