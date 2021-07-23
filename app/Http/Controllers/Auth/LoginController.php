@@ -27,7 +27,7 @@ class LoginController extends Controller
 
 	use AuthenticatesUsers;
 
-	
+
 	public function showLoginForm()
     {
         return view('auth.login')->with(['business_categories' => Business_category::all()]);
@@ -50,7 +50,7 @@ class LoginController extends Controller
     {
         $this->middleware('guest', ['except' => 'logout']);
     }
-	
+
 	public function username() {
 		return 'staff_id';
 	}
@@ -60,7 +60,7 @@ class LoginController extends Controller
         $arr = $request->only($this->username(), 'password', 'shop_code', 'business_category');
         return $arr;
     }
-	
+
 	public function authenticate(Request $request)
 	{
 		$validate_rule = [
@@ -101,7 +101,7 @@ class LoginController extends Controller
 
 		if ( 'true' === $canLogin ) {
 			Auth::loginUsingId($user->user_id);
-			return redirect()->intended('maintenance');
+			return redirect()->intended('vue');
 		}
 
 		if ( 1 === $user->role_id || 10 === $user->role_id || 20 === $user->role_id || 30 === $user->role_id ) {
