@@ -5,7 +5,7 @@ const ChunkRenamePlugin = require('webpack-chunk-rename-plugin');
 function resolve(dir) {
   return path.join(
     __dirname,
-    '/resources/vue/js',
+    '/resources/vue',
     dir
   );
 }
@@ -23,7 +23,7 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       vue$: 'vue/dist/vue.esm.js',
-      '@': path.join(__dirname, '/resources/vue/js'),
+      '@': path.join(__dirname, '/resources/vue'),
     },
   },
   module: {

@@ -6,7 +6,7 @@ require('laravel-mix-eslint');
 function resolve(dir) {
   return path.join(
     __dirname,
-    '/resources/vue/js',
+    '/resources/vue',
     dir
   );
 }
@@ -35,7 +35,7 @@ mix.webpackConfig(config);
  */
 
 mix
-  .js('resources/vue/js/app.js', 'public/assets/js')
+  .js('resources/vue/app.js', 'public/assets/js')
   .extract([
     'vue',
     'axios',
