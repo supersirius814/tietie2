@@ -38,18 +38,18 @@ Route::post('login', 'Auth\LoginController@authenticate');
 Route::get('home', 'HomeController@index')->name('home');
 
 Route::get('maintenance', function(Request $request) {
-	
+
 	$business_category_id = Auth::user()->business_category_id;
 	$role                 = Role::find( Auth::user()->role_id )->role_name;
-	
+
 	if ( '管理者' === $role ) {
 		return view('admin.maintenance.index', [
 			'business_categories' => Business_category::all(),
 			'shop_id'             => 'null',
 			'shops'               => Shop::all(),
 		]);
-	} 
-	
+	}
+
 	if ( 'BM' === $role ) {
 		$block_id = Block_manager::where('user_id', Auth::user()->user_id)->first()->block_id;
 		return view('maintenance.index_bm', [
@@ -60,7 +60,7 @@ Route::get('maintenance', function(Request $request) {
 			'all_progress'      => Progress::all(),
 		]);
 	}
-	
+
 	$shop_id = Auth::user()->shop_id;
 	return view('maintenance.index', [
 		'business_category' => Business_category::find($business_category_id),
@@ -70,7 +70,7 @@ Route::get('maintenance', function(Request $request) {
 //			'unapproved_count' => Maintenance::where('shop_id', $shop_id)->where('is_approved', 0)->where('is_sendbacked', 0)->count(),
 //			'sendbacked_count' => Maintenance::where('shop_id', $shop_id)->where('is_sendbacked', 1)->count(),
 	]);
-	
+
 })->middleware('auth');
 
 Route::get('maintenance/error', 'MaintenanceController@error')->middleware('auth');
@@ -89,7 +89,7 @@ Route::get('maintenance/add/confirm', function(Request $request) {
     $block_name           = $shop->block->block_name;
 	$form                 = $request->session()->get('form');
 	$images               = $request->session()->get('images');
-    
+
     $reasons = [];
     $order_reason_ids = '';
     if ($form['order_reason_ids']) {
@@ -98,7 +98,7 @@ Route::get('maintenance/add/confirm', function(Request $request) {
         }
         $order_reason_ids = implode(',', $form['order_reason_ids']);
     }
-    
+
 	return view('maintenance.confirm', [
 		'business_category' => Business_category::find($business_category_id),
         'block_name'        => $block_name,
@@ -108,7 +108,7 @@ Route::get('maintenance/add/confirm', function(Request $request) {
 		'images'            => $images,
         'reasons'           => $reasons,
         'order_reason_ids'  => $order_reason_ids,
-	]);	
+	]);
 })->middleware('auth');
 
 Route::post('maintenance/add/confirm', 'MaintenanceController@confirm')->middleware('auth');
@@ -129,7 +129,7 @@ Route::get('maintenance/add', function(Request $request) {
             'order_reasons'     => $order_reasons,
 		]);
 	}
-	
+
 	return view('maintenance.add', [
 		'business_category' => Business_category::find($business_category_id),
 		'shop'              => Shop::find($shop_id),
@@ -220,15 +220,15 @@ Route::match(['get', 'post'],'maintenance/{maintenance_id}/edit', function($main
         $block_id   = Block_manager::where('user_id', Auth::user()->user_id)->first()->block_id;
         $block_name = Block::find($block_id)->block_name;
     }
-    
+
     $order_reason_ids = [];
     $maintenance_order_reasons = Maintenance_order_reason::where('maintenance_id', $maintenance_id)->get();
     foreach ( $maintenance_order_reasons as $maintenance_order_reason ) {
         $order_reason_ids[] = $maintenance_order_reason->order_reason_id;
     }
-    
+
     $order_reasons = Order_reason::all();
-    
+
 	return view('maintenance.edit', [
 		'business_category' => Business_category::find($business_category_id),
         'block_name'        => $block_name,
@@ -306,18 +306,18 @@ Route::get('maintenance/{maintenance_id}', function($maintenance_id) {
 	$progress_id          = Maintenance::find($maintenance_id)->progress_id;
 	$progress_status      = Progress::find($progress_id)->status;
     $block_name           = '';
-	
+
 	if ( '管理者' === $role ) {
 		return view('admin.maintenance.detail', [
 			'maintenance_id' => $maintenance_id
 		]);
 	}
- 
+
     if ( 'BM' === $role ) {
 		$block_id = Block_manager::where('user_id', Auth::user()->user_id)->first()->block_id;
-		$block_name = Block::find($block_id)->block_name;   
+		$block_name = Block::find($block_id)->block_name;
     }
-	
+
 	return view('maintenance.detail', [
 		'business_category' => Business_category::find($business_category_id),
         'block_name'        => $block_name,
@@ -385,4 +385,8 @@ Route::get('admin/csv/import', function() {
 
 Route::get('admin/csv/export', function() {
 	return view('admin.csv.export');
+})->middleware('auth');
+
+Route::get('vue', function() {
+	return view('admin');
 })->middleware('auth');

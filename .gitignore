@@ -9,3 +9,4 @@ Homestead.yaml
 public/img/tmp
 .env
 .editorconfig
+public/mix-manifest.json
