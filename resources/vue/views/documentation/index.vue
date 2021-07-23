@@ -1,8 +1,6 @@
 <template>
   <div class="app-container documentation-container">
-    <a class="document-btn" target="_blank" href="https://laravel.com/docs/5.8">{{ $t('documentation.laravel') }}</a>
-    <a class="document-btn" target="_blank" href="https://vuejs.org/">VueJS</a>
-    <a class="document-btn" target="_blank" href="https://github.com/tuandm/laravue/">{{ $t('documentation.github') }}</a>
+    <h1>開発中です。</h1>
   </div>
 </template>
 <script>

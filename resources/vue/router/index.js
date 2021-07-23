@@ -65,7 +65,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'maintenance',
-        component: () => import('@/views/documentation/index'),
+        component: () => import('@/views/maintenance/list'),
         name: 'maintenance',
         meta: { title: 'メンテナンス', icon: 'documentation', noCache: true },
       },

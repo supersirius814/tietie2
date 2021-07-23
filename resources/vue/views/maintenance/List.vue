@@ -1,59 +1,119 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="query.role" :placeholder="$t('table.role')" clearable style="width: 90px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in roles" :key="item" :label="item | uppercaseFirst" :value="item" />
-      </el-select>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-        {{ $t('table.search') }}
-      </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
-        {{ $t('table.add') }}
-      </el-button>
-      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
-        {{ $t('table.export') }}
-      </el-button>
+      <ul class="list-inline">
+        <li>
+          <router-link :to="'/user/index'" class="link-type link-title">
+            <span>承認済み（4）</span>
+          </router-link>
+        </li>
+        <li>
+          <router-link :to="'/user/index'" class="link-type link-title">
+            <span>承認待ち（4）</span>
+          </router-link>
+        </li>
+        <li>
+          <router-link :to="'/user/index'" class="link-type link-title">
+            <span>差戻し（1）</span>
+          </router-link>
+        </li>
+        <li style="margin-left:40px;">
+          <span class="el-tag el-tag--danger el-tag--medium el-tag--light">
+            <i class="el-icon-info" /> 緊急・重要
+          </span>
+        </li>
+        <li>
+          <span class="el-tag el-tag--warning el-tag--medium el-tag--light">
+            <svg-icon icon-class="warning" /> 災害（地震・台風・大雨など）
+          </span>
+        </li>
+
+        <li class="pull-right">
+          <el-select v-model="query.progress_id" placeholder="ステータス" clearable style="width: 150px" class="filter-item" @change="handleFilter">
+            <el-option :label="'1'" :value="1" />
+            <el-option :label="'2'" :value="2" />
+          </el-select>
+          <el-select v-model="query.business_category_id" placeholder="業態" clearable style="width: 100px" class="filter-item" @change="handleFilter">
+            <el-option :label="'1'" :value="1" />
+            <el-option :label="'2'" :value="2" />
+          </el-select>
+          <el-select v-model="query.shop_id" placeholder="店舗" clearable style="width: 100px" class="filter-item" @change="handleFilter">
+            <el-option :label="'1'" :value="1" />
+            <el-option :label="'2'" :value="2" />
+          </el-select>
+
+          <el-input v-model="query.keyword" placeholder="フリーワード" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+          <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+            検索
+          </el-button>
+        </li>
+      </ul>
     </div>
 
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.index }}</span>
+          <span>{{ scope.row.maintenance_id }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Name">
+      <el-table-column align="center" label="メンテナンスNo">
         <template slot-scope="scope">
-          <span>{{ scope.row.name }}</span>
+          <span>{{ scope.row.maintenance_code }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Email">
+      <el-table-column align="center" label="承認状況">
         <template slot-scope="scope">
-          <span>{{ scope.row.email }}</span>
+          <span>{{ scope.row.progress.status }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Role" width="120">
+      <el-table-column align="center" label="業態">
         <template slot-scope="scope">
-          <span>{{ scope.row.roles.join(', ') }}</span>
+          <span>{{ scope.row.shop.business_category.business_category }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Actions" width="350">
+      <el-table-column align="center" label="店舗名">
         <template slot-scope="scope">
-          <router-link v-if="!scope.row.roles.includes('admin')" :to="'/administrator/users/edit/'+scope.row.id">
-            <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-edit">
-              Edit
-            </el-button>
-          </router-link>
-          <el-button v-if="!scope.row.roles.includes('admin')" v-permission="['manage permission']" type="warning" size="small" icon="el-icon-edit" @click="handleEditPermissions(scope.row.id);">
-            Permissions
-          </el-button>
-          <el-button v-if="scope.row.roles.includes('visitor')" v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.id, scope.row.name);">
-            Delete
-          </el-button>
+          <span>{{ scope.row.shop.shop_name }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="申請者">
+        <template slot-scope="scope">
+          <span>{{ scope.row.user.name }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="依頼区分">
+        <template slot-scope="scope">
+          <span>{{ scope.row.order_type.type }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="設備名">
+        <template slot-scope="scope">
+          <span>{{ scope.row.equipment }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="経過ステータス">
+        <template slot-scope="scope">
+          <span>{{ scope.row.progress.status }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="完了日">
+        <template slot-scope="scope">
+          <span>{{ scope.row.completed_date }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="申請日">
+        <template slot-scope="scope">
+          <span>{{ scope.row.created_at }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -126,17 +186,15 @@
 
 <script>
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
-import UserResource from '@/api/user';
-import Resource from '@/api/resource';
+import MaintenanceResource from '@/api/maintenance';
 import waves from '@/directive/waves'; // Waves directive
 import permission from '@/directive/permission'; // Permission directive
 import checkPermission from '@/utils/permission'; // Permission checking
 
-const userResource = new UserResource();
-const permissionResource = new Resource('permissions');
+const userResource = new MaintenanceResource();
 
 export default {
-  name: 'UserList',
+  name: 'MaintenanceList',
   components: { Pagination },
   directives: { waves, permission },
   data() {
@@ -158,6 +216,9 @@ export default {
         limit: 15,
         keyword: '',
         role: '',
+        progress_id: null,
+        business_category_id: null,
+        shop_id: null,
       },
       roles: ['admin', 'manager', 'editor', 'user', 'visitor'],
       nonAdminRoles: ['editor', 'user', 'visitor'],
@@ -257,19 +318,9 @@ export default {
   created() {
     this.resetNewUser();
     this.getList();
-    if (checkPermission(['manage permission'])) {
-      this.getPermissions();
-    }
   },
   methods: {
     checkPermission,
-    async getPermissions() {
-      const { data } = await permissionResource.list({});
-      const { all, menu, other } = this.classifyPermissions(data);
-      this.permissions = all;
-      this.menuPermissions = menu;
-      this.otherPermissions = other;
-    },
 
     async getList() {
       const { limit, page } = this.query;
@@ -458,6 +509,23 @@ export default {
   }
   .clear-left {
     clear: left;
+  }
+}
+
+.list-inline {
+  padding-left: 0;
+  margin-left: -5px;
+  list-style: none;
+  li {
+    display: inline-block;
+    padding-right: 5px;
+    padding-left: 5px;
+    font-size: 13px;
+  }
+  .link-black {
+    &:hover, &:focus {
+      color: #999;
+    }
   }
 }
 </style>
