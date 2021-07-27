@@ -53,13 +53,17 @@
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.maintenance_id }}</span>
+          <router-link :to="'/maintenance/detail/'+scope.row.maintenance_id" class="link-type">
+            <span>{{ scope.row.maintenance_id }}</span>
+          </router-link>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="メンテナンスNo">
         <template slot-scope="scope">
-          <span>{{ scope.row.maintenance_code }}</span>
+          <router-link :to="'/maintenance/detail/'+scope.row.maintenance_id" class="link-type">
+            <span>{{ scope.row.maintenance_code }}</span>
+          </router-link>
         </template>
       </el-table-column>
 

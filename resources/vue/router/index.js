@@ -69,6 +69,13 @@ export const constantRoutes = [
         name: 'maintenance',
         meta: { title: 'メンテナンス', icon: 'documentation', noCache: true },
       },
+      {
+        path: 'maintenance/detail/:id(\\d+)',
+        component: () => import('@/views/maintenance/Detail'),
+        name: 'MaintenanceDetail',
+        meta: { title: 'メンテナンス情報　詳細', noCache: true },
+        hidden: true,
+      },
     ],
   },
   {
