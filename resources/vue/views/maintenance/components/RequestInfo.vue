@@ -3,7 +3,7 @@
     <div slot="header" class="clearfix">
       <span>依頼情報 </span>
       <el-button style="float: right; margin-left:10px;" type="primary" size="small">特記編集</el-button>
-      <el-button style="float: right;" type="primary" size="small">取引先メール</el-button>
+      <el-button style="float: right;" type="primary" size="small" @click="createMailVisible = true">取引先メール</el-button>
     </div>
     <el-row :gutter="20">
       <el-col :span="10">
@@ -172,12 +172,25 @@
         </tr>
       </tbody>
     </table>
+    <el-dialog
+      title="【取引先メール作成】"
+      :visible.sync="createMailVisible"
+      width="700px"
+    >
+      <create-client-mail />
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="createMailVisible = false">メール</el-button>
+        <el-button @click="createMailVisible = false">閉じる</el-button>
+      </span>
+    </el-dialog>
   </el-card>
 </template>
 
 <script>
+import CreateClientMail from './sub/CreateClientMail.vue';
 
 export default {
+  components: { CreateClientMail },
   props: {
     user: {
       type: Object,
@@ -193,6 +206,7 @@ export default {
   },
   data() {
     return {
+      createMailVisible: false,
       tableData: [
         { title: '特記①', value: '20’10/13〜10/25改装 浄化槽店舗' },
         { title: '特記②', value: '20’5/21エアコン全台清掃 駐車場案件は大和ハウス様へ' },
@@ -203,32 +217,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.el-row {
-  margin-bottom: 10px;
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.detail-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 10px;
-  &:last-child {
-    margin-bottom: 0;
-  }
-
-  th, td{
-    border: solid 1px #dfe6ec;
-    padding: 5px 0 5px 10px;
-    font-size: 14px;
-  }
-  th {
-    font-weight: 100;
-    background: #eee;
-    width: 150px;
-  }
-}
-</style>

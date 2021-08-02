@@ -2,7 +2,7 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>基本情報</span>
-      <el-button style="float: right;" type="primary" size="small">担当者メール</el-button>
+      <el-button style="float: right;" type="primary" size="small" @click="createMailVisible = true">担当者メール</el-button>
     </div>
 
     <el-row :gutter="20">
@@ -26,12 +26,25 @@
         </el-table>
       </el-col>
     </el-row>
+    <el-dialog
+      title="【メール作成】"
+      :visible.sync="createMailVisible"
+      width="700px"
+    >
+      <create-manager-mail />
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="createMailVisible = false">メール</el-button>
+        <el-button @click="createMailVisible = false">閉じる</el-button>
+      </span>
+    </el-dialog>
   </el-card>
 </template>
 
 <script>
+import CreateManagerMail from './sub/CreateManagerMail.vue';
 
 export default {
+  components: { CreateManagerMail },
   props: {
     user: {
       type: Object,
@@ -47,6 +60,7 @@ export default {
   },
   data() {
     return {
+      createMailVisible: false,
       tableData: [
         {
           title: 'メンテナンスNo',
@@ -95,11 +109,14 @@ export default {
 };
 </script>
 
-<style >
+<style>
 .header-1{
-  background: #eee;
+  background: #E9ECEF;
 }
 .el-table th, .el-table td{
   padding: 5px 0;
+}
+.el-table th{
+  background:#E9ECEF;
 }
 </style>
