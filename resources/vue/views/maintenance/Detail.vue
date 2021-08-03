@@ -1,30 +1,13 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <el-col :span="18">
-        <base-info :user="user" />
-      </el-col>
-      <el-col :span="6">
-        <special-info :user="user" />
-      </el-col>
-    </el-row>
-    <el-row :gutter="20">
       <el-col :span="12">
         <request-info :user="user" />
       </el-col>
       <el-col :span="12">
-        <progress-info :user="user" />
+        <history-info :user="user" />
       </el-col>
     </el-row>
-    <el-row :gutter="20">
-      <el-col :span="12">
-        <quotation-info :user="user" />
-      </el-col>
-      <el-col :span="12">
-        <accounting-info :user="user" />
-      </el-col>
-    </el-row>
-    <history-info :user="user" />
   </div>
 </template>
 

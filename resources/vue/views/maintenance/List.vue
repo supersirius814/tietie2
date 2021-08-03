@@ -2,21 +2,6 @@
   <div class="app-container">
     <div class="filter-container">
       <ul class="list-inline">
-        <li>
-          <router-link :to="'/user/index'" class="link-type link-title">
-            <span>承認済み（4）</span>
-          </router-link>
-        </li>
-        <li>
-          <router-link :to="'/user/index'" class="link-type link-title">
-            <span>承認待ち（4）</span>
-          </router-link>
-        </li>
-        <li>
-          <router-link :to="'/user/index'" class="link-type link-title">
-            <span>差戻し（1）</span>
-          </router-link>
-        </li>
         <li style="margin-left:40px;">
           <span class="el-tag el-tag--danger el-tag--medium el-tag--light">
             <i class="el-icon-info" /> 緊急・重要
@@ -51,25 +36,11 @@
     </div>
 
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
-      <el-table-column align="center" label="ID" width="80">
-        <template slot-scope="scope">
-          <router-link :to="'/maintenance/detail/'+scope.row.maintenance_id" class="link-type">
-            <span>{{ scope.row.maintenance_id }}</span>
-          </router-link>
-        </template>
-      </el-table-column>
-
       <el-table-column align="center" label="メンテナンスNo">
         <template slot-scope="scope">
           <router-link :to="'/maintenance/detail/'+scope.row.maintenance_id" class="link-type">
             <span>{{ scope.row.maintenance_code }}</span>
           </router-link>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="承認状況">
-        <template slot-scope="scope">
-          <span>{{ scope.row.progress.status }}</span>
         </template>
       </el-table-column>
 
@@ -118,6 +89,14 @@
       <el-table-column align="center" label="申請日">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="アクション">
+        <template slot-scope="scope">
+          <router-link :to="'/maintenance/detail/'+scope.row.maintenance_id" class="link-type">
+            <el-button size="small" type="primary">変更</el-button>
+          </router-link>
         </template>
       </el-table-column>
     </el-table>

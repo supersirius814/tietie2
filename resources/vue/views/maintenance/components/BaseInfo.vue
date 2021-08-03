@@ -1,50 +1,91 @@
 <template>
-  <el-card class="box-card">
-    <div slot="header" class="clearfix">
-      <span>基本情報</span>
-      <el-button style="float: right;" type="primary" size="small" @click="createMailVisible = true">担当者メール</el-button>
-    </div>
+  <div>
+    <h3>基本情報</h3>
 
-    <el-row :gutter="20">
-      <el-col :span="8">
-        <el-table :data="tableData" :show-header="false" border style="width: 100%">
-          <el-table-column align="center" prop="title" class-name="header-1" />
-          <el-table-column align="center" prop="value" />
-        </el-table>
+    <el-row :gutter="0">
+      <el-col :span="12">
+        <table class="detail-table">
+          <tbody>
+            <tr>
+              <th>店舗CD</th>
+              <td style="text-align:center">1174</td>
+              <td style="text-align:center">HS</td>
+            </tr>
+            <tr>
+              <th>TEL</th>
+              <td colspan="2" style="text-align:center">0533-66-6277</td>
+            </tr>
+            <tr>
+              <th>開店日</th>
+              <td colspan="2" style="text-align:center">2014/01/28</td>
+            </tr>
+          </tbody>
+        </table>
       </el-col>
-      <el-col :span="8">
-        <el-table :data="tableData1" :show-header="false" border style="width: 100%">
-          <el-table-column align="center" prop="title" class-name="header-1" />
-          <el-table-column align="center" prop="value" />
-        </el-table>
-      </el-col>
-      <el-col :span="8">
-        <el-table :data="tableData2" :show-header="true" border style="width: 100%">
-          <el-table-column align="center" prop="title" label="" class-name="header-1" />
-          <el-table-column align="center" prop="value" label="名称" />
-          <el-table-column align="center" prop="value1" label="担当者" />
-        </el-table>
+      <el-col :span="12">
+        <table class="detail-table">
+          <tbody>
+            <tr>
+              <th>店舗名</th>
+              <td>蒲郡竹谷</td>
+            </tr>
+            <tr>
+              <th>FAX</th>
+              <td>0533-66-6277</td>
+            </tr>
+            <tr>
+              <th>店舗担当</th>
+              <td>高橋</td>
+            </tr>
+          </tbody>
+        </table>
       </el-col>
     </el-row>
-    <el-dialog
-      title="【メール作成】"
-      :visible.sync="createMailVisible"
-      width="700px"
-    >
-      <create-manager-mail />
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="createMailVisible = false">メール</el-button>
-        <el-button @click="createMailVisible = false">閉じる</el-button>
-      </span>
-    </el-dialog>
-  </el-card>
+    <el-divider />
+    <h3>担当者メール</h3>
+    <el-table :data="tableData" :show-header="true" border style="width: 100%; margin:auto;">
+      <el-table-column align="center" prop="title" class-name="header-1" label="" />
+      <el-table-column align="center" prop="name" label="名称" />
+      <el-table-column align="center" prop="manager" label="担当者" />
+      <el-table-column align="center" prop="to" label="メール宛先">
+        <template slot-scope="scope">
+          <el-checkbox v-model="scope.row.to" />
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="cc" label="メールCC">
+        <template slot-scope="scope">
+          <el-checkbox v-model="scope.row.cc" />
+        </template>
+      </el-table-column>
+    </el-table>
+    <div style="text-align:right;margin-top:10px;">
+      <span>宛先とCC宛先、それぞれ選択してください。</span>
+      <el-button type="primary" size="small">メーラー起動</el-button>
+    </div>
+
+    <el-divider />
+    <h3>特記情報</h3>
+    <table class="detail-table">
+      <tbody>
+        <tr>
+          <th>特記①</th>
+          <td>20’10/13〜10/25改装<br>浄化槽店舗</td>
+        </tr>
+        <tr>
+          <th>特記②</th>
+          <td>20’5/21エアコン全台清掃<br>駐車場案件は大和ハウス様へ</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="text-align:right;margin-top:10px;">
+      <el-button type="primary" size="small">特記編集</el-button>
+    </div>
+
+  </div>
 </template>
 
 <script>
-import CreateManagerMail from './sub/CreateManagerMail.vue';
-
 export default {
-  components: { CreateManagerMail },
   props: {
     user: {
       type: Object,
@@ -60,47 +101,12 @@ export default {
   },
   data() {
     return {
-      createMailVisible: false,
       tableData: [
-        {
-          title: 'メンテナンスNo',
-          value: '1234567890',
-        },
-        {
-          title: '',
-          value: '',
-        },
-        {
-          title: '申請者',
-          value: '北村　仁',
-        },
-        {
-          title: '受付・更新',
-          value: '2020/04/06 00:00',
-        },
-        {
-          title: '申請者',
-          value: '北村　仁',
-        },
-        {
-          title: '受付・更新',
-          value: '2020/04/06 00:00',
-        },
-      ],
-      tableData1: [
-        { title: '店舗CD', value: '1174   -    HS' },
-        { title: '店舗名', value: '蒲郡竹谷' },
-        { title: '開店日', value: '2014/01/28' },
-        { title: 'TEL', value: '0533-66-6277' },
-        { title: 'FAX', value: '0533-66-6277' },
-        { title: '店舗担当', value: '高橋' },
-      ],
-      tableData2: [
-        { title: '地域会社', value: '-', value1: '-' },
-        { title: '営業部', value: '西日本', value1: '町野' },
-        { title: 'ディストリクト', value: '東海', value1: '高木' },
-        { title: 'ブロック', value: '東愛知', value1: '山田克' },
-        { title: 'エリア', value: '安城', value1: '細川' },
+        { title: '地域会社', name: '-', manager: '-', to: false, cc: false },
+        { title: '営業部', name: '西日本', manager: '町野', to: false, cc: false },
+        { title: 'ディストリクト', name: '東海', manager: '高木', to: false, cc: false },
+        { title: 'ブロック', name: '東愛知', manager: '山田克', to: false, cc: false },
+        { title: 'エリア', name: '安城', manager: '細川', to: false, cc: false },
       ],
     };
   },
@@ -108,15 +114,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.header-1{
-  background: #E9ECEF;
-}
-.el-table th, .el-table td{
-  padding: 5px 0;
-}
-.el-table th{
-  background:#E9ECEF;
-}
-</style>

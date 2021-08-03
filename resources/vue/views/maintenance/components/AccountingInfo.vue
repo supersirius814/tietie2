@@ -61,12 +61,3 @@ export default {
   },
 };
 </script>
-
-<style >
-.header-1{
-  background: #eee;
-}
-.el-table th, .el-table td{
-  padding: 5px 0;
-}
-</style>
