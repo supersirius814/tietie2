@@ -16,10 +16,10 @@
           </tbody>
         </table>
       </el-col>
-      <el-col :span="10" :offset="2">
-        <el-button type="info" size="small" @click="quotationFilesVisible=true">見積書(3)</el-button>
-        <el-button type="info" size="small" @click="photoFilesVisible=true">写真(3)</el-button>
-        <el-button type="info" size="small">報告書(1)</el-button>
+      <el-col :span="12">
+        <el-button type="info" size="mini" @click="quotationFilesVisible=true">見積書(3)</el-button>
+        <el-button type="info" size="mini" @click="photoFilesVisible=true">写真(3)</el-button>
+        <el-button type="info" size="mini">報告書(1)</el-button>
       </el-col>
     </el-row>
     <el-table :data="tableData" :show-header="true" border style="width: 100%">

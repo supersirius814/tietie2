@@ -13,7 +13,7 @@ body {
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+    font-family: Hiragino Kaku Gothic ProN, Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
 }
 
 label {
@@ -266,4 +266,29 @@ aside {
 
 .el-table th {
     background: #E9ECEF;
+}
+
+@media screen and (max-width: 1400px) {
+    .el-button--mini {
+        padding: 7px 8px;
+        font-size: 10px;
+    }
+
+    .detail-table {
+        th,
+        td {
+            border: solid 1px #dfe6ec;
+            padding: 8px 0 8px 3px;
+            font-size: 12px;
+        }
+
+        th {
+            width: 100px;
+        }
+    }
+
+    .el-table {
+        font-size: 12px !important;
+    }
+
 }

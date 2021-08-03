@@ -1,5 +1,7 @@
 <template>
   <div class="app-container">
+    <el-button type="primary" size="mini"><svg-icon icon-class="upload" />  同一中分類過去履歴</el-button>
+    <el-button type="primary" size="mini"><svg-icon icon-class="upload" style="transform: rotate(270deg);" />  見積 / 会計 情報</el-button>
     <el-row :gutter="20">
       <el-col :span="12">
         <request-info :user="user" />
@@ -13,18 +15,13 @@
 
 <script>
 import Resource from '@/api/resource';
-import BaseInfo from './components/BaseInfo';
-import SpecialInfo from './components/SpecialInfo';
 import RequestInfo from './components/RequestInfo';
-import ProgressInfo from './components/ProgressInfo';
-import QuotationInfo from './components/QuotationInfo';
-import AccountingInfo from './components/AccountingInfo';
 import HistoryInfo from './components/HistoryInfo';
 
 const userResource = new Resource('users');
 export default {
   name: 'EditUser',
-  components: { BaseInfo, SpecialInfo, RequestInfo, ProgressInfo, QuotationInfo, AccountingInfo, HistoryInfo },
+  components: { RequestInfo, HistoryInfo },
   data() {
     return {
       user: {},
