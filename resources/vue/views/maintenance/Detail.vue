@@ -1,7 +1,9 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" size="mini"><svg-icon icon-class="upload" />  同一中分類過去履歴</el-button>
-    <el-button type="primary" size="mini"><svg-icon icon-class="upload" style="transform: rotate(270deg);" />  見積 / 会計 情報</el-button>
+    <div style="position: fixed;top:10px;left:300px;z-index:10;">
+      <el-button type="primary" size="mini"><svg-icon icon-class="upload" />  同一中分類過去履歴</el-button>
+      <el-button type="primary" size="mini"><svg-icon icon-class="upload" style="transform: rotate(270deg);" />  見積 / 会計 情報</el-button>
+    </div>
     <el-row :gutter="20">
       <el-col :span="12">
         <request-info :user="user" />

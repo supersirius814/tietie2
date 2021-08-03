@@ -270,8 +270,8 @@ aside {
 
 @media screen and (max-width: 1400px) {
     .el-button--mini {
-        padding: 7px 8px;
-        font-size: 10px;
+        padding: 7px 8px !important;
+        font-size: 10px !important;
     }
 
     .detail-table {
@@ -279,7 +279,7 @@ aside {
         td {
             border: solid 1px #dfe6ec;
             padding: 8px 0 8px 3px;
-            font-size: 12px;
+            font-size: 9px;
         }
 
         th {
@@ -288,7 +288,7 @@ aside {
     }
 
     .el-table {
-        font-size: 12px !important;
+        font-size: 9px !important;
     }
 
 }

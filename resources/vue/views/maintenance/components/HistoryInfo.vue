@@ -25,11 +25,11 @@
     <el-table :data="tableData" :show-header="true" border style="width: 100%">
       <el-table-column align="center" prop="v1" label="日時" />
       <el-table-column align="center" prop="v2" label="ステータス" />
-      <el-table-column align="center" prop="v3" label="入力者" />
-      <el-table-column align="center" prop="v4" label="コメント" />
+      <el-table-column align="center" prop="v3" label="入力者" width="80px" />
+      <el-table-column align="center" prop="v4" label="コメント" width="80px" />
       <el-table-column align="center" label="FAX送信">
-        <el-table-column align="center" prop="v5" label="取" />
-        <el-table-column align="center" prop="v6" label="店" />
+        <el-table-column align="center" prop="v5" label="取" width="50px" />
+        <el-table-column align="center" prop="v6" label="店" width="50px" />
       </el-table-column>
     </el-table>
 
@@ -81,11 +81,12 @@ export default {
       quotationFilesVisible: false,
       photoFilesVisible: false,
       tableData: [
-        { v1: '緊急', v2: '0000345678', v3: '取完了', v4: '2020/04/07', v5: '2020/04/09', v6: 'パナソニック産機システムズ', v7: '事務所のエアコンから水漏れ', v8: '2020/04', v9: '¥35,000' },
-        { v1: '緊急', v2: '0000345678', v3: '取完了', v4: '2020/04/07', v5: '2020/04/09', v6: 'パナソニック産機システムズ', v7: '事務所のエアコンから水漏れ', v8: '2020/04', v9: '¥35,000' },
-        { v1: '緊急', v2: '0000345678', v3: '取完了', v4: '2020/04/07', v5: '2020/04/09', v6: 'パナソニック産機システムズ', v7: '事務所のエアコンから水漏れ', v8: '2020/04', v9: '¥35,000' },
-        { v1: '緊急', v2: '0000345678', v3: '取完了', v4: '2020/04/07', v5: '2020/04/09', v6: 'パナソニック産機システムズ', v7: '事務所のエアコンから水漏れ', v8: '2020/04', v9: '¥35,000' },
-        { v1: '緊急', v2: '0000345678', v3: '取完了', v4: '2020/04/07', v5: '2020/04/09', v6: 'パナソニック産機システムズ', v7: '事務所のエアコンから水漏れ', v8: '2020/04', v9: '¥35,000' },
+        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
+        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
+        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
+        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
+        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
+        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
       ],
     };
   },

@@ -6,7 +6,7 @@
     </div>
 
     <br>
-    <el-row :gutter="20">
+    <el-row :gutter="10">
       <el-col :span="10">
         <table class="detail-table">
           <tbody>
@@ -33,11 +33,11 @@
         </table>
       </el-col>
       <el-col :span="4">
-        <el-button type="info" size="small" @click="baseInfoVisible = true">基本情報</el-button>
+        <el-button type="info" size="mini" width="120px" @click="baseInfoVisible = true">基本情報</el-button>
       </el-col>
     </el-row>
     <el-divider />
-    <el-row :gutter="20">
+    <el-row :gutter="10">
       <el-col :span="10">
         <table class="detail-table">
           <tbody>
@@ -66,8 +66,8 @@
             <tr>
               <th>取引先コード</th>
               <td>11000000060</td>
-              <td style="border:none;padding:0 5px;">
-                <el-button type="info" size="small" @click="createMailVisible = true">取引先メール</el-button>
+              <td style="border:none;padding:0 5px;text-align:right;">
+                <el-button type="info" size="mini" width="120px" @click="createMailVisible = true">取引先メール</el-button>
               </td>
             </tr>
           </tbody>
