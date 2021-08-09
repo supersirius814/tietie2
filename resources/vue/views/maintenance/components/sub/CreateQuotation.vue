@@ -155,9 +155,6 @@ export default {
       tableData: [
         { date: '2020/05/12 16:00:00', amount: '20000', description: '作業後の訂正見積', quotation: '1', photo: '1', report: '1', editor: '川手' },
         { date: '2020/05/12 16:00:00', amount: '20000', description: '作業後の訂正見積', quotation: '1', photo: '1', report: '1', editor: '川手' },
-        { date: '', amount: '', description: '', quotation: '', photo: '', report: '', editor: '' },
-        { date: '', amount: '', description: '', quotation: '', photo: '', report: '', editor: '' },
-        { date: '', amount: '', description: '', quotation: '', photo: '', report: '', editor: '' },
       ],
     };
   },

@@ -275,6 +275,7 @@ aside {
     }
 
     .detail-table {
+
         th,
         td {
             border: solid 1px #dfe6ec;
@@ -291,4 +292,124 @@ aside {
         font-size: 9px !important;
     }
 
+}
+
+.el-dialog.slide-dialog {
+    margin-right: 0%;
+    right: 0;
+    min-height: 100vh;
+    box-shadow: -1px 0px 10px 3px #737373;
+}
+
+.el-dialog__wrapper.slide-dialog-wrapper.dialog-fade-enter-active {
+    -webkit-animation: dialog-fade-in1 .3s !important;
+    animation: dialog-fade-in1 .3s !important;
+}
+
+.el-dialog__wrapper.slide-dialog-wrapper.dialog-fade-leave-active {
+    -webkit-animation: dialog-fade-out1 .3s !important;
+    animation: dialog-fade-out1 .3s !important;
+}
+
+@-webkit-keyframes dialog-fade-in1 {
+    0% {
+        right: -100%;
+    }
+
+    100% {
+        right: 0%;
+    }
+}
+
+@keyframes dialog-fade-in1 {
+    0% {
+        right: -100%;
+    }
+
+    100% {
+        right: 0%;
+    }
+}
+
+@-webkit-keyframes dialog-fade-out1 {
+    0% {
+        right: 0%;
+    }
+
+    100% {
+        right: -100%;
+    }
+}
+
+@keyframes dialog-fade-out1 {
+    0% {
+        right: 0%;
+    }
+
+    100% {
+        right: -100%;
+    }
+}
+
+.el-dialog.bottom-dialog {
+    margin: 0;
+    left: 0;
+    bottom: 0;
+    height: 400px;
+    box-shadow: -1px 0px 10px 3px #737373;
+}
+
+.el-dialog__wrapper.bottom-dialog-wrapper {
+    top: calc( 100% - 400px);
+    overflow: hidden;
+}
+
+.el-dialog__wrapper.bottom-dialog-wrapper.dialog-fade-enter-active {
+    -webkit-animation: dialog-slide-bottom-in .3s !important;
+    animation: dialog-slide-bottom-in .3s !important;
+}
+
+.el-dialog__wrapper.bottom-dialog-wrapper.dialog-fade-leave-active {
+    -webkit-animation: dialog-slide-bottom-out .3s !important;
+    animation: dialog-slide-bottom-out .3s !important;
+}
+
+@-webkit-keyframes dialog-slide-bottom-in {
+    0% {
+        top: 100%;
+    }
+
+    100% {
+        top: calc( 100% - 400px);
+    }
+}
+
+@keyframes dialog-slide-bottom-in {
+    0% {
+        top: 100%;
+    }
+
+    100% {
+        top: calc( 100% - 400px);
+    }
+}
+
+@-webkit-keyframes dialog-slide-bottom-out {
+    0% {
+        top: calc( 100% - 400px);
+    }
+
+    100% {
+        top: 100%;
+    }
+}
+
+@keyframes dialog-slide-bottom-out {
+    0% {
+        top: calc( 100% - 400px);
+    }
+
+    100% {
+        top: 100%;
+    }
 }

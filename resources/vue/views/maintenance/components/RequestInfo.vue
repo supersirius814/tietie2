@@ -161,13 +161,17 @@
       title=""
       :visible.sync="baseInfoVisible"
       width="700px"
+      top="0px"
     >
       <base-info />
     </el-dialog>
+
     <el-dialog
       title="依頼情報 編集"
       :visible.sync="editVisible"
       width="1100px"
+      custom-class="slide-dialog"
+      top="0px"
     >
       <request-info-edit />
       <span slot="footer" class="dialog-footer">
@@ -214,15 +218,16 @@ export default {
       ],
     };
   },
+  mounted() {
+    const dialogs = document.querySelectorAll('.slide-dialog');
+    dialogs.forEach(el => {
+      el.closest('.el-dialog__wrapper').classList.add('slide-dialog-wrapper');
+    });
+  },
   methods: {
   },
 };
 </script>
 
 <style lang="scss" scoped>
-  td {
-    .el-button{
-      // padding:6px 15px;
-    }
-  }
 </style>

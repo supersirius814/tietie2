@@ -1,9 +1,6 @@
 <template>
-  <el-card class="box-card">
-    <div slot="header" class="clearfix">
-      <span>会計情報</span>
-      <el-button style="float: right;" type="primary" size="small" @click="createAccounting = true">会計登録</el-button>
-    </div>
+  <div>
+    <h3>会計情報</h3>
 
     <el-table :data="tableData" :show-header="true" border style="width: 100%">
       <el-table-column align="center" prop="v1" label="会計年月" />
@@ -13,10 +10,16 @@
       <el-table-column align="center" prop="v5" label="科目" />
       <el-table-column align="center" prop="v6" label="入力者" width="100" />
     </el-table>
+    <div style="margin: 5px 0;">
+      <el-button style="float: right;" type="primary" size="small" @click="createAccounting = true">会計登録</el-button>
+    </div>
     <el-dialog
       title="【会計情報】"
       :visible.sync="createAccounting"
-      width="1100px"
+      width="700px"
+      custom-class="slide-dialog"
+      top="0px"
+      :modal="false"
     >
       <create-accounting />
       <span slot="footer" class="dialog-footer">
@@ -25,7 +28,7 @@
       </span>
     </el-dialog>
 
-  </el-card>
+  </div>
 </template>
 
 <script>

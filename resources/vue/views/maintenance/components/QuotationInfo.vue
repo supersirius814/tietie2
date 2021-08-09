@@ -1,23 +1,26 @@
 <template>
-  <el-card class="box-card">
-    <div slot="header" class="clearfix">
-      <span>見積情報</span>
-      <el-button style="float: right; margin-left:10px;" type="primary" size="small" @click="createQuotation = true">見積登録</el-button>
-      <el-button style="float: right;" type="info" size="small">報告書(1)</el-button>
-      <el-button style="float: right;" type="info" size="small">写真(3)</el-button>
-      <el-button style="float: right;" type="info" size="small">見積書(3)</el-button>
-    </div>
-
+  <div>
+    <h3>見積情報</h3>
     <el-table :data="tableData" :show-header="true" border style="width: 100%">
       <el-table-column align="center" prop="v1" label="日時" />
       <el-table-column align="center" prop="v2" label="金額" />
       <el-table-column align="center" prop="v3" label="摘要" />
       <el-table-column align="center" prop="v4" label="入力者" width="100" />
     </el-table>
+    <div style="margin: 5px 0;">
+      <el-button style="float: right; margin-left:10px;" type="primary" size="small" @click="createQuotation = true">見積登録</el-button>
+      <el-button type="info" size="small">見積書(3)</el-button>
+      <el-button type="info" size="small">写真(3)</el-button>
+      <el-button type="info" size="small">報告書(1)</el-button>
+    </div>
+
     <el-dialog
       title="【見積情報】"
       :visible.sync="createQuotation"
-      width="90%"
+      width="700px"
+      custom-class="slide-dialog"
+      top="0px"
+      :modal="false"
     >
       <create-quotation />
       <span slot="footer" class="dialog-footer">
@@ -25,7 +28,7 @@
         <el-button @click="createQuotation = false">閉じる</el-button>
       </span>
     </el-dialog>
-  </el-card>
+  </div>
 </template>
 
 <script>

@@ -2,7 +2,7 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>経過情報</span>
-      <el-button style="float: right;" type="primary" size="small">登録</el-button>
+      <el-button style="float: right;" type="primary" size="small" @click="editVisible=true">登録</el-button>
     </div>
 
     <el-row :gutter="20">
@@ -19,7 +19,7 @@
       <el-col :span="12">
         <el-button type="info" size="mini" @click="quotationFilesVisible=true">見積書(3)</el-button>
         <el-button type="info" size="mini" @click="photoFilesVisible=true">写真(3)</el-button>
-        <el-button type="info" size="mini">報告書(1)</el-button>
+        <el-button type="info" size="mini" @click="reportFilesVisible=true">報告書(1)</el-button>
       </el-col>
     </el-row>
     <el-table :data="tableData" :show-header="true" border style="width: 100%">
@@ -53,6 +53,27 @@
         <el-button @click="photoFilesVisible=false">閉じる</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog
+      title="【報告書ファイルリスト】"
+      :visible.sync="reportFilesVisible"
+      width="700px"
+    >
+      <quotation-files />
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="reportFilesVisible = false">閉じる</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog
+      title="経過情報 登録"
+      :visible.sync="editVisible"
+      width="1100px"
+      custom-class="slide-dialog"
+      top="0px"
+    >
+      <progress-edit />
+    </el-dialog>
   </el-card>
 </template>
 
@@ -60,9 +81,10 @@
 
 import QuotationFiles from './sub/QuotationFiles.vue';
 import PhotoFiles from './sub/PhotoFiles.vue';
+import ProgressEdit from './sub/ProgressEdit.vue';
 
 export default {
-  components: { QuotationFiles, PhotoFiles },
+  components: { QuotationFiles, PhotoFiles, ProgressEdit },
   props: {
     user: {
       type: Object,
@@ -78,8 +100,10 @@ export default {
   },
   data() {
     return {
+      editVisible: false,
       quotationFilesVisible: false,
       photoFilesVisible: false,
+      reportFilesVisible: false,
       tableData: [
         { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
         { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
@@ -89,6 +113,12 @@ export default {
         { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
       ],
     };
+  },
+  mounted() {
+    const dialogs = document.querySelectorAll('.slide-dialog');
+    dialogs.forEach(el => {
+      el.closest('.el-dialog__wrapper').classList.add('slide-dialog-wrapper');
+    });
   },
   methods: {
   },
