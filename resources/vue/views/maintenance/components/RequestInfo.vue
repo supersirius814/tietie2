@@ -12,7 +12,7 @@
           <tbody>
             <tr>
               <th style="line-height:3;">メンテナンスNo</th>
-              <td>M1234567890123</td>
+              <td>{{ detail.maintenance_code }}</td>
             </tr>
           </tbody>
         </table>
@@ -22,12 +22,12 @@
           <tbody>
             <tr>
               <th>店舗CD</th>
-              <td style="text-align:center">1174</td>
-              <td style="text-align:center">HS</td>
+              <td style="text-align:center">{{ detail.shop.shop_id }}</td>
+              <td style="text-align:center">{{ detail.shop.business_category.business_category }}</td>
             </tr>
             <tr>
               <th>店舗名</th>
-              <td colspan="2" style="text-align:center">蒲郡竹谷</td>
+              <td colspan="2" style="text-align:center">{{ detail.shop.shop_name }}</td>
             </tr>
           </tbody>
         </table>
@@ -55,7 +55,7 @@
           <tbody>
             <tr>
               <th>依頼区分*</th>
-              <td>修理依頼</td>
+              <td>{{ detail.order_type.type }}</td>
             </tr>
           </tbody>
         </table>
@@ -91,7 +91,7 @@
       <tbody>
         <tr>
           <th>依頼内容*</th>
-          <td>AC2系統（客席）でP15エラー表示。冷えない。至急手配お願いいたします。AC2系統（客席）でP15エラー表示。冷えない。至急手配お願いいたします。AC2系統（客席）でP15エラー表示。冷えない。P15エラー表示。冷えない。至急手配お願いいたします。</td>
+          <td>{{ detail.order }}</td>
           <td rowspan="2" style="padding:0;">
             <p class="header-1" style="margin-top:0;padding:10px">添付ファイル</p>
             <div style="text-align:center; padding:5px;max-height:300px;overflow-x:hidden;overflow-y:auto;">
@@ -106,7 +106,7 @@
         </tr>
         <tr>
           <th>備考</th>
-          <td>完全ガス欠</td>
+          <td>{{ detail.remark }}</td>
         </tr>
       </tbody>
     </table>
@@ -169,9 +169,10 @@
     <el-dialog
       title="依頼情報 編集"
       :visible.sync="editVisible"
-      width="1100px"
+      width="60%"
       custom-class="slide-dialog"
       top="0px"
+      :modal="false"
     >
       <request-info-edit />
       <span slot="footer" class="dialog-footer">
@@ -190,15 +191,10 @@ import RequestInfoEdit from './sub/RequestInfoEdit.vue';
 export default {
   components: { CreateClientMail, BaseInfo, RequestInfoEdit },
   props: {
-    user: {
+    detail: {
       type: Object,
       default: () => {
-        return {
-          name: '',
-          email: '',
-          avatar: '',
-          roles: [],
-        };
+        return {};
       },
     },
   },
@@ -223,6 +219,8 @@ export default {
     dialogs.forEach(el => {
       el.closest('.el-dialog__wrapper').classList.add('slide-dialog-wrapper');
     });
+  },
+  created() {
   },
   methods: {
   },

@@ -6,33 +6,20 @@
     </div>
     <el-row :gutter="20">
       <el-col :span="12">
-        <request-info :user="user" />
+        <request-info v-if="detail" :detail="detail" />
       </el-col>
       <el-col :span="12">
-        <history-info :user="user" />
+        <history-info v-if="detail" :detail="detail" />
       </el-col>
     </el-row>
 
-    <el-dialog
-      title=""
-      :visible.sync="qaVisible"
-      width="900px"
-      custom-class="slide-dialog"
-      top="0px"
-    >
+    <el-dialog title="" :visible.sync="qaVisible" width="900px" custom-class="slide-dialog" top="0px">
       <qa-dialog />
     </el-dialog>
 
-    <el-dialog
-      title=""
-      :visible.sync="bottomVisible"
-      width="100%"
-      custom-class="bottom-dialog"
-      top="0px"
-    >
+    <el-dialog title="" :visible.sync="bottomVisible" width="100%" custom-class="bottom-dialog" top="0px">
       <bottom-dialog />
     </el-dialog>
-
   </div>
 </template>
 
@@ -43,28 +30,23 @@ import HistoryInfo from './components/HistoryInfo.vue';
 import QaDialog from './components/QaDialog.vue';
 import BottomDialog from './components/BottomDialog.vue';
 
-const userResource = new Resource('users');
+const resource = new Resource('maintenance');
 export default {
-  name: 'EditUser',
   components: { RequestInfo, HistoryInfo, QaDialog, BottomDialog },
   data() {
     return {
       qaVisible: false,
       bottomVisible: false,
-      user: {},
+      detail: null,
     };
   },
-  watch: {
-    '$route': 'getUser',
-  },
   created() {
-    // const id = this.$route.params && this.$route.params.id;
-    // this.getUser(id);
+    const id = this.$route.params && this.$route.params.id;
+    this.getDetail(id);
   },
   methods: {
-    async getUser(id) {
-      const { data } = await userResource.get(id);
-      this.user = data;
+    async getDetail(id) {
+      this.detail = await resource.get(id);
     },
   },
 };

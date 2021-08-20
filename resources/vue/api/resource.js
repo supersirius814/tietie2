@@ -6,7 +6,7 @@ import request from '@/utils/request';
 class Resource {
   constructor(uri) {
     this.uri = uri;
-    this.baseUrl = '/api/v1/';
+    this.baseUrl = '/api/v2/';
   }
   list(query) {
     return request({

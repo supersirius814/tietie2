@@ -1106,19 +1106,7 @@
             }
         }
     ],
-    "links": {
-        "first": "https:\/\/laravue.dev\/api\/users?page=1",
-        "last": "https:\/\/laravue.dev\/api\/users?page=24",
-        "prev": null,
-        "next": "https:\/\/laravue.dev\/api\/users?page=2"
-    },
     "meta": {
-        "current_page": 1,
-        "from": 1,
-        "last_page": 24,
-        "path": "https:\/\/laravue.dev\/api\/users",
-        "per_page": "15",
-        "to": 15,
         "total": 358
     }
 }

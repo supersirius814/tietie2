@@ -7,7 +7,7 @@ class MaintenanceResource extends Resource {
     super('maintenance');
   }
 
-  list(query) {
+  list1(query) {
     return new Promise((resolve, reject) => {
       resolve(mock);
     });

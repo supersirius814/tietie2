@@ -24,7 +24,7 @@ Route::post('v1', 'VersionController@index');
 
 Route::post('v1/progress', 'ProgressController@index'); // ステータス一覧取得
 
-Route::post('v1/business_category',  function(Request $request) {
+Route::post('v1/business_category',  function (Request $request) {
     return Business_category::all();
 });
 
@@ -68,3 +68,37 @@ Route::post('v1/admin/csv/export', 'CsvController@export');
 Route::get('v1/admin/csv/export', 'CsvController@export');
 
 Route::get('v1/maintenance/{maintenance_id}/changeprogress', 'MaintenanceController@changeProgress')->middleware('auth');
+
+
+
+
+
+Route::group(['namespace' => 'V2'], function () {
+
+    Route::get('v2/shops', 'ShopController@index');
+    Route::get('v2/shops/{shop_id}', 'ShopController@show');
+
+    Route::get('v2/maintenance', 'MaintenanceController@index'); // メンテナンス一覧
+    Route::post('v2/maintenance', 'MaintenanceController@index'); // メンテナンス一覧
+
+
+    Route::post('v2/maintenance/post', 'MaintenanceController@post');
+
+    Route::post('v2/maintenance/{mantenance_id}/put/update', 'MaintenanceController@update');
+
+    Route::post('v2/maintenance/{mantenance_id}/put/approve', 'MaintenanceController@approve');
+
+    Route::post('v2/maintenance/{mantenance_id}/put/delete', 'MaintenanceController@destroy');
+
+    Route::post('v2/maintenance/{mantenance_id}/put/sendback', 'MaintenanceController@sendback');
+
+    Route::post('v2/maintenance/{mantenance_id}/put/reject', 'MaintenanceController@reject');
+
+    Route::post('v2/maintenance/{mantenance_id}/put/suspend', 'MaintenanceController@suspend');
+
+    Route::post('v2/maintenance/{mantenance_id}', 'MaintenanceController@show'); // メンテナンス詳細
+    Route::get('v2/maintenance/{mantenance_id}', 'MaintenanceController@show'); // メンテナンス詳細
+
+    Route::get('v2/maintenance/{maintenance_id}/changeprogress', 'MaintenanceController@changeProgress')->middleware('auth');
+
+});
