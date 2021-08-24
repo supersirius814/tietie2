@@ -2,16 +2,21 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>依頼情報 </span>
-      <el-button style="float: right;" type="primary" size="small" @click="editVisible=true">編集</el-button>
+      <el-button
+        style="float: right"
+        type="primary"
+        size="small"
+        @click="editVisible = true"
+      >編集</el-button>
     </div>
 
-    <br>
+    <br />
     <el-row :gutter="10">
       <el-col :span="10">
         <table class="detail-table">
           <tbody>
             <tr>
-              <th style="line-height:3;">メンテナンスNo</th>
+              <th style="line-height: 3">メンテナンスNo</th>
               <td>{{ detail.maintenance_code }}</td>
             </tr>
           </tbody>
@@ -22,18 +27,27 @@
           <tbody>
             <tr>
               <th>店舗CD</th>
-              <td style="text-align:center">{{ detail.shop.shop_id }}</td>
-              <td style="text-align:center">{{ detail.shop.business_category.business_category }}</td>
+              <td style="text-align: center">{{ detail.shop.shop_id }}</td>
+              <td style="text-align: center">
+                {{ detail.shop.business_category.business_category }}
+              </td>
             </tr>
             <tr>
               <th>店舗名</th>
-              <td colspan="2" style="text-align:center">{{ detail.shop.shop_name }}</td>
+              <td colspan="2" style="text-align: center">
+                {{ detail.shop.shop_name }}
+              </td>
             </tr>
           </tbody>
         </table>
       </el-col>
       <el-col :span="4">
-        <el-button type="info" size="mini" width="120px" @click="baseInfoVisible = true">基本情報</el-button>
+        <el-button
+          type="info"
+          size="mini"
+          width="120px"
+          @click="baseInfoVisible = true"
+        >基本情報</el-button>
       </el-col>
     </el-row>
     <el-divider />
@@ -66,8 +80,13 @@
             <tr>
               <th>取引先コード</th>
               <td>11000000060</td>
-              <td style="border:none;padding:0 5px;text-align:right;">
-                <el-button type="info" size="mini" width="120px" @click="createMailVisible = true">取引先メール</el-button>
+              <td style="border: none; padding: 0 5px; text-align: right">
+                <el-button
+                  type="info"
+                  size="mini"
+                  width="120px"
+                  @click="createMailVisible = true"
+                >取引先メール</el-button>
               </td>
             </tr>
           </tbody>
@@ -92,15 +111,37 @@
         <tr>
           <th>依頼内容*</th>
           <td>{{ detail.order }}</td>
-          <td rowspan="2" style="padding:0;">
-            <p class="header-1" style="margin-top:0;padding:10px">添付ファイル</p>
-            <div style="text-align:center; padding:5px;max-height:300px;overflow-x:hidden;overflow-y:auto;">
-              <el-image style="width: 150px; height: 100px; display:block;" src="https://picsum.photos/id/0/300/200" :preview-src-list="fileList" />
-              <a href="#" style="margin-bottom:10px;display:block;">全体写真</a>
-              <el-image style="width: 150px; height: 100px; display:block;" src="https://picsum.photos/id/1/300/200" :preview-src-list="fileList" />
-              <a href="#" style="margin-bottom:10px;display:block;">細部写真</a>
-              <el-image style="width: 150px; height: 100px; display:block;" src="https://picsum.photos/id/2/300/200" :preview-src-list="fileList" />
-              <a href="#" style="margin-bottom:10px;display:block;">型番写真</a>
+          <td rowspan="2" style="padding: 0">
+            <p class="header-1" style="margin-top: 0; padding: 10px">
+              添付ファイル
+            </p>
+            <div
+              style="
+                text-align: center;
+                padding: 5px;
+                max-height: 300px;
+                overflow-x: hidden;
+                overflow-y: auto;
+              "
+            >
+              <el-image
+                style="width: 150px; height: 100px; display: block"
+                src="https://picsum.photos/id/0/300/200"
+                :preview-src-list="fileList"
+              />
+              <a href="#" style="margin-bottom: 10px; display: block">全体写真</a>
+              <el-image
+                style="width: 150px; height: 100px; display: block"
+                src="https://picsum.photos/id/1/300/200"
+                :preview-src-list="fileList"
+              />
+              <a href="#" style="margin-bottom: 10px; display: block">細部写真</a>
+              <el-image
+                style="width: 150px; height: 100px; display: block"
+                src="https://picsum.photos/id/2/300/200"
+                :preview-src-list="fileList"
+              />
+              <a href="#" style="margin-bottom: 10px; display: block">型番写真</a>
             </div>
           </td>
         </tr>
@@ -157,12 +198,7 @@
         <el-button @click="createMailVisible = false">閉じる</el-button>
       </span>
     </el-dialog>
-    <el-dialog
-      title=""
-      :visible.sync="baseInfoVisible"
-      width="700px"
-      top="0px"
-    >
+    <el-dialog title="" :visible.sync="baseInfoVisible" width="700px" top="0px">
       <base-info />
     </el-dialog>
 
@@ -176,8 +212,8 @@
     >
       <request-info-edit />
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="editVisible=false">登録</el-button>
-        <el-button @click="editVisible=false">閉じる</el-button>
+        <el-button type="primary" @click="editVisible = false">登録</el-button>
+        <el-button @click="editVisible = false">閉じる</el-button>
       </span>
     </el-dialog>
   </el-card>
@@ -210,20 +246,21 @@ export default {
       ],
       tableData: [
         { title: '特記①', value: '20’10/13〜10/25改装 浄化槽店舗' },
-        { title: '特記②', value: '20’5/21エアコン全台清掃 駐車場案件は大和ハウス様へ' },
+        {
+          title: '特記②',
+          value: '20’5/21エアコン全台清掃 駐車場案件は大和ハウス様へ',
+        },
       ],
     };
   },
   mounted() {
     const dialogs = document.querySelectorAll('.slide-dialog');
-    dialogs.forEach(el => {
+    dialogs.forEach((el) => {
       el.closest('.el-dialog__wrapper').classList.add('slide-dialog-wrapper');
     });
   },
-  created() {
-  },
-  methods: {
-  },
+  created() {},
+  methods: {},
 };
 </script>
 
