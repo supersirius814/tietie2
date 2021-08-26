@@ -57,11 +57,11 @@
           <tbody>
             <tr>
               <th>大分類*</th>
-              <td>空調</td>
+              <td>{{ detail.category.category_name }}</td>
             </tr>
             <tr>
               <th>中分類*</th>
-              <td>エアコン</td>
+              <td>{{ detail.sub_category.sub_category_name }}</td>
             </tr>
           </tbody>
         </table>
@@ -79,7 +79,7 @@
           <tbody>
             <tr>
               <th>取引先コード</th>
-              <td>11000000060</td>
+              <td>1111</td>
               <td style="border: none; padding: 0 5px; text-align: right">
                 <el-button
                   type="info"
@@ -95,7 +95,7 @@
           <tbody>
             <tr>
               <th>取引先名</th>
-              <td colspan="2">パナソニック産機システムズ</td>
+              <td colspan="2">abc</td>
             </tr>
             <tr>
               <th>TEL/FAX</th>

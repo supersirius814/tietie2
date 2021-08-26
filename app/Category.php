@@ -12,4 +12,9 @@ class Category extends Model
 	{
 		return $this->hasMany('App\Equipment');
 	}
+	
+	public function maintenances()
+	{
+		return $this->hasMany('App\Maintenance');
+	}
 }

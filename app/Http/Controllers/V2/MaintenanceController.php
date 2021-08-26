@@ -6,42 +6,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Http\File;
-use Carbon\Carbon;
-use Storage;
 
 use App\Block;
 use App\Block_manager;
 use App\Business_category;
-use App\Category;
-use App\Client;
-use App\Client_equipment;
-use App\District_manager;
-use App\Equipment;
-use App\Final_status;
 use App\Maintenance;
-use App\Maintenance_image;
-use App\Maintenance_order_reason;
 use App\Maintenance_progress;
-use App\Manufacturer;
-use App\Order_type;
-use App\Progress;
 use App\Role;
 use App\Shop;
-use App\Sub_category;
-use App\User;
-
-use Illuminate\Support\Facades\Mail;
-use App\Mail\MaintenanceRequestMail;
-use App\Mail\MaintenanceEditMail;
-use App\Mail\ApprovalMail;
-use App\Mail\SendbackMail;
-use App\Mail\SuspendMail;
-use App\Mail\RejectMail;
 
 use DB;
-use Log;
 
 class MaintenanceController extends Controller
 {
@@ -99,19 +73,6 @@ class MaintenanceController extends Controller
      */
     public function confirm(Request $request)
     {
-        //		$this->validate($request, [
-        //			'shop_id'      => 'required',
-        //			'equipment'    => 'required',
-        //			'manufacturer' => 'required',
-        //			'model_number' => 'required',
-        //			'when'         => 'required',
-        //			'situation'    => 'required',
-        //			'image_1'      => 'required|file|image',
-        //			'image_2'      => 'required|file|image',
-        //			'image_3'      => 'required|file|image',
-        //		]);
-        //
-        $form = $request->except('image_1', 'image_2', 'image_3');
         $request_all = $request->all();
         $request_keys = array_keys($request_all);
         $request_images = preg_grep('/^image/', $request_keys);
@@ -173,6 +134,7 @@ class MaintenanceController extends Controller
             'maintenanceProgress.entered_by',
             'maintenanceImages',
             'orderReasons',
+            'category', 'subCategory'
         ])->find($maintenance_id);
         return response($maintenance);
     }

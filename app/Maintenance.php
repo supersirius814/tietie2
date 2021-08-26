@@ -65,4 +65,14 @@ class Maintenance extends Model
 		return $this->belongsToMany('App\Order_reason', 'maintenance_order_reasons', 'maintenance_id', 'order_reason_id');
 	}
 
+	public function category()
+	{
+		return $this->belongsTo('App\Category', 'category_id');
+	}
+
+	public function subCategory()
+	{
+		return $this->belongsTo('App\Sub_Category', 'sub_category_id');
+	}
+	
 }
