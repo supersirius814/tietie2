@@ -57,11 +57,11 @@
           <tbody>
             <tr>
               <th>大分類*</th>
-              <td>{{ detail.category.category_name }}</td>
+              <td>{{ detail.category ? detail.category.category_name : '' }}</td>
             </tr>
             <tr>
               <th>中分類*</th>
-              <td>{{ detail.sub_category.sub_category_name }}</td>
+              <td>{{ detail.sub_category ? detail.sub_category.sub_category_name : '' }}</td>
             </tr>
           </tbody>
         </table>
