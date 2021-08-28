@@ -72,7 +72,7 @@ class Maintenance extends Model
 
 	public function subCategory()
 	{
-		return $this->belongsTo('App\Sub_Category', 'sub_category_id');
+		return $this->belongsTo('App\Sub_category', 'sub_category_id');
 	}
 
 	public function maintenanceMatters()
