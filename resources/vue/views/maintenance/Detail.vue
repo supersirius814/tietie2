@@ -6,7 +6,7 @@
     </div>
     <el-row :gutter="20">
       <el-col :span="12">
-        <request-info v-if="detail" :detail="detail" />
+        <request-info v-if="detail" :detail="detail" @get-detail="getDetail()" />
       </el-col>
       <el-col :span="12">
         <history-info v-if="detail" :detail="detail" />
@@ -41,12 +41,17 @@ export default {
     };
   },
   created() {
-    const id = this.$route.params && this.$route.params.id;
-    this.getDetail(id);
+    this.getDetail();
   },
   methods: {
-    async getDetail(id) {
+    async getDetail() {
+      const id = this.$route.params && this.$route.params.id;
       this.detail = await resource.get(id);
+      if (this.detail.maintenance_matters.length < 10) {
+        for (let i = this.detail.maintenance_matters.length; i < 10; i++){
+          this.detail.maintenance_matters.push({ maintenance_matter_id: null, matter_option_id: null, matter_value_id: null });
+        }
+      }
     },
   },
 };

@@ -155,34 +155,34 @@
       <tbody>
         <tr>
           <th rowspan="5">案件情報</th>
-          <th>系統</th>
-          <td>AC2</td>
-          <th>原因</th>
-          <td>AC2</td>
+          <th>{{ detail.maintenance_matters[0].matter_option ? detail.maintenance_matters[0].matter_option.name : '' }}</th>
+          <td style="min-width:100px;">{{ detail.maintenance_matters[0].matter_value ? detail.maintenance_matters[0].matter_value.name : '' }}</td>
+          <th>{{ detail.maintenance_matters[5].matter_option ? detail.maintenance_matters[5].matter_option.name : '' }}</th>
+          <td style="min-width:100px;">{{ detail.maintenance_matters[5].matter_value ? detail.maintenance_matters[5].matter_value.name : '' }}</td>
         </tr>
         <tr>
-          <th>発生現象</th>
-          <td>エラー</td>
-          <th>原因箇所</th>
-          <td>AC2</td>
+          <th>{{ detail.maintenance_matters[1].matter_option ? detail.maintenance_matters[1].matter_option.name : '' }}</th>
+          <td>{{ detail.maintenance_matters[1].matter_value ? detail.maintenance_matters[1].matter_value.name : '' }}</td>
+          <th>{{ detail.maintenance_matters[6].matter_option ? detail.maintenance_matters[6].matter_option.name : '' }}</th>
+          <td>{{ detail.maintenance_matters[6].matter_value ? detail.maintenance_matters[6].matter_value.name : '' }}</td>
         </tr>
         <tr>
-          <th>エラーコード</th>
-          <td>P15</td>
-          <th>&nbsp</th>
-          <td>AC2</td>
+          <th>{{ detail.maintenance_matters[2].matter_option ? detail.maintenance_matters[2].matter_option.name : '' }}</th>
+          <td>{{ detail.maintenance_matters[2].matter_value ? detail.maintenance_matters[2].matter_value.name : '' }}</td>
+          <th>{{ detail.maintenance_matters[7].matter_option ? detail.maintenance_matters[7].matter_option.name : '' }}</th>
+          <td>{{ detail.maintenance_matters[7].matter_value ? detail.maintenance_matters[7].matter_value.name : '' }}</td>
         </tr>
         <tr>
-          <th>発生現象</th>
-          <td>エラー</td>
-          <th>原因箇所</th>
-          <td>AC2</td>
+          <th>{{ detail.maintenance_matters[3].matter_option ? detail.maintenance_matters[3].matter_option.name : '' }}</th>
+          <td>{{ detail.maintenance_matters[3].matter_value ? detail.maintenance_matters[3].matter_value.name : '' }}</td>
+          <th>{{ detail.maintenance_matters[8].matter_option ? detail.maintenance_matters[8].matter_option.name : '' }}</th>
+          <td>{{ detail.maintenance_matters[8].matter_value ? detail.maintenance_matters[8].matter_value.name : '' }}</td>
         </tr>
         <tr>
-          <th>エラーコード</th>
-          <td>P15</td>
-          <th>&nbsp</th>
-          <td>AC2</td>
+          <th>{{ detail.maintenance_matters[4].matter_option ? detail.maintenance_matters[4].matter_option.name : '' }}</th>
+          <td>{{ detail.maintenance_matters[4].matter_value ? detail.maintenance_matters[4].matter_value.name : '' }}</td>
+          <th>{{ detail.maintenance_matters[9].matter_option ? detail.maintenance_matters[9].matter_option.name : '' }}</th>
+          <td>{{ detail.maintenance_matters[9].matter_value ? detail.maintenance_matters[9].matter_value.name : '' }}</td>
         </tr>
       </tbody>
     </table>
@@ -194,6 +194,7 @@
       <create-client-mail />
       <span slot="footer" class="dialog-footer">
         <span>宛先とCC宛先、それぞれ選択してください。</span>
+        <a target="_blank" href="mailto:name@email.com?cc=name1@email.com;name2@mail.com">Link text</a>
         <el-button type="primary" @click="createMailVisible = false">メーラー起動</el-button>
         <el-button @click="createMailVisible = false">閉じる</el-button>
       </span>
@@ -210,9 +211,9 @@
       top="0px"
       :modal="false"
     >
-      <request-info-edit />
+      <request-info-edit ref="editForm" :detail="detail" />
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="editVisible = false">登録</el-button>
+        <el-button type="primary" @click="save()">登録</el-button>
         <el-button @click="editVisible = false">閉じる</el-button>
       </span>
     </el-dialog>
@@ -259,8 +260,15 @@ export default {
       el.closest('.el-dialog__wrapper').classList.add('slide-dialog-wrapper');
     });
   },
-  created() {},
-  methods: {},
+  created() {
+  },
+  methods: {
+    async save(){
+      this.editVisible = false;
+      await this.$refs.editForm.save();
+      this.$emit('get-detail');
+    },
+  },
 };
 </script>
 

@@ -74,5 +74,10 @@ class Maintenance extends Model
 	{
 		return $this->belongsTo('App\Sub_Category', 'sub_category_id');
 	}
-	
+
+	public function maintenanceMatters()
+	{
+		return $this->hasMany('App\Maintenance_matter');
+	}
+
 }

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-checkbox :v-model="true" label="緊急・重要" />
-    <el-checkbox :v-model="true" label="災害（地震・台風・大雨など）" />
+    <el-checkbox v-model="data.is_emergency" :checked="data.is_emergency == 1" label="緊急・重要" />
+    <el-checkbox v-model="data.is_disaster" :checked="data.is_disaster == 1" label="災害（地震・台風・大雨など）" />
     <br>
     <br>
     <el-row :gutter="20">
@@ -11,16 +11,16 @@
             <tr>
               <th>大分類*</th>
               <td class="select-td">
-                <el-select v-model="category1" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
-                  <el-option :label="'空調'" :value="1" />
+                <el-select v-model="data.category_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+                  <el-option v-for="item in categories" :key="item.category_id" :label="item.category_name" :value="item.category_id" />
                 </el-select>
               </td>
             </tr>
             <tr>
               <th>中分類*</th>
               <td class="select-td">
-                <el-select v-model="category2" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
-                  <el-option :label="'エアコン'" :value="1" />
+                <el-select v-model="data.sub_category_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+                  <el-option v-for="item in subCategories" :key="item.sub_category_id" :label="item.sub_category_name" :value="item.sub_category_id" />
                 </el-select>
               </td>
             </tr>
@@ -31,8 +31,8 @@
             <tr>
               <th>依頼区分*</th>
               <td class="select-td">
-                <el-select v-model="category2" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
-                  <el-option :label="'修理依頼'" :value="1" />
+                <el-select v-model="data.order_type_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+                  <el-option v-for="item in orderTypes" :key="item.order_type_id" :label="item.type" :value="item.order_type_id" />
                 </el-select>
               </td>
             </tr>
@@ -70,11 +70,15 @@
       <tbody>
         <tr>
           <th>依頼内容*</th>
-          <td>AC2系統（客席）でP15エラー表示。冷えない。至急手配お願いいたします。AC2系統（客席）でP15エラー表示。冷えない。至急手配お願いいたします。AC2系統（客席）でP15エラー表示。冷えない。P15エラー表示。冷えない。至急手配お願いいたします。</td>
+          <td class="input-td">
+            <textarea v-model="data.order" readonly rows="10" />
+          </td>
         </tr>
         <tr>
           <th>備考</th>
-          <td>完全ガス欠</td>
+          <td class="input-td">
+            <textarea v-model="data.remark" rows="5" />
+          </td>
         </tr>
       </tbody>
     </table>
@@ -82,34 +86,105 @@
       <tbody>
         <tr>
           <th rowspan="5">案件情報</th>
-          <th>系統</th>
-          <td>AC2</td>
-          <th>原因</th>
-          <td>AC2</td>
+          <th class="select-td">
+            <el-select v-model="data.maintenance_matters[0].matter_option_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterOptions" :key="item.matter_option_id" :label="item.name" :value="item.matter_option_id" />
+            </el-select>
+          </th>
+          <td class="select-td">
+            <el-select v-model="data.maintenance_matters[0].matter_value_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterValues" :key="item.matter_value_id" :label="item.name" :value="item.matter_value_id" />
+            </el-select>
+          </td>
+          <th class="select-td">
+            <el-select v-model="data.maintenance_matters[5].matter_option_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterOptions" :key="item.matter_option_id" :label="item.name" :value="item.matter_option_id" />
+            </el-select></th>
+          <td class="select-td">
+            <el-select v-model="data.maintenance_matters[5].matter_value_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterValues" :key="item.matter_value_id" :label="item.name" :value="item.matter_value_id" />
+            </el-select>
+          </td>
         </tr>
         <tr>
-          <th>発生現象</th>
-          <td>エラー</td>
-          <th>原因箇所</th>
-          <td>AC2</td>
+          <th class="select-td">
+            <el-select v-model="data.maintenance_matters[1].matter_option_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterOptions" :key="item.matter_option_id" :label="item.name" :value="item.matter_option_id" />
+            </el-select></th>
+          <td class="select-td">
+            <el-select v-model="data.maintenance_matters[1].matter_value_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterValues" :key="item.matter_value_id" :label="item.name" :value="item.matter_value_id" />
+            </el-select>
+          </td>
+          <th class="select-td">
+            <el-select v-model="data.maintenance_matters[6].matter_option_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterOptions" :key="item.matter_option_id" :label="item.name" :value="item.matter_option_id" />
+            </el-select></th>
+          <td class="select-td">
+            <el-select v-model="data.maintenance_matters[6].matter_value_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterValues" :key="item.matter_value_id" :label="item.name" :value="item.matter_value_id" />
+            </el-select>
+          </td>
         </tr>
         <tr>
-          <th>エラーコード</th>
-          <td>P15</td>
-          <th>&nbsp</th>
-          <td>AC2</td>
+          <th class="select-td">
+            <el-select v-model="data.maintenance_matters[2].matter_option_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterOptions" :key="item.matter_option_id" :label="item.name" :value="item.matter_option_id" />
+            </el-select></th>
+          <td class="select-td">
+            <el-select v-model="data.maintenance_matters[2].matter_value_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterValues" :key="item.matter_value_id" :label="item.name" :value="item.matter_value_id" />
+            </el-select>
+          </td>
+          <th class="select-td">
+            <el-select v-model="data.maintenance_matters[7].matter_option_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterOptions" :key="item.matter_option_id" :label="item.name" :value="item.matter_option_id" />
+            </el-select></th>
+          <td class="select-td">
+            <el-select v-model="data.maintenance_matters[7].matter_value_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterValues" :key="item.matter_value_id" :label="item.name" :value="item.matter_value_id" />
+            </el-select>
+          </td>
         </tr>
         <tr>
-          <th>発生現象</th>
-          <td>エラー</td>
-          <th>原因箇所</th>
-          <td>AC2</td>
+          <th class="select-td">
+            <el-select v-model="data.maintenance_matters[3].matter_option_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterOptions" :key="item.matter_option_id" :label="item.name" :value="item.matter_option_id" />
+            </el-select></th>
+          <td class="select-td">
+            <el-select v-model="data.maintenance_matters[3].matter_value_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterValues" :key="item.matter_value_id" :label="item.name" :value="item.matter_value_id" />
+            </el-select>
+          </td>
+          <th class="select-td">
+            <el-select v-model="data.maintenance_matters[8].matter_option_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterOptions" :key="item.matter_option_id" :label="item.name" :value="item.matter_option_id" />
+            </el-select></th>
+          <td class="select-td">
+            <el-select v-model="data.maintenance_matters[8].matter_value_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterValues" :key="item.matter_value_id" :label="item.name" :value="item.matter_value_id" />
+            </el-select>
+          </td>
         </tr>
         <tr>
-          <th>エラーコード</th>
-          <td>P15</td>
-          <th>&nbsp</th>
-          <td>AC2</td>
+          <th class="select-td">
+            <el-select v-model="data.maintenance_matters[4].matter_option_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterOptions" :key="item.matter_option_id" :label="item.name" :value="item.matter_option_id" />
+            </el-select></th>
+          <td class="select-td">
+            <el-select v-model="data.maintenance_matters[4].matter_value_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterValues" :key="item.matter_value_id" :label="item.name" :value="item.matter_value_id" />
+            </el-select>
+          </td>
+          <th class="select-td">
+            <el-select v-model="data.maintenance_matters[9].matter_option_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterOptions" :key="item.matter_option_id" :label="item.name" :value="item.matter_option_id" />
+            </el-select></th>
+          <td class="select-td">
+            <el-select v-model="data.maintenance_matters[9].matter_value_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <el-option v-for="item in matterValues" :key="item.matter_value_id" :label="item.name" :value="item.matter_value_id" />
+            </el-select>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -117,24 +192,29 @@
 </template>
 
 <script>
+import Resource from '@/api/resource';
+import MaintenanceResource from '@/api/maintenance';
+
+const maintenanceResource = new MaintenanceResource();
+
 export default {
   props: {
-    user: {
+    detail: {
       type: Object,
       default: () => {
-        return {
-          name: '',
-          email: '',
-          avatar: '',
-          roles: [],
-        };
+        return {};
       },
     },
   },
   data() {
     return {
-      category1: 1,
-      category2: 1,
+      data: null,
+      categories: [],
+      subCategories: [],
+      orderTypes: [],
+      matterOptions: [],
+      matterValues: [],
+      order_type: null,
       requestClass: 1,
       fileList: [
         'https://picsum.photos/id/0/300/200',
@@ -147,15 +227,29 @@ export default {
       ],
     };
   },
+  created() {
+    this.data = JSON.parse(JSON.stringify(this.detail));
+    this.getList();
+  },
   methods: {
+    async getList() {
+      const categoryResource = new Resource('categories');
+      const subCategoryResource = new Resource('sub_categories');
+      const orderTypesResource = new Resource('order_types');
+      const matterOptionsResource = new Resource('matter_options');
+      const matterValuesResource = new Resource('matter_values');
+      this.categories = await categoryResource.list(this.query);
+      this.subCategories = await subCategoryResource.list(this.query);
+      this.orderTypes = await orderTypesResource.list(this.query);
+      this.matterOptions = await matterOptionsResource.list(this.query);
+      this.matterValues = await matterValuesResource.list(this.query);
+    },
+    async save() {
+      await maintenanceResource.update(this.data.maintenance_id, this.data);
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-  td {
-    .el-button{
-      // padding:6px 15px;
-    }
-  }
 </style>

@@ -101,4 +101,10 @@ Route::group(['namespace' => 'V2'], function () {
 
     Route::get('v2/maintenance/{maintenance_id}/changeprogress', 'MaintenanceController@changeProgress')->middleware('auth');
 
+    Route::get('v2/categories', 'CategoryController@index');
+    Route::get('v2/sub_categories', 'SubCategoryController@index');
+    Route::get('v2/order_types', 'OrderTypeController@index');
+    Route::get('v2/matter_options', 'MatterOptionController@index');
+    Route::get('v2/matter_values', 'MatterValueController@index');
+
 });

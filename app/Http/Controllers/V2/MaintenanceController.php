@@ -11,6 +11,7 @@ use App\Block;
 use App\Block_manager;
 use App\Business_category;
 use App\Maintenance;
+use App\Maintenance_matter;
 use App\Maintenance_progress;
 use App\Role;
 use App\Shop;
@@ -134,9 +135,50 @@ class MaintenanceController extends Controller
             'maintenanceProgress.entered_by',
             'maintenanceImages',
             'orderReasons',
-            'category', 'subCategory'
+            'category', 'subCategory',
+            'maintenanceMatters.matter_value',
+            'maintenanceMatters.matter_option',
         ])->find($maintenance_id);
         return response($maintenance);
+    }
+
+    public function update(Request $request, $maintenance_id)
+    {
+        // $order                 = $equipment . ' ' . $manufacturer . ':' . $model_number . ' ' . $when . ' ' . $situation . '手配お願いします。';
+
+        $maintenance = Maintenance::find($maintenance_id);
+        $maintenance->is_disaster             = $request->input('is_disaster');
+        $maintenance->is_emergency             = $request->input('is_emergency');
+        $maintenance->category_id             = $request->input('category_id');
+        $maintenance->sub_category_id             = $request->input('sub_category_id');
+        $maintenance->order_type_id             = $request->input('order_type_id');
+        $maintenance->remark             = $request->input('remark');
+        $maintenance->save();
+
+        $maintenance_matters = $request->input('maintenance_matters', []);
+        foreach ($maintenance_matters as $item) {
+            $maintenance_matter = null;
+            if (empty($item['maintenance_matter_id'])) {
+                if (empty($item['matter_option_id']) || empty($item['matter_value_id'])) {
+                    continue;
+                }
+                $maintenance_matter = new Maintenance_matter();
+            } else {
+                $maintenance_matter = Maintenance_matter::find($item['maintenance_matter_id']);
+                if (empty($item['matter_option_id']) || empty($item['matter_value_id'])) {
+                    $maintenance_matter->delete();
+                    continue;
+                }
+            }
+            $maintenance_matter->maintenance_id  = $maintenance_id;
+            $maintenance_matter->matter_option_id  = $item['matter_option_id'];
+            $maintenance_matter->matter_value_id  = $item['matter_value_id'];
+            $maintenance_matter->save();
+        }
+
+        return response([
+            'success' => true
+        ]);
     }
 
     /**
