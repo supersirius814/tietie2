@@ -215,6 +215,11 @@ export default {
       };
       resource.createProgress(this.detail.maintenance_id, insertData).then(res => {
         this.detail.maintenance_progress = res;
+        this.detail.progress_id = this.progressId;
+        this.detail.progress = {
+          progress_id: this.progressId,
+          status: this.progress[this.progressId]
+        };
         this.comment = '';
         this.faxedToClient = false;
         this.faxedToShop = false;
