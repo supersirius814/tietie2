@@ -87,6 +87,6 @@ class Maintenance extends Model
 
 	public function reportFiles()
 	{
-		return $this->hasMany('App\report_file');
+		return $this->hasMany('App\Report_file');
 	}
 }
