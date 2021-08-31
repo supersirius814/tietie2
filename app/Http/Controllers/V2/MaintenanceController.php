@@ -34,7 +34,6 @@ class MaintenanceController extends Controller
      */
     public function index(Request $request)
     {
-
         $request->input('action');
         $business_category_id = $request->input('business_category_id', 0);
         $shop_id = $request->input('shop_id', 0);
@@ -65,6 +64,57 @@ class MaintenanceController extends Controller
 
         $maintenances = $qb->orderBy('maintenance_id', 'desc')->take($limit)->get();
         return response(['data' => $maintenances, 'meta' => ['total' => $total]]);
+    }
+
+    public function classHistory(Request $request)
+    {
+        $request->input('action');
+
+        $limit = $request->input('limit', 15);
+        $page = $request->input('page', 1);
+        $offset = $limit * ($page - 1);
+
+        $qb = Maintenance::with(['shop.business_category', 'orderType', 'progress', 'user'])->whereNotNull('shop_id')->where('sub_category_id', $request->input('sub_category_id'));
+
+        $total = $qb->count();
+
+        $qb->offset($offset)->limit($limit);
+
+        $maintenances = $qb->orderBy('maintenance_id', 'desc')->take($limit)->get();
+        return response(['data' => $maintenances, 'meta' => ['total' => $total]]);
+    }
+
+    public function shopHistory(Request $request)
+    {
+        $request->input('action');
+
+        $limit = $request->input('limit', 15);
+        $page = $request->input('page', 1);
+        $offset = $limit * ($page - 1);
+
+        $qb = Maintenance::with(['shop.business_category', 'orderType', 'progress', 'user'])->whereNotNull('shop_id')->where('shop_id', $request->input('shop_id'));
+
+        $total = $qb->count();
+
+        $qb->offset($offset)->limit($limit);
+
+        $maintenances = $qb->orderBy('maintenance_id', 'desc')->take($limit)->get();
+        return response(['data' => $maintenances, 'meta' => ['total' => $total]]);
+    }
+
+    public function createProgress(Request $request, $maintenance_id)
+    {
+        $row = new Maintenance_progress();
+        $row->maintenance_id = $maintenance_id; 
+        $row->progress_id = $request->input('progress_id'); 
+        $row->comment = $request->input('comment'); 
+        $row->faxed_to_client = $request->input('faxed_to_client'); 
+        $row->faxed_to_shop = $request->input('faxed_to_shop'); 
+        $row->entered_by = $request->user()->user_id;
+        $row->save();
+        
+        $maintenance_progress = Maintenance_progress::with('entered_by')->where('maintenance_id', $maintenance_id)->get();
+        return response($maintenance_progress);
     }
 
     /**
@@ -147,12 +197,12 @@ class MaintenanceController extends Controller
         // $order                 = $equipment . ' ' . $manufacturer . ':' . $model_number . ' ' . $when . ' ' . $situation . '手配お願いします。';
 
         $maintenance = Maintenance::find($maintenance_id);
-        $maintenance->is_disaster             = $request->input('is_disaster');
-        $maintenance->is_emergency             = $request->input('is_emergency');
-        $maintenance->category_id             = $request->input('category_id');
-        $maintenance->sub_category_id             = $request->input('sub_category_id');
-        $maintenance->order_type_id             = $request->input('order_type_id');
-        $maintenance->remark             = $request->input('remark');
+        $maintenance->is_disaster     = $request->input('is_disaster');
+        $maintenance->is_emergency    = $request->input('is_emergency');
+        $maintenance->category_id     = $request->input('category_id');
+        $maintenance->sub_category_id = $request->input('sub_category_id');
+        $maintenance->order_type_id   = $request->input('order_type_id');
+        $maintenance->remark          = $request->input('remark');
         $maintenance->save();
 
         $maintenance_matters = $request->input('maintenance_matters', []);

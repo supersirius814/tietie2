@@ -28,8 +28,16 @@
       <el-table-column align="center" prop="entered_by.name" label="入力者" width="100px" />
       <el-table-column align="center" prop="comment" label="コメント" />
       <el-table-column align="center" label="FAX送信">
-        <el-table-column align="center" prop="faxed_to_client" label="取" width="50px" />
-        <el-table-column align="center" prop="faxed_to_shop" label="店" width="50px" />
+        <el-table-column align="center" prop="faxed_to_client" label="取" width="50px">
+          <template slot-scope="scope">
+            <span>{{ scope.row.faxed_to_client == 1 ? '済' : '' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="faxed_to_shop" label="店" width="50px">
+          <template slot-scope="scope">
+            <span>{{ scope.row.faxed_to_shop == 1 ? '済' : '' }}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
     </el-table>
 
@@ -73,7 +81,7 @@
       top="0px"
       :modal="false"
     >
-      <progress-edit />
+      <progress-edit :detail="detail" @create="editVisible=false" />
     </el-dialog>
   </el-card>
 </template>
@@ -101,14 +109,6 @@ export default {
       photoFilesVisible: false,
       reportFilesVisible: false,
       progress: [],
-      tableData: [
-        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
-        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
-        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
-        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
-        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
-        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
-      ],
     };
   },
   created() {

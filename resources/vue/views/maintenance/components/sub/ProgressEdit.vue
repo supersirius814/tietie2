@@ -7,8 +7,28 @@
             <tr>
               <th>経過ステータス*</th>
               <td class="select-td">
-                <el-select v-model="category1" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
-                  <el-option :label="'----'" :value="1" />
+                <el-select v-model="progressId" size="small" :multiple="false" placeholder="ステータス" clearable style="width: 100%" class="filter-item">
+                  <el-option label="すべて選択" :value="0" />
+                  <el-option label="BM承認待" :value="1" />
+                  <el-option label="BM承認" :value="2" />
+                  <el-option label="BM差戻し" :value="3" />
+                  <el-option label="BM却下" :value="4" />
+                  <el-option label="BM保留" :value="5" />
+                  <el-option label="受付前" :value="6" />
+                  <!-- <el-option label="本部承認" :value="1" /> -->
+                  <el-option label="本部差戻し" :value="7" />
+                  <el-option label="本部見送り" :value="8" />
+                  <el-option label="依頼前" :value="9" />
+                  <el-option label="依頼済" :value="10" />
+                  <el-option label="見積待ち" :value="11" />
+                  <el-option label="入荷待ち" :value="13" />
+                  <el-option label="DM承認待ち" :value="14" />
+                  <el-option label="稟議中" :value="15" />
+                  <el-option label="見積発注済み" :value="16" />
+                  <el-option label="訪問待ち" :value="18" />
+                  <el-option label="報告待ち" :value="19" />
+                  <el-option label="店完了" :value="20" />
+                  <el-option label="取完了" :value="21" />
                 </el-select>
               </td>
             </tr>
@@ -20,7 +40,7 @@
           <tbody>
             <tr>
               <th>入力者</th>
-              <td>川手</td>
+              <td>{{ userName }}</td>
             </tr>
           </tbody>
         </table>
@@ -61,7 +81,7 @@
             <tr>
               <th>経過情報</th>
               <td style="padding:0 5px;">
-                <textarea style="border:none;height:70px;width:100%">5月12日 13時訪問予定</textarea>
+                <textarea v-model="comment" style="border:none;height:70px;width:100%" />
               </td>
             </tr>
           </tbody>
@@ -70,7 +90,7 @@
     </el-row>
     <el-row>
       <el-col :span="1">
-        <el-checkbox style="padding:10px" />
+        <el-checkbox v-model="faxedToShop" style="padding:10px" />
       </el-col>
       <el-col :span="10">
         <table class="detail-table">
@@ -86,7 +106,7 @@
     </el-row>
     <el-row>
       <el-col :span="1">
-        <el-checkbox style="padding:10px" />
+        <el-checkbox v-model="faxedToClient" style="padding:10px" />
       </el-col>
       <el-col :span="10">
         <table class="detail-table">
@@ -101,66 +121,100 @@
       </el-col>
     </el-row>
     <div style="text-align:right;">
-      <el-button type="primary" size="small">登録</el-button>
+      <el-button type="primary" size="small" @click="save()">登録</el-button>
       <el-button type="default" size="small">閉じる</el-button>
     </div>
-    <el-table :data="tableData" :show-header="true" border style="width: 100%">
-      <el-table-column align="center" prop="v1" label="日時" width="120px" />
-      <el-table-column align="center" prop="v2" label="ステータス" width="100px" />
-      <el-table-column align="center" prop="v3" label="入力者" width="100px" />
-      <el-table-column align="center" prop="v4" label="コメント" />
+    <el-table :data="detail.maintenance_progress" :show-header="true" border style="width: 100%">
+      <el-table-column align="center" prop="created_at" label="日時" width="160px" />
+      <el-table-column align="center" prop="progress_id" label="ステータス" :formatter="formatterProgress" width="100px" />
+      <el-table-column align="center" prop="entered_by.name" label="入力者" width="100px" />
+      <el-table-column align="center" prop="comment" label="コメント" />
       <el-table-column align="center" label="FAX送信">
-        <el-table-column align="center" prop="v5" label="取" width="50px" />
-        <el-table-column align="center" prop="v6" label="店" width="50px" />
+        <el-table-column align="center" prop="faxed_to_client" label="取" width="50px">
+          <template slot-scope="scope">
+            <span>{{ scope.row.faxed_to_client == 1 ? '済' : '' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="faxed_to_shop" label="店" width="50px">
+          <template slot-scope="scope">
+            <span>{{ scope.row.faxed_to_shop == 1 ? '済' : '' }}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
     </el-table>
   </div>
 </template>
 
 <script>
+import MaintenanceResource from '@/api/maintenance';
+const resource = new MaintenanceResource();
+
 export default {
   props: {
-    user: {
+    detail: {
       type: Object,
       default: () => {
-        return {
-          name: '',
-          email: '',
-          avatar: '',
-          roles: [],
-        };
+        return {};
       },
     },
   },
   data() {
     return {
-      category1: 1,
-      category2: 1,
-      requestClass: 1,
-      fileList: [
-        'https://picsum.photos/id/0/300/200',
-        'https://picsum.photos/id/1/300/200',
-        'https://picsum.photos/id/2/300/200',
-      ],
-      tableData: [
-        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
-        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
-        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
-        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
-        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
-        { v1: '2020/05/08 13:54:22', v2: '新規申請', v3: '渡辺', v4: '', v5: '', v6: '' },
-      ],
+      userName: '',
+      comment: '',
+      faxedToClient: 0,
+      faxedToShop: 0,
+      progressId: 1,
+      progress: {
+        1: 'BM承認待ち',
+        2: 'BM承認',
+        3: 'BM差戻し',
+        4: 'BM却下',
+        5: 'BM保留',
+        6: '本部受付前',
+        7: '本部差戻し',
+        8: '本部見送り',
+        9: '依頼確定',
+        10: '依頼済',
+        11: '見積待ち',
+        12: '見積精査中',
+        13: '入荷待ち',
+        14: 'DM承認待ち',
+        15: '稟議中',
+        16: '見積発注済み',
+        17: '日程調整中',
+        18: '訪問待ち',
+        19: '報告待ち',
+        20: '店完了',
+        21: '取完了',
+        22: '問合せ中',
+      },
     };
   },
+  created(){
+    this.$store.dispatch('user/getInfo').then(user => {
+      this.userName = user.name;
+    });
+  },
   methods: {
+    formatterProgress(row, column) {
+      return this.progress[row.progress_id] ?? '';
+    },
+    save() {
+      const insertData = {
+        progress_id: this.progressId,
+        comment: this.comment,
+        faxed_to_client: this.faxedToClient,
+        faxed_to_shop: this.faxedToShop,
+      };
+      resource.createProgress(this.detail.maintenance_id, insertData).then(res => {
+        this.detail.maintenance_progress = res;
+        this.comment = '';
+        this.faxedToClient = false;
+        this.faxedToShop = false;
+        this.$emit('create');
+      });
+    },
   },
 };
 </script>
-
-<style lang="scss" scoped>
-  td {
-    .el-button{
-      // padding:6px 15px;
-    }
-  }
-</style>

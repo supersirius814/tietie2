@@ -60,13 +60,21 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo()
         .then(response => {
-          const { data } = response;
+          // const { data } = response;
+          const data = {
+            'id': response.user_id,
+            'name': response.name,
+            'email': response.email,
+            'roles': ['admin'],
+            'permissions': ['manage permission'],
+            'avatar': 'https:\/\/i.pravatar.cc',
+          };
 
           if (!data) {
             reject('Verification failed, please Login again.');
           }
-
           const { roles, name, avatar, introduction, permissions, id } = data;
+
           // roles must be a non-empty array
           if (!roles || roles.length <= 0) {
             reject('getInfo: roles must be a non-null array!');

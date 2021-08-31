@@ -18,7 +18,7 @@ Auth::routes();
 
 Route::get('/user', function (Request $request) {
     return $request->user();
-})->middleware('auth:api');
+})->middleware('auth');
 
 Route::post('v1', 'VersionController@index');
 
@@ -80,6 +80,11 @@ Route::group(['namespace' => 'V2'], function () {
 
     Route::get('v2/maintenance', 'MaintenanceController@index'); // メンテナンス一覧
     Route::post('v2/maintenance', 'MaintenanceController@index'); // メンテナンス一覧
+
+    Route::any('v2/maintenance/class_history', 'MaintenanceController@classHistory'); // メンテナンス一覧
+    Route::any('v2/maintenance/shop_history', 'MaintenanceController@shopHistory'); // メンテナンス一覧
+
+    Route::post('v2/maintenance/{mantenance_id}/progress/create', 'MaintenanceController@createProgress');
 
 
     Route::post('v2/maintenance/post', 'MaintenanceController@post');

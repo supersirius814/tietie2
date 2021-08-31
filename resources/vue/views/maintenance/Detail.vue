@@ -17,8 +17,8 @@
       <qa-dialog />
     </el-dialog>
 
-    <el-dialog title="" :visible.sync="bottomVisible" width="100%" custom-class="bottom-dialog" top="0px">
-      <bottom-dialog />
+    <el-dialog v-if="detail" title="" :visible.sync="bottomVisible" width="100%" custom-class="bottom-dialog" top="0px">
+      <bottom-dialog :shop-id="detail.shop_id" :sub-category-id="detail.sub_category_id" />
     </el-dialog>
   </div>
 </template>

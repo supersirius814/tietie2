@@ -228,7 +228,8 @@ aside {
     padding: 0 !important;
     // position: relative;
 
-    input, textarea {
+    input,
+    textarea {
         width: 100%;
         border: none;
         // height: 100%;
@@ -353,7 +354,7 @@ aside {
 }
 
 .el-dialog__wrapper.bottom-dialog-wrapper {
-    top: calc( 100% - 400px);
+    top: calc(100% - 400px);
     overflow: hidden;
 }
 
@@ -373,7 +374,7 @@ aside {
     }
 
     100% {
-        top: calc( 100% - 400px);
+        top: calc(100% - 400px);
     }
 }
 
@@ -383,13 +384,13 @@ aside {
     }
 
     100% {
-        top: calc( 100% - 400px);
+        top: calc(100% - 400px);
     }
 }
 
 @-webkit-keyframes dialog-slide-bottom-out {
     0% {
-        top: calc( 100% - 400px);
+        top: calc(100% - 400px);
     }
 
     100% {
@@ -399,10 +400,14 @@ aside {
 
 @keyframes dialog-slide-bottom-out {
     0% {
-        top: calc( 100% - 400px);
+        top: calc(100% - 400px);
     }
 
     100% {
         top: 100%;
     }
+}
+
+.history-td {
+    padding: 2px !important;
 }

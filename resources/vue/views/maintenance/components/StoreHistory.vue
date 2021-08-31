@@ -2,55 +2,103 @@
   <div>
     <h3>店舗過去履歴</h3>
 
-    <el-table :data="tableData" :show-header="true" border style="width: 100%">
-      <el-table-column align="center" prop="v1" label="緊/重" />
-      <el-table-column align="center" prop="v2" label="メンテナンスNo" />
-      <el-table-column align="center" prop="v3" label="ステータス" />
-      <el-table-column align="center" prop="v4" label="依頼日" />
-      <el-table-column align="center" prop="v5" label="完了日" />
-      <el-table-column align="center" prop="v6" label="取引先名" />
-      <el-table-column align="center" prop="v7" label="依頼内容" />
-      <el-table-column align="center" prop="v8" label="会計年月" />
-      <el-table-column align="center" prop="v9" label="請求金額（税抜）" />
+    <el-table :data="list" :show-header="true" border style="width: 100%">
+      <el-table-column align="center" class-name="history-td" label="緊/重">
+        <template slot-scope="scope">
+          <span>{{ scope.row.is_emergency == 1 ? '緊急' : '' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" class-name="history-td" prop="maintenance_code" label="メンテナンスNo" />
+      <el-table-column align="center" class-name="history-td" label="ステータス">
+        <template slot-scope="scope">
+          <span>{{ scope.row.progress.status }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" class-name="history-td" prop="created_at" label="依頼日" />
+      <el-table-column align="center" class-name="history-td" label="完了日">
+        <template slot-scope="scope">
+          <span>{{ '' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" class-name="history-td" label="取引先名">
+        <template slot-scope="scope">
+          <span>{{ '' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" class-name="history-td" label="依頼内容">
+        <template slot-scope="scope">
+          <span>{{ scope.row.order.substr(0, 10) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" class-name="history-td" label="会計年月">
+        <template slot-scope="scope">
+          <span>{{ '' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" class-name="history-td" label="請求金額（税抜）">
+        <template slot-scope="scope">
+          <span>{{ '' }}</span>
+        </template>
+      </el-table-column>
     </el-table>
     <div style="text-align:center;margin-top:10px;">
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        :total="1000"
-      />
+      <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" layout="total, prev, pager, next, jumper" @pagination="getList" />
     </div>
   </div>
 </template>
 
 <script>
+import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
+import MaintenanceResource from '@/api/maintenance';
+
+const resource = new MaintenanceResource();
 
 export default {
+  components: { Pagination },
   props: {
-    user: {
-      type: Object,
-      default: () => {
-        return {
-          name: '',
-          email: '',
-          avatar: '',
-          roles: [],
-        };
-      },
+    shopId: {
+      type: Number,
+      default: 0,
     },
   },
   data() {
     return {
-      tableData: [
-        { v1: '緊急', v2: '0000345678', v3: '取完了', v4: '2020/04/07', v5: '2020/04/09', v6: 'パナソニック産機システムズ', v7: '事務所のエアコンから水漏れ', v8: '2020/04', v9: '¥35,000' },
-        { v1: '', v2: '', v3: '', v4: '', v5: '', v6: '', v7: '', v8: '', v9: '' },
-        { v1: '', v2: '', v3: '', v4: '', v5: '', v6: '', v7: '', v8: '', v9: '' },
-        { v1: '', v2: '', v3: '', v4: '', v5: '', v6: '', v7: '', v8: '', v9: '' },
-        { v1: '', v2: '', v3: '', v4: '', v5: '', v6: '', v7: '', v8: '', v9: '' },
-      ],
+      list: null,
+      total: 0,
+      loading: true,
+      query: {
+        page: 1,
+        limit: 8,
+        shop_id: this.shopId,
+      },
     };
   },
+  created() {
+    this.getList();
+  },
   methods: {
+    async getList() {
+      const { limit, page } = this.query;
+      this.loading = true;
+      const { data, meta } = await resource.storeHistory(this.query);
+      this.list = data;
+      this.list.forEach((element, index) => {
+        element['index'] = (page - 1) * limit + index + 1;
+      });
+      this.total = meta.total;
+      this.loading = false;
+    },
   },
 };
 </script>
+
+<style scoped>
+.pagination-container {
+  background: #fff;
+  padding: 1px 16px !important;
+  margin-top: 10px !important;
+}
+.pagination-container.hidden {
+  display: none;
+}
+</style>

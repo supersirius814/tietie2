@@ -1,8 +1,8 @@
 <template>
   <div style="padding-bottom:10px;margin-top:-58px">
     <el-button type="primary" size="small" style="position:absolute;left:200px;top:10px;" @click="toggle()" v-text="btnText" />
-    <class-history v-if="view1" />
-    <store-history v-else />
+    <class-history v-if="view1" :sub-category-id="subCategoryId" />
+    <store-history v-else :shop-id="shopId" />
   </div>
 </template>
 
@@ -13,16 +13,13 @@ import ClassHistory from './ClassHistory.vue';
 export default {
   components: { StoreHistory, ClassHistory },
   props: {
-    user: {
-      type: Object,
-      default: () => {
-        return {
-          name: '',
-          email: '',
-          avatar: '',
-          roles: [],
-        };
-      },
+    subCategoryId: {
+      type: Number,
+      default: 0,
+    },
+    shopId: {
+      type: Number,
+      default: 0,
     },
   },
   data() {
