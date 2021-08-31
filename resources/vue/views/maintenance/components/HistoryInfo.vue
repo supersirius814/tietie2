@@ -18,8 +18,8 @@
       </el-col>
       <el-col :span="12">
         <el-button type="info" size="mini" @click="quotationFilesVisible=true">見積書(3)</el-button>
-        <el-button type="info" size="mini" @click="photoFilesVisible=true">写真(3)</el-button>
-        <el-button type="info" size="mini" @click="reportFilesVisible=true">報告書(1)</el-button>
+        <el-button type="info" size="mini" @click="photoFilesVisible=true">写真({{ detail.photo_files.length }})</el-button>
+        <el-button type="info" size="mini" @click="reportFilesVisible=true">報告書({{ detail.report_files.length }})</el-button>
       </el-col>
     </el-row>
     <el-table :data="detail.maintenance_progress" :show-header="true" border style="width: 100%">
@@ -56,7 +56,7 @@
       :visible.sync="photoFilesVisible"
       width="700px"
     >
-      <photo-files />
+      <photo-files :detail="detail" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="photoFilesVisible=false">閉じる</el-button>
       </span>
@@ -67,7 +67,7 @@
       :visible.sync="reportFilesVisible"
       width="700px"
     >
-      <quotation-files />
+      <report-files :detail="detail" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="reportFilesVisible = false">閉じる</el-button>
       </span>
@@ -90,10 +90,11 @@
 
 import QuotationFiles from './sub/QuotationFiles.vue';
 import PhotoFiles from './sub/PhotoFiles.vue';
+import ReportFiles from './sub/ReportFiles.vue';
 import ProgressEdit from './sub/ProgressEdit.vue';
 
 export default {
-  components: { QuotationFiles, PhotoFiles, ProgressEdit },
+  components: { QuotationFiles, PhotoFiles, ProgressEdit, ReportFiles },
   props: {
     detail: {
       type: Object,

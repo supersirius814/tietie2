@@ -53,7 +53,9 @@
             <tr>
               <th>写真</th>
               <td style="border:none;padding:0 5px;">
-                <el-button type="info" size="small">ファイル選択</el-button>
+                <el-upload ref="uploadPhoto" :action="'/api/v2/maintenance/upload/photo/' + detail.maintenance_id" :auto-upload="false" :multiple="false" :on-success="getPhotoFiles()">
+                  <el-button slot="trigger" size="small" type="info">ファイル選択</el-button>
+                </el-upload>
               </td>
             </tr>
           </tbody>
@@ -67,7 +69,9 @@
             <tr>
               <th>報告書</th>
               <td style="border:none;padding:0 5px;">
-                <el-button type="info" size="small">ファイル選択</el-button>
+                <el-upload ref="uploadReport" :action="'/api/v2/maintenance/upload/report/' + detail.maintenance_id" :auto-upload="false" :multiple="false" :on-success="getReportFiles()">
+                  <el-button slot="trigger" size="small" type="info">ファイル選択</el-button>
+                </el-upload>
               </td>
             </tr>
           </tbody>
@@ -201,6 +205,8 @@ export default {
       return this.progress[row.progress_id] ?? '';
     },
     save() {
+      this.$refs.uploadReport.submit();
+      this.$refs.uploadPhoto.submit();
       const insertData = {
         progress_id: this.progressId,
         comment: this.comment,
@@ -213,6 +219,18 @@ export default {
         this.faxedToClient = false;
         this.faxedToShop = false;
         this.$emit('create');
+      });
+    },
+
+    getPhotoFiles() {
+      resource.getPhotoFiles(this.detail.maintenance_id).then(files => {
+        this.detail.photo_files = files;
+      });
+    },
+
+    getReportFiles() {
+      resource.getReportFiles(this.detail.maintenance_id).then(files => {
+        this.detail.report_files = files;
       });
     },
   },

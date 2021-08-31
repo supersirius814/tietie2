@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Report_file extends Model
 {
-	protected $primaryKey = 'id';
+	protected $primaryKey = 'report_file_id';
 	
-	public function equipment()
+	public function maintenance()
 	{
-		return $this->hasMany('App\Equipment');
+		return $this->belongsTo('App\Maintenance');
 	}
 }

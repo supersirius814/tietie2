@@ -13,10 +13,13 @@ use App\Business_category;
 use App\Maintenance;
 use App\Maintenance_matter;
 use App\Maintenance_progress;
+use App\Photo_file;
+use App\Report_file;
 use App\Role;
 use App\Shop;
 
 use DB;
+use Validator;
 
 class MaintenanceController extends Controller
 {
@@ -105,16 +108,98 @@ class MaintenanceController extends Controller
     public function createProgress(Request $request, $maintenance_id)
     {
         $row = new Maintenance_progress();
-        $row->maintenance_id = $maintenance_id; 
-        $row->progress_id = $request->input('progress_id'); 
-        $row->comment = $request->input('comment'); 
-        $row->faxed_to_client = $request->input('faxed_to_client'); 
-        $row->faxed_to_shop = $request->input('faxed_to_shop'); 
+        $row->maintenance_id = $maintenance_id;
+        $row->progress_id = $request->input('progress_id');
+        $row->comment = $request->input('comment');
+        $row->faxed_to_client = $request->input('faxed_to_client');
+        $row->faxed_to_shop = $request->input('faxed_to_shop');
         $row->entered_by = $request->user()->user_id;
         $row->save();
-        
+
+        $maintenance = Maintenance::find($maintenance_id);
+        $maintenance->progress_id = $row->progress_id;
+        $maintenance->save();
+
         $maintenance_progress = Maintenance_progress::with('entered_by')->where('maintenance_id', $maintenance_id)->get();
         return response($maintenance_progress);
+    }
+
+    public function uploadReport(Request $request, $maintenance_id)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'file' => 'required|mimes:pdf|max:204800',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+        if ($request->file('file')) {
+
+            //store file into document folder
+            $file = $request->file->store('public/reports');
+
+            //store your file into database
+            $reportFile = new Report_file();
+            $reportFile->file_path = $file;
+            $reportFile->file_name = $request->file('file')->getClientOriginalName();;
+            $reportFile->maintenance_id = $maintenance_id;
+            $reportFile->save();
+
+            return response()->json([
+                "success" => true,
+                "message" => "File successfully uploaded",
+                "file" => $file
+            ]);
+        }
+    }
+
+    public function uploadPhoto(Request $request, $maintenance_id)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'file' => 'required|mimes:jpg,jpeg,png|max:204800',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+        if ($request->file('file')) {
+
+            //store file into document folder
+            $file = $request->file->store('public/photos');
+
+            //store your file into database
+            $reportFile = new Photo_file();
+            $reportFile->file_path = $file;
+            $reportFile->file_name = $request->file('file')->getClientOriginalName();;
+            $reportFile->maintenance_id = $maintenance_id;
+            $reportFile->save();
+
+            return response()->json([
+                "success" => true,
+                "message" => "File successfully uploaded",
+                "file" => $file
+            ]);
+        }
+    }
+
+    public function getPhotoFiles(Request $request, $maintenance_id)
+    {
+        $files = Photo_file::where('maintenance_id', $maintenance_id)->get();
+        return response($files);
+    }
+
+    public function getReportFiles(Request $request, $maintenance_id)
+    {
+        $files = Report_file::where('maintenance_id', $maintenance_id)->get();
+        return response($files);
     }
 
     /**
@@ -188,6 +273,7 @@ class MaintenanceController extends Controller
             'category', 'subCategory',
             'maintenanceMatters.matter_value',
             'maintenanceMatters.matter_option',
+            'photoFiles', 'reportFiles'
         ])->find($maintenance_id);
         return response($maintenance);
     }

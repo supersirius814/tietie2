@@ -86,6 +86,12 @@ Route::group(['namespace' => 'V2'], function () {
 
     Route::post('v2/maintenance/{mantenance_id}/progress/create', 'MaintenanceController@createProgress');
 
+    Route::post('v2/maintenance/upload/report/{mantenance_id}', 'MaintenanceController@uploadReport');
+    Route::post('v2/maintenance/upload/photo/{mantenance_id}', 'MaintenanceController@uploadPhoto');
+
+    Route::get('v2/maintenance/{mantenance_id}/photo_files', 'MaintenanceController@getPhotoFiles');
+    Route::get('v2/maintenance/{mantenance_id}/report_files', 'MaintenanceController@getReportFiles');
+
 
     Route::post('v2/maintenance/post', 'MaintenanceController@post');
 

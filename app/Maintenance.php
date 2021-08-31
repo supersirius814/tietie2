@@ -80,4 +80,13 @@ class Maintenance extends Model
 		return $this->hasMany('App\Maintenance_matter');
 	}
 
+	public function photoFiles()
+	{
+		return $this->hasMany('App\Photo_file');
+	}
+
+	public function reportFiles()
+	{
+		return $this->hasMany('App\report_file');
+	}
 }

@@ -37,6 +37,20 @@ class MaintenanceResource extends Resource {
       data: updateData,
     });
   }
+
+  getPhotoFiles(id) {
+    return request({
+      url: this.baseUrl + this.uri + '/' + id + '/photo_files',
+      method: 'get',
+    });
+  }
+
+  getReportFiles(id) {
+    return request({
+      url: this.baseUrl + this.uri + '/' + id + '/report_files',
+      method: 'get',
+    });
+  }
 }
 
 export { MaintenanceResource as default };
