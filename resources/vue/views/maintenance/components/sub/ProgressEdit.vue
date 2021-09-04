@@ -1,5 +1,8 @@
 <template>
   <div>
+  <!-- {{this.progressId}} -->
+  <!-- {{this.detail.maintenance_id}} -->
+
     <el-row :gutter="20">
       <el-col :span="10">
         <table class="detail-table">
@@ -218,8 +221,10 @@ export default {
         this.detail.progress_id = this.progressId;
         this.detail.progress = {
           progress_id: this.progressId,
-          status: this.progress[this.progressId]
+          status: this.progress[this.progressId],
+          // updated_at: this.detail.maintenance_id,
         };
+       
         this.comment = '';
         this.faxedToClient = false;
         this.faxedToShop = false;

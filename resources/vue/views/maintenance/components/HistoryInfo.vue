@@ -4,7 +4,13 @@
       <span>経過情報</span>
       <el-button style="float: right;" type="primary" size="small" @click="editVisible=true">登録</el-button>
     </div>
+    
+<!-- {{ detail.progress.status }} -->
 
+<!-- {{detail.maintenance_progress[detail.maintenance_progress.length - 1].created_at}} -->
+<!-- {{detail.maintenance_progress.length }} -->
+<!-- {{ this.detail.updated_at}}
+{{ detail.progress.updated_at }} -->
     <el-row :gutter="20">
       <el-col :span="12">
         <table class="detail-table">
@@ -87,7 +93,10 @@
 </template>
 
 <script>
-
+console.log("detail.maintenance_progress")
+// var last_element = this.maintenance_progress[this.detail.maintenance_progress.length - 1];
+// var dd = new Date(GMT).toISOString().replace(/T/, ' ').replace(/\..+/, '');
+// console.log(last_element);
 import QuotationFiles from './sub/QuotationFiles.vue';
 import PhotoFiles from './sub/PhotoFiles.vue';
 import ReportFiles from './sub/ReportFiles.vue';

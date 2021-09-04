@@ -158,7 +158,8 @@
 
       <el-table-column align="center" label="完了日">
         <template slot-scope="scope">
-          <span>{{ scope.row.completed_date }}</span>
+          <span>{{ scope.row.updated_at }}</span>
+          <!-- <span>{{ scope.row.completed_date }}</span> -->
         </template>
       </el-table-column>
 
@@ -187,6 +188,8 @@ import Pagination from '@/components/Pagination'; // Secondary package based on 
 import MaintenanceResource from '@/api/maintenance';
 import ShopResource from '@/api/shop';
 import waves from '@/directive/waves'; // Waves directive
+
+
 
 const resource = new MaintenanceResource();
 const shopResource = new ShopResource();
