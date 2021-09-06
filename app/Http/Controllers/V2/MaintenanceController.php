@@ -13,8 +13,11 @@ use App\Business_category;
 use App\Maintenance;
 use App\Maintenance_matter;
 use App\Maintenance_progress;
+use App\Quotation_info;
+use App\Accounting_info;
 use App\Photo_file;
 use App\Report_file;
+use App\Quotation_file;
 use App\Role;
 use App\Shop;
 
@@ -124,6 +127,52 @@ class MaintenanceController extends Controller
         return response($maintenance_progress);
     }
 
+//9.5 tietie add
+    public function createQuotation(Request $request, $maintenance_id)
+    {
+        $row = new Quotation_info();
+        $row->maintenance_id = $maintenance_id;
+        $row->date = $request->input('date');
+        $row->comment = $request->input('comment');
+        $row->amount = $request->input('amount');
+        $row->photo_files_cnt = $request->input('photo_files_cnt');
+        $row->report_files_cnt = $request->input('report_files_cnt');
+        $row->quotation_files_cnt = $request->input('quotation_files_cnt');
+        $row->editor = $request->input('editor');
+        // $row->entered_by = $request->user()->user_id;
+        $row->save();
+
+        // $maintenance = Maintenance::find($maintenance_id);
+        // $maintenance->progress_id = $row->progress_id;
+        // $maintenance->save();
+
+        $quotation_info = Quotation_info::where('maintenance_id', $maintenance_id)->get();
+        return response($quotation_info);
+    }
+
+    public function createAccounting(Request $request, $maintenance_id)
+    {
+        $row = new Accounting_info();
+        $row->maintenance_id = $maintenance_id;
+        $row->accounting_year = $request->input('accounting_year');
+        $row->relation_code = $request->input('relation_code');
+        $row->relation_name = $request->input('relation_name');
+        $row->accounting_amount = $request->input('accounting_amount');
+        $row->including_price = $request->input('including_price');
+        $row->unincluding_price = $request->input('unincluding_price');
+        $row->employee = $request->input('employee');
+        $row->editor = $request->input('editor');
+        // $row->entered_by = $request->user()->user_id;
+        $row->save();
+
+        // $maintenance = Maintenance::find($maintenance_id);
+        // $maintenance->progress_id = $row->progress_id;
+        // $maintenance->save();
+
+        $accounting_info = Accounting_info::where('maintenance_id', $maintenance_id)->get();
+        return response($accounting_info);
+    }
+
     public function uploadReport(Request $request, $maintenance_id)
     {
         $validator = Validator::make(
@@ -190,6 +239,39 @@ class MaintenanceController extends Controller
         }
     }
 
+    public function uploadQuotation(Request $request, $maintenance_id)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'file' => 'required|mimes:pdf|max:204800',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+        if ($request->file('file')) {
+
+            //store file into document folder
+            $file = $request->file->store('public/reports');
+
+            //store your file into database
+            $reportFile = new Quotation_file();
+            $reportFile->file_path = $file;
+            $reportFile->file_name = $request->file('file')->getClientOriginalName();;
+            $reportFile->maintenance_id = $maintenance_id;
+            $reportFile->save();
+
+            return response()->json([
+                "success" => true,
+                "message" => "File successfully uploaded",
+                "file" => $file
+            ]);
+        }
+    }
+
     public function getPhotoFiles(Request $request, $maintenance_id)
     {
         $files = Photo_file::where('maintenance_id', $maintenance_id)->get();
@@ -199,6 +281,12 @@ class MaintenanceController extends Controller
     public function getReportFiles(Request $request, $maintenance_id)
     {
         $files = Report_file::where('maintenance_id', $maintenance_id)->get();
+        return response($files);
+    }
+
+    public function getQuotationFiles(Request $request, $maintenance_id)
+    {
+        $files = Quotation_file::where('maintenance_id', $maintenance_id)->get();
         return response($files);
     }
 
@@ -273,8 +361,12 @@ class MaintenanceController extends Controller
             'category', 'subCategory',
             'maintenanceMatters.matter_value',
             'maintenanceMatters.matter_option',
-            'photoFiles', 'reportFiles'
+            'photoFiles', 'reportFiles', 'quotationFiles', 'quotationInfo', 'accountingInfo'
         ])->find($maintenance_id);
+        // $quotation = DB::table('quotation_files')
+        //     ->where('maintenance_id',$maintenance_id)
+        //     ->get();
+        // $maintenance['quotation_files'] = $quotation; 
         return response($maintenance);
     }
 

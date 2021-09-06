@@ -55,6 +55,15 @@ class Maintenance extends Model
 		return $this->hasMany('App\Maintenance_progress');
 	}
 
+	public function quotationInfo()
+	{
+		return $this->hasMany('App\Quotation_info');
+	}
+
+	public function accountingInfo()
+	{
+		return $this->hasMany('App\Accounting_info');
+	}
 	public function maintenanceImages()
 	{
 		return $this->hasMany('App\Maintenance_image');
@@ -88,5 +97,10 @@ class Maintenance extends Model
 	public function reportFiles()
 	{
 		return $this->hasMany('App\Report_file');
+	}
+
+	public function quotationFiles()
+	{
+		return $this->hasMany('App\Quotation_file');
 	}
 }

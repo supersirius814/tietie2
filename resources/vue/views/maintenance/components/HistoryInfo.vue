@@ -4,9 +4,9 @@
       <span>経過情報</span>
       <el-button style="float: right;" type="primary" size="small" @click="editVisible=true">登録</el-button>
     </div>
-    
-<!-- {{ detail.progress.status }} -->
 
+<!-- {{ detail.progress.status }} -->
+<!-- {{detail}} -->
 <!-- {{detail.maintenance_progress[detail.maintenance_progress.length - 1].created_at}} -->
 <!-- {{detail.maintenance_progress.length }} -->
 <!-- {{ this.detail.updated_at}}
@@ -23,7 +23,7 @@
         </table>
       </el-col>
       <el-col :span="12">
-        <el-button type="info" size="mini" @click="quotationFilesVisible=true">見積書(3)</el-button>
+        <el-button type="info" size="mini" @click="quotationFilesVisible=true">見積書({{ detail.quotation_files.length }})</el-button>
         <el-button type="info" size="mini" @click="photoFilesVisible=true">写真({{ detail.photo_files.length }})</el-button>
         <el-button type="info" size="mini" @click="reportFilesVisible=true">報告書({{ detail.report_files.length }})</el-button>
       </el-col>
@@ -52,7 +52,7 @@
       :visible.sync="quotationFilesVisible"
       width="700px"
     >
-      <quotation-files />
+      <quotation-files :detail="detail"/>
       <span slot="footer" class="dialog-footer">
         <el-button @click="quotationFilesVisible = false">閉じる</el-button>
       </span>
@@ -93,7 +93,7 @@
 </template>
 
 <script>
-console.log("detail.maintenance_progress")
+// console.log("detail.maintenance_progress")
 // var last_element = this.maintenance_progress[this.detail.maintenance_progress.length - 1];
 // var dd = new Date(GMT).toISOString().replace(/T/, ' ').replace(/\..+/, '');
 // console.log(last_element);
@@ -111,7 +111,7 @@ export default {
         return {};
       },
     },
-  },
+  },  
   data() {
     return {
       editVisible: false,

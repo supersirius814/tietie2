@@ -1,7 +1,9 @@
 <template>
   <el-card class="box-card">
+    <!-- {{detail}}wwww -->
     <div slot="header" class="clearfix">
-      <span>依頼情報 </span>
+      <span>依頼情報</span>
+     
       <el-button
         style="float: right"
         type="primary"
