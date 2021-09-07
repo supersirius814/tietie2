@@ -19,21 +19,9 @@
         <el-button type="info" size="mini" @click="reportFilesVisible=true">報告書({{ detail.report_files.length }})</el-button>
     </div>
 
-    <!-- <el-dialog
-      title="【見積情報】"
-      :visible.sync="createQuotation"
-      width="700px"
-      custom-class="slide-dialog"
-      top="0px"
-      :modal="false"
-    >
-      <create-quotation />
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="createQuotation = false">登録</el-button>
-        <el-button @click="createQuotation = false">閉じる</el-button>
-      </span>
-    </el-dialog> -->
+
     <el-dialog
+    
       title="【見積書ファイルリスト】"
       :visible.sync="quotationFilesVisible"
       width="700px"
@@ -43,7 +31,8 @@
         <el-button @click="quotationFilesVisible = false">閉じる</el-button>
       </span>
     </el-dialog>
-    <el-dialog
+    <el-dialog 
+    
       title="【写真リスト】"
       :visible.sync="photoFilesVisible"
       width="700px"

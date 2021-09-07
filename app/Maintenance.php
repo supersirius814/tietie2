@@ -52,7 +52,7 @@ class Maintenance extends Model
 	
 	public function maintenanceProgress()
 	{
-		return $this->hasMany('App\Maintenance_progress');
+		return $this->hasMany('App\Maintenance_progress')->orderBy('created_at', 'desc');
 	}
 
 	public function quotationInfo()
