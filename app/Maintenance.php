@@ -104,4 +104,9 @@ class Maintenance extends Model
 	{
 		return $this->hasMany('App\Quotation_file');
 	}
+
+	public function bmcategoryTable()
+	{
+		return $this->hasMany('App\Bmcategory_table');
+	}
 }

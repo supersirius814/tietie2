@@ -18,6 +18,7 @@ use App\Accounting_info;
 use App\Photo_file;
 use App\Report_file;
 use App\Quotation_file;
+use App\Bmcategory_table;
 use App\Role;
 use App\Shop;
 
@@ -361,8 +362,14 @@ class MaintenanceController extends Controller
             'category', 'subCategory',
             'maintenanceMatters.matter_value',
             'maintenanceMatters.matter_option',
-            'photoFiles', 'reportFiles', 'quotationFiles', 'quotationInfo', 'accountingInfo'
+            'photoFiles', 'reportFiles', 'quotationFiles', 'quotationInfo', 'accountingInfo',
         ])->find($maintenance_id);
+
+        $quotation = Bmcategory_table::select('big_id','big_name')->distinct()->get();
+        $maintenance['bmcategoryTable_big'] = $quotation; 
+
+        $quotationm = Bmcategory_table::select('middle_id', 'middle_name')->distinct()->get();
+        $maintenance['bmcategoryTable_middle'] = $quotationm; 
         // $quotation = DB::table('quotation_files')
         //     ->where('maintenance_id',$maintenance_id)
         //     ->get();
