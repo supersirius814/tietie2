@@ -60,7 +60,7 @@
             <tr>
               <th>大分類*</th>
               <td class="select-td">
-                <el-select  size="small" :multiple="false" placeholder="大分類名" clearable style="width: 100%" class="filter-item">
+                <el-select size="small" :multiple="false" placeholder="大分類名" clearable style="width: 100%" class="filter-item">
                   <el-option label="ガス設備" :value="0" />
                   <el-option label="リフト" :value="1" />
                   <el-option label="備品" :value="2" />
