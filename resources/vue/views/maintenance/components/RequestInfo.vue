@@ -59,11 +59,67 @@
           <tbody>
             <tr>
               <th>大分類*</th>
-              <td>{{ detail.category ? detail.category.category_name : '' }}</td>
+              <td class="select-td">
+                <el-select  size="small" :multiple="false" placeholder="大分類名" clearable style="width: 100%" class="filter-item">
+                  <el-option label="ガス設備" :value="0" />
+                  <el-option label="リフト" :value="1" />
+                  <el-option label="備品" :value="2" />
+                  <el-option label="内外装" :value="3" />
+                  <el-option label="厨房機器" :value="4" />
+                  <el-option label="外構" :value="5" />
+                  <el-option label="害虫駆除" :value="6" />
+                  <!-- <el-option label="本部承認" :value="1" /> -->
+                  <el-option label="廃棄物" :value="7" />
+                  <el-option label="清掃" :value="8" />
+                  <el-option label="看板・テント" :value="9" />
+                  <el-option label="空調" :value="10" />
+                  <el-option label="給排水" :value="11" />
+                  <el-option label="通信機器" :value="13" />
+                  <el-option label="開口部" :value="14" />
+                  <el-option label="防災設備" :value="15" />
+                  <el-option label="電気" :value="16" />
+                </el-select>
+              </td>
+              <!-- <td>{{ detail.category ? detail.category.category_name : '' }}</td> -->
             </tr>
             <tr>
               <th>中分類*</th>
-              <td>{{ detail.sub_category ? detail.sub_category.sub_category_name : '' }}</td>
+              <!-- <td>{{ detail.sub_category ? detail.sub_category.sub_category_name : '' }}</td> -->
+              <td class="select-td">
+                <el-select size="small" :multiple="false" placeholder="中分類名" clearable style="width: 100%" class="filter-item">
+                  <el-option label="給湯器（湯沸し器）" :value="0" />
+                  <el-option label="ガス器具・ガス設備" :value="1" />
+                  <el-option label="ダムウェダー" :value="2" />
+                  <el-option label="エレベーター" :value="3" />
+                  <el-option label="掃除機" :value="4" />
+                  <el-option label="洗濯機" :value="5" />
+                  <el-option label="その他" :value="6" />
+                  <!-- <el-option label="本部承認" :value="1" /> -->
+                  <el-option label="内装（壁・床・天井・クロス他）" :value="7" />
+                  <el-option label="外装（屋根・外壁・雨どい他）" :value="8" />
+                  <el-option label="ブラインド・ロールスクリーン" :value="9" />
+                  <el-option label="家具（イス・テーブル・ソファ他）" :value="10" />
+                  <el-option label="建物" :value="11" />
+                  <el-option label="ＤＴ" :value="13" />
+                  <el-option label="冷水機" :value="14" />
+                  <el-option label="温蔵庫" :value="15" />
+                  <el-option label="その他厨房機器" :value="16" />
+                  <el-option label="ガスレンジ" :value="18" />
+                  <el-option label="パスタスチーマ" :value="19" />
+                  <el-option label="酢合わせ機" :value="20" />
+                  <el-option label="巻きロボ" :value="21" />
+
+                  <el-option label="軍艦ロボ" :value="22" />
+                  <el-option label="巻きカッター" :value="23" />
+                  <el-option label="ウォークイン冷蔵庫" :value="24" />
+                  <el-option label="シャリロボ" :value="25" />
+                  <el-option label="リーチイン冷蔵庫" :value="26" />
+                  <el-option label="蒸し器" :value="27" />
+                  <el-option label="ドロアー冷凍庫" :value="28" />
+                  <el-option label="リーチイン冷凍庫" :value="29" />
+                  <el-option label="解凍機" :value="30" />
+                </el-select>
+              </td>
             </tr>
           </tbody>
         </table>
