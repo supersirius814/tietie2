@@ -68,7 +68,7 @@
                   <el-option label="厨房機器" :value="4" />
                   <el-option label="外構" :value="5" />
                   <el-option label="害虫駆除" :value="6" />
-                  <!-- <el-option label="本部承認" :value="1" /> -->
+        
                   <el-option label="廃棄物" :value="7" />
                   <el-option label="清掃" :value="8" />
                   <el-option label="看板・テント" :value="9" />
