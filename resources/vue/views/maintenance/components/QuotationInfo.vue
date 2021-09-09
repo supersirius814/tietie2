@@ -24,15 +24,16 @@
     
       title="【見積書ファイルリスト】"
       :visible.sync="quotationFilesVisible"
+      :modal="false"
       width="700px"
     >
       <quotation-files :detail="detail" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="quotationFilesVisible = false">閉じる</el-button>
       </span>
-    </el-dialog>
+      </el-dialog>
     <el-dialog 
-    
+      :modal="false"
       title="【写真リスト】"
       :visible.sync="photoFilesVisible"
       width="700px"
@@ -47,6 +48,7 @@
       title="【報告書ファイルリスト】"
       :visible.sync="reportFilesVisible"
       width="700px"
+      :modal="false"
     >
       <report-files :detail="detail" />
       <span slot="footer" class="dialog-footer">

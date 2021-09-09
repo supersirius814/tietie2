@@ -1,5 +1,7 @@
 <template>
+
   <div>
+
     <el-row :gutter="20">
       <el-col :span="10">
         <table class="detail-table">
@@ -28,7 +30,9 @@
           <tbody>
             <tr>
               <th>金額</th>
-              <td class="input-td"><input v-model="amount" /></td>
+              <td class="input-td">  <currency-input v-model="amount" :options="{ currency: 'JPY' }" />
+              <!-- <input v-model="amount" /> -->
+  </td>
             </tr>
           </tbody>
         </table>
@@ -217,11 +221,18 @@
 // </script>-->
 <style lang="scss" scoped>
 </style>
+    <script src="https://unpkg.com/vue"></script>
+    <!-- Optional polyfills for usage with IE 11 -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=Array.prototype.includes%2CObject.assign"></script>
+    <script src="https://unpkg.com/vue-currency-input@1.22.4"></script>
 <script>
 import MaintenanceResource from '@/api/maintenance';
+import CurrencyInput from './CurrencyInput.vue';
+
 const resource = new MaintenanceResource();
 
 export default {
+   components: { CurrencyInput },
   props: {
     detail: {
       type: Object,
@@ -232,6 +243,7 @@ export default {
   },
   data() {
     return {
+      value11: 1234,
       userName: '',
       comment: '',
       date: '',
