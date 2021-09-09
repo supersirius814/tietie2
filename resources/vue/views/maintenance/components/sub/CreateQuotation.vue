@@ -31,8 +31,8 @@
             <tr>
               <th>金額</th>
               <td class="input-td">  <currency-input v-model="amount" :options="{ currency: 'JPY' }" />
-              <!-- <input v-model="amount" /> -->
-  </td>
+                    <!-- <input v-model="amount" /> -->
+              </td>
             </tr>
           </tbody>
         </table>
