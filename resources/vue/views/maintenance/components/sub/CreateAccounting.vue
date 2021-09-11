@@ -1,13 +1,14 @@
 <template>
 
   <div>
+
     <el-row :gutter="20">
       <el-col :span="10">
         <table class="detail-table">
           <tbody>
             <tr>
               <th>請求元取引コード</th>
-              <td class="input-td"><input value="" v-model="relation_code"/></td>
+              <td class="input-td"><input value="" v-model="relation_code" class="el-input__inner"/></td>
               <!-- <td class="input-td"><input value="110000060" /></td> -->
             </tr>
           </tbody>
@@ -34,7 +35,7 @@
             <tr>
               <th>請求元取引先名</th>
               <td class="input-td">
-                <input value="" v-model="relation_name"/>                
+                <input value="" v-model="relation_name" class="el-input__inner"/>                
                 <!-- <input value="パナ産機（あじさい銀行）" /> -->
               </td>
             </tr>
@@ -48,7 +49,11 @@
           <tbody>
             <tr>
               <th>会計年月</th>
-              <td class="input-td"><input v-model="accounting_year" type="date"/></td>
+                <td class="input-td">
+                  <month-picker-input v-model="accounting_year" style="z-index:4000" lang="ja" placeholder="日付を選択してください。"
+                  :format="format"
+                  ></month-picker-input>
+                </td>
             </tr>
           </tbody>
         </table>
@@ -60,7 +65,10 @@
           <tbody>
             <tr>
               <th>請求金額（税抜）</th>
-              <td class="input-td"><input v-model="including_price"/></td>
+              <td class="input-td">
+                <!-- <input v-model="unincluding_price"/> -->
+                <currency-input v-model="unincluding_price" :options="{ currency: 'JPY' }"  class="el-input__inner"/>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -72,7 +80,10 @@
           <tbody>
             <tr>
               <th>消費税</th>
-              <td class="input-td"><input v-model="accounting_amount" /></td>
+              <td class="input-td">
+                <!-- <input v-model="accounting_amount" /> -->
+                <currency-input v-model="accounting_amount" :options="{ currency: 'JPY' }" class="el-input__inner"/>
+              </td>
             </tr> 
           </tbody>
         </table>
@@ -84,7 +95,10 @@
           <tbody>
             <tr>
               <th>請求金額（税込）</th>
-              <td class="input-td"><input v-model="unincluding_price"/></td>
+              <td class="input-td">
+                <!-- <input v-model="including_price"/> -->
+                <currency-input v-model="including_price" :options="{ currency: 'JPY' }"  class="el-input__inner"/>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -96,12 +110,16 @@
           <tbody>
             <tr>
               <th>科目</th>
-              <td class="input-td"><input v-model="employee" /></td>
+              <td class="input-td"><input v-model="employee" class="el-input__inner"/></td>
             </tr>
           </tbody>
         </table>
       </el-col>
     </el-row>
+    <div style="text-align: right; padding-bottom: 15px;">
+      <el-button type="primary" size="small" @click="save()">登録</el-button>
+      <el-button type="default" size="small">閉じる</el-button>
+    </div>    
     <el-table
       :data="detail.accounting_info"
       :show-header="true"
@@ -113,19 +131,22 @@
           <el-input v-model="scope.row.accounting_year" placeholder="" />
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="unincluding_price" label="請求金額（税抜）">
+      <el-table-column align="center" prop="unincluding_price" label="請求金額（税抜）" >
         <template slot-scope="scope">
-          <el-input v-model="scope.row.unincluding_price" placeholder="" />
+          <!-- <el-input v-model="scope.row.unincluding_price" placeholder=""/> -->
+          <currency-input v-model="scope.row.unincluding_price" :options="{ currency: 'JPY' }" class="el-input__inner"/>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="accounting_amount" label="消費税">
         <template slot-scope="scope">
-          <el-input v-model="scope.row.accounting_amount" placeholder="" />
+          <!-- <el-input v-model="scope.row.accounting_amount" placeholder="" /> -->
+           <currency-input v-model="scope.row.accounting_amount" :options="{ currency: 'JPY' }" class="el-input__inner"/>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="including_amount" label="請求金額（税込）">
+      <el-table-column align="center" prop="including_price" label="請求金額（税込）">
         <template slot-scope="scope">
-          <el-input v-model="scope.row.including_amount" placeholder="" />
+          <!-- <el-input v-model="scope.row.including_price" placeholder="" /> -->
+          <currency-input v-model="scope.row.including_price" :options="{ currency: 'JPY' }" class="el-input__inner"/>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="employee" label="科目">
@@ -139,19 +160,26 @@
         </template>
       </el-table-column>
     </el-table>
-    <div style="text-align: right">
-      <el-button type="primary" size="small" @click="save()">登録</el-button>
-      <el-button type="default" size="small">閉じる</el-button>
-    </div>
+
   </div>
 
 </template>
 
 <script>
 import MaintenanceResource from '@/api/maintenance';
+import CurrencyInput from './CurrencyInput.vue';
+import { MonthPickerInput } from 'vue-month-picker'
+import { Datetime } from 'vue-datetime';
+import { Settings } from 'luxon'
+import { DateTime } from 'luxon';
 const resource = new MaintenanceResource();
 
+
+
+
+
 export default {
+  components: { CurrencyInput, MonthPickerInput },
   props: {
     detail: {
       type: Object,
@@ -162,8 +190,9 @@ export default {
   },
   data() {
     return {
+      accounting_year: new Date(),
+      format: "yyyy/MM/ddd",
       userName: '',
-      accounting_year: '',
       accounting_amount: '',
       including_price: '',
       unincluding_price: '',
@@ -208,14 +237,15 @@ export default {
     formatterProgress(row, column) {
       return this.progress[row.progress_id] ?? '';
     },
-    save() {
 
+    save() {
+    
       const insertData = {
         relation_code: this.relation_code,
         relation_name: this.relation_name,
         unincluding_price: this.unincluding_price,
         including_price: this.including_price,
-        accounting_year: this.accounting_year,
+        accounting_year: this.accounting_year.year + '-' + ('0'+this.accounting_year.monthIndex).slice(-2),
         editor: this.userName,
         employee: this.employee,
         accounting_amount: this.accounting_amount,

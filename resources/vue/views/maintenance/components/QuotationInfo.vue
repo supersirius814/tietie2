@@ -6,7 +6,7 @@
     <h3>見積情報</h3>
     <el-table :data="detail.quotation_info" :show-header="true" border style="width: 100%">
       <el-table-column align="center" prop="date" label="日時" />
-      <el-table-column align="center" prop="amount" label="金額" />
+      <el-table-column align="center" prop="amount" label="金額" :formatter="formatterCurrency"/>
       <el-table-column align="center" prop="comment" label="摘要" />
       <el-table-column align="center" prop="editor" label="入力者" width="100" />
     </el-table>
@@ -167,14 +167,20 @@ export default {
     };
   },
   mounted() {
+
     const dialogs = document.querySelectorAll('.slide-dialog');
     dialogs.forEach(el => {
       el.closest('.el-dialog__wrapper').classList.add('slide-dialog-wrapper');
     });
+
   },
   methods: {
     formatterProgress(row, column) {
       return this.progress[row.progress_id] ?? '';
+    },
+            formatterCurrency(row, column) {
+      if(row.amount == null) return;
+      return '¥' + row.amount;
     },
   },
 };

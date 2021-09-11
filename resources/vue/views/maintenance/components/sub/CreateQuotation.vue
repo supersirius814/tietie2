@@ -8,7 +8,19 @@
           <tbody>
             <tr>
               <th>日時</th>
-              <td class="input-td"><input v-model="date" type="date" /></td>
+              <td class="input-td"><datetime v-model="date"   type="datetime"
+  input-class="my-class" placeholder="日付を選択してください。"
+  :format="{ year: 'numeric', 
+month: '2-digit', 
+day: '2-digit', 
+hour: 'numeric', 
+minute: '2-digit', 
+hour12: false}"
+  :phrases="{ok: 'Continue', cancel: 'Exit'}"
+  :hour-step="1"
+  :minute-step="60"
+  :week-start="7"
+  auto></datetime></td>
             </tr>
           </tbody>
         </table>
@@ -30,7 +42,7 @@
           <tbody>
             <tr>
               <th>金額</th>
-              <td class="input-td">  <currency-input v-model="amount" :options="{ currency: 'JPY' }" />
+              <td class="input-td">  <currency-input v-model="amount" :options="{ currency: 'JPY' }" class="el-input__inner"/>
                     <!-- <input v-model="amount" /> -->
               </td>
             </tr>
@@ -44,7 +56,7 @@
           <tbody>
             <tr>
               <th>摘要</th>
-              <td class="input-td"><input v-model="comment" /></td>
+              <td class="input-td"><input v-model="comment" class="el-input__inner"/></td>
             </tr>
           </tbody>
         </table>
@@ -138,8 +150,8 @@
       border
       style="width: 100%; margin-top: 2%"
     >
-      <el-table-column align="center" prop="date" label="日時" />
-      <el-table-column align="center" prop="amount" label="金額" />
+      <el-table-column align="center" prop="date" label="日時"  />
+      <el-table-column align="center" prop="amount" label="金額" :formatter="formatterCurrency"  />
       <el-table-column align="center" prop="comment" label="摘要" />
       <el-table-column align="center" prop="quotation_files_cnt" label="見積書" />
       <el-table-column align="center" prop="photo_files_cnt" label="写真" />
@@ -228,11 +240,16 @@
 <script>
 import MaintenanceResource from '@/api/maintenance';
 import CurrencyInput from './CurrencyInput.vue';
+import 'vue-datetime/dist/vue-datetime.css'
+import { Datetime } from 'vue-datetime';
+import { Settings } from 'luxon'
+import { DateTime } from 'luxon';
 
+Settings.defaultLocale = 'ja'
 const resource = new MaintenanceResource();
 
 export default {
-   components: { CurrencyInput },
+   components: { CurrencyInput, Datetime },
   props: {
     detail: {
       type: Object,
@@ -243,7 +260,6 @@ export default {
   },
   data() {
     return {
-      value11: 1234,
       userName: '',
       comment: '',
       date: '',
@@ -256,10 +272,13 @@ export default {
       this.userName = user.name;
     });
   },
+  
   methods: {
-    formatterProgress(row, column) {
-      return this.progress[row.progress_id] ?? '';
+    formatterCurrency(row, column) {
+      if(row.amount == null) return;
+      return '¥' + row.amount;
     },
+
     save() {
       // alert(this.detail.maintenance_id);
       // return false;
@@ -267,7 +286,7 @@ export default {
       this.$refs.uploadPhoto.submit();
       this.$refs.uploadQuotation.submit();
       const insertData = {
-        date: this.date,
+        date: DateTime.fromISO(this.date).toFormat('yyyy-MM-dd hh:mm'),
         comment: this.comment,
         amount: this.amount,
         quotation_files_cnt: this.detail.quotation_files.length,

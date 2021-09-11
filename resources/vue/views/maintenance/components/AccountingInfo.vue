@@ -4,9 +4,9 @@
 
     <el-table :data="detail.accounting_info" :show-header="true" border style="width: 100%">
       <el-table-column align="center" prop="accounting_year" label="会計年月" />
-      <el-table-column align="center" prop="unincluding_price" label="請求金額（税抜）" />
-      <el-table-column align="center" prop="accounting_amount" label="消費税" />
-      <el-table-column align="center" prop="including_price" label="請求金額（税込）" />
+      <el-table-column align="center" prop="unincluding_price" label="請求金額（税抜）" :formatter="formatterCurrency"/>
+      <el-table-column align="center" prop="accounting_amount" label="消費税" :formatter="formatterCurrency1"/>
+      <el-table-column align="center" prop="including_price" label="請求金額（税込）" :formatter="formatterCurrency2"/>
       <el-table-column align="center" prop="employee" label="科目" />
       <el-table-column align="center" prop="editor" label="入力者" width="100" />
     </el-table>
@@ -69,6 +69,18 @@ export default {
   },
 
   methods: {
+                formatterCurrency(row, column) {
+      if(row.unincluding_price == null) return;
+      return '¥' + row.unincluding_price;
+    },
+                formatterCurrency1(row, column) {
+      if(row.accounting_amount == null) return;
+      return '¥' + row.accounting_amount;
+    },
+                    formatterCurrency2(row, column) {
+      if(row.including_price == null) return;
+      return '¥' + row.including_price;
+    },
   },
 };
 </script>
