@@ -175,9 +175,6 @@ import { DateTime } from 'luxon';
 const resource = new MaintenanceResource();
 
 
-
-
-
 export default {
   components: { CurrencyInput, MonthPickerInput },
   props: {

@@ -280,8 +280,7 @@ export default {
     },
 
     save() {
-      // alert(this.detail.maintenance_id);
-      // return false;
+
       this.$refs.uploadReport.submit();
       this.$refs.uploadPhoto.submit();
       this.$refs.uploadQuotation.submit();

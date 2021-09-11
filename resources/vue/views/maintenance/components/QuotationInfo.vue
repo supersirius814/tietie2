@@ -173,7 +173,7 @@ export default {
       el.closest('.el-dialog__wrapper').classList.add('slide-dialog-wrapper');
     });
 
-  },
+  }, 
   methods: {
     formatterProgress(row, column) {
       return this.progress[row.progress_id] ?? '';
