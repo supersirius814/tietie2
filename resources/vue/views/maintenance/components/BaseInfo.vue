@@ -8,8 +8,8 @@
           <tbody>
             <tr>
               <th>店舗CD</th>
-              <td style="text-align:center">1174</td>
-              <td style="text-align:center">HS</td>
+              <td style="text-align:center">{{ detail.shop.shop_id }}</td>
+              <td style="text-align:center">{{ detail.shop.business_category.business_category }}</td>
             </tr>
             <tr>
               <th>TEL</th>
@@ -27,7 +27,7 @@
           <tbody>
             <tr>
               <th>店舗名</th>
-              <td>蒲郡竹谷</td>
+              <td> {{ detail.shop.shop_name }}</td>
             </tr>
             <tr>
               <th>FAX</th>
@@ -87,6 +87,12 @@
 <script>
 export default {
   props: {
+        detail: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
     user: {
       type: Object,
       default: () => {

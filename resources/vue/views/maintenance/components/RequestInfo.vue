@@ -222,7 +222,7 @@
       </span>
     </el-dialog>
     <el-dialog title="" :visible.sync="baseInfoVisible" width="700px" top="0px">
-      <base-info />
+      <base-info  :detail="detail"/>
     </el-dialog>
 
     <el-dialog
