@@ -109,4 +109,9 @@ class Maintenance extends Model
 	{
 		return $this->hasMany('App\Bmcategory_table');
 	}
+
+	public function customerInformation()
+	{
+		return $this->hasMany('App\Customer_information');
+	}
 }

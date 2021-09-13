@@ -1,6 +1,7 @@
 <template>
   <el-card class="box-card">
     <!-- {{detail}}wwww -->
+    <!-- {{detail.customerInformation}} -->
     <div slot="header" class="clearfix">
       <span>依頼情報</span>
      
@@ -101,7 +102,22 @@
           <tbody>
             <tr>
               <th>取引先コード</th>
-              <td>1111</td>
+              <td class="select-td">
+                <!-- <el-select v-model="progressId" size="small" :multiple="false" placeholder="中分類名" clearable style="width: 100%" class="filter-item">
+                    <el-option
+                      v-for="item in detail.customerInformation"
+                      :key="item.customer_id"
+                      :label="item.customer_code"
+                      :value="{ id: item.customer_code, name: item.customer_name }">{{ item.customer_code }}
+                    </el-option>
+                </el-select> -->
+<select v-model="custom" style="width: 100%; height: 36px; border-color: #C0C4CC; line-height: 32px;" class="filter-item" placeholder="" clearable size="small">
+  <option v-for="option in detail.customerInformation" v-bind:value="{ id: option.customer_code, name: option.customer_name, tel: option.TEL, fax: option.FAX }" >
+    {{ option.customer_code }}
+  </option>
+</select>
+
+              </td>
               <td style="border: none; padding: 0 5px; text-align: right">
                 <el-button
                   type="info"
@@ -117,12 +133,12 @@
           <tbody>
             <tr>
               <th>取引先名</th>
-              <td colspan="2">abc</td>
+              <td colspan="2">{{ custom.name }}</td>
             </tr>
             <tr>
               <th>TEL/FAX</th>
-              <td>0533-66-6277</td>
-              <td>0533-66-6277</td>
+              <td>{{custom.tel}}</td>
+              <td>{{custom.fax}}</td>
             </tr>
           </tbody>
         </table>
@@ -158,7 +174,7 @@
                 :preview-src-list="fileList"
               />
               <a href="#" style="margin-bottom: 10px; display: block; ">細部写真</a>
-              <el-image
+              <el-image     
                 style="width: 100px; height: 100px; display: block;  padding: 10px"
                 src="https://picsum.photos/id/2/300/200"
                 :preview-src-list="fileList"
@@ -250,7 +266,7 @@ import RequestInfoEdit from './sub/RequestInfoEdit.vue';
 export default {
   components: { CreateClientMail, BaseInfo, RequestInfoEdit },
   props: {
-  
+     selected: '',
     detail: {
       type: Object,
       default: () => {
@@ -263,7 +279,7 @@ export default {
   },
   data() {
     return {
-      
+      custom: 1,
      
       createMailVisible: false,
       baseInfoVisible: false,

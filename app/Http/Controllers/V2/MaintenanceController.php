@@ -19,6 +19,7 @@ use App\Photo_file;
 use App\Report_file;
 use App\Quotation_file;
 use App\Bmcategory_table;
+use App\Customer_information;  
 use App\Role;
 use App\Shop;
 
@@ -370,6 +371,9 @@ class MaintenanceController extends Controller
 
         $quotationm = Bmcategory_table::select('middle_id', 'middle_name')->distinct()->get();
         $maintenance['bmcategoryTable_middle'] = $quotationm; 
+
+        $quotationcus = Customer_information::select('customer_code', 'customer_name', 'customer_id', 'TEL', 'FAX')->distinct()->get();
+        $maintenance['customerInformation'] = $quotationcus; 
         // $quotation = DB::table('quotation_files')
         //     ->where('maintenance_id',$maintenance_id)
         //     ->get();
