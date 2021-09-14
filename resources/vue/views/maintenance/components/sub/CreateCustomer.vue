@@ -58,7 +58,7 @@
           <tbody>
             <tr>
               <th>区分コード</th>
-              <td class="input-td"><input value="" v-model="relation_code" class="el-input__inner"/></td>
+              <td class="input-td"><input value="" v-model="customergroup_code" class="el-input__inner"/></td>
               <!-- <td class="input-td"><input value="110000060" /></td> -->
             </tr>
           </tbody>
@@ -69,7 +69,7 @@
           <tbody>
             <tr>
               <th>区分</th>
-              <td class="input-td"><input value="" v-model="relation_code" class="el-input__inner"/></td>
+              <td class="input-td"><input value="" v-model="customergroup" class="el-input__inner"/></td>
             </tr>
           </tbody>
         </table>
@@ -135,7 +135,7 @@ export default {
     return {
       accounting_year: new Date(),
       format: "yyyy/MM/ddd",
-      customer_code: 2313,
+      customer_code: this.detail.customer_code,
       customer_name: '',
       customer_tel: '',
       customer_fax: '',
@@ -188,6 +188,8 @@ export default {
         this.customer_alias = res[res.length - 1].customer_alias;
         this.customer_tel = res[res.length - 1].TEL;
         this.customer_fax = res[res.length - 1].FAX;
+        this.customergroup = res[res.length - 1].customergroup;
+        this.customergroup_code = res[res.length - 1].customergroup_code;
         // console.log(res); 
         // this.customer_alias = res.customer_name;
         // [detail.customerInformation.length - 1]

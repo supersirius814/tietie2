@@ -282,7 +282,7 @@ class MaintenanceController extends Controller
 
     public function customsearch(Request $request, $custom_code)
     {
-        $result = Customer_information::select('customer_code', 'customer_name', 'customer_id', 'TEL', 'FAX', 'customer_alias')
+        $result = Customer_information::select('customer_code', 'customer_name', 'customer_id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
         ->distinct()
         ->where('customer_code', $custom_code)
         ->get();
