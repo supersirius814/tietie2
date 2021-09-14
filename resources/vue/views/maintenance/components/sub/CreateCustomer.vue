@@ -183,8 +183,13 @@ export default {
     customsearch() {
       // customer_code = this.customer_code;
       resource.customsearch(this.customer_code).then(res => {
-        // this.customer_name = res[].customer_name;
-        this.customer_alias = res;
+        this.customer_name = res[res.length - 1].customer_name;
+        this.customer_code = res[res.length - 1].customer_code;
+        this.customer_alias = res[res.length - 1].customer_alias;
+        this.customer_tel = res[res.length - 1].TEL;
+        this.customer_fax = res[res.length - 1].FAX;
+        // console.log(res); 
+        // this.customer_alias = res.customer_name;
         // [detail.customerInformation.length - 1]
       });
     },

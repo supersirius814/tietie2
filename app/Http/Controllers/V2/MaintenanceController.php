@@ -286,7 +286,7 @@ class MaintenanceController extends Controller
         ->distinct()
         ->where('customer_code', $custom_code)
         ->get();
-        echo $result;
+        // echo $result;
         return response($result);
     }
 
