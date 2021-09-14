@@ -46,11 +46,19 @@ class MaintenanceResource extends Resource {
         });
     }
 
+
     update(id, updateData) {
         return request({
             url: this.baseUrl + this.uri + '/' + id + '/put/update',
             method: 'post',
             data: updateData,
+        });
+    }
+
+    customsearch(id) {
+        return request({
+            url: this.baseUrl + this.uri + '/' + id + '/customsearch',
+            method: 'get',
         });
     }
 

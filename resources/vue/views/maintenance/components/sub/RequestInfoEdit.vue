@@ -1,5 +1,6 @@
 <template>
   <div>
+  <!-- {{detail.shop}} -->
     <el-checkbox v-model="data.is_emergency" :checked="data.is_emergency == 1" label="緊急・重要" />
     <el-checkbox v-model="data.is_disaster" :checked="data.is_disaster == 1" label="災害（地震・台風・大雨など）" />
     <br>
@@ -44,9 +45,9 @@
           <tbody>
             <tr>
               <th>取引先コード</th>
-              <td>11000000060</td>
+              <td>{{detail.customer_code}}</td>
               <td style="border:none;padding:0 5px;">
-                <el-button type="info" size="small" @click="createMailVisible = true">検索</el-button>
+                <el-button type="info" size="small" @click="createCustomerVisible = true">検索</el-button>
               </td>
             </tr>
           </tbody>
@@ -55,12 +56,12 @@
           <tbody>
             <tr>
               <th>取引先名</th>
-              <td colspan="2">パナソニック産機システムズ</td>
+              <td colspan="2">{{ detail.customerInformation[detail.customerInformation.length - 1].customer_name }}</td>
             </tr>
             <tr>
               <th>TEL/FAX</th>
-              <td>0533-66-6277</td>
-              <td>0533-66-6277</td>
+              <td>{{detail.customerInformation[detail.customerInformation.length - 1].TEL}}</td>
+              <td>{{detail.customerInformation[detail.customerInformation.length - 1].FAX}}</td>
             </tr>
           </tbody>
         </table>
@@ -188,16 +189,32 @@
         </tr>
       </tbody>
     </table>
+    <el-dialog
+      title="【取引先検索】"
+      :visible.sync="createCustomerVisible"
+      width="43%"
+      custom-class="slide-dialog"
+      top="0px"
+      :modal="false"
+    >
+      <create-customer :detail="detail"/>
+      <!-- <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="createAccounting = false">登録</el-button>
+        <el-button @click="createAccounting = false">閉じる</el-button>
+      </span> --> 
+    </el-dialog>    
   </div>
 </template>
 
 <script>
 import Resource from '@/api/resource';
 import MaintenanceResource from '@/api/maintenance';
+import CreateCustomer from './CreateCustomer.vue';
 
 const maintenanceResource = new MaintenanceResource();
 
 export default {
+  components: { CreateCustomer },
   props: {
     detail: {
       type: Object,
@@ -209,6 +226,7 @@ export default {
   data() {
     return {
       data: null,
+      createCustomerVisible: false,
       categories: [],
       subCategories: [],
       orderTypes: [],

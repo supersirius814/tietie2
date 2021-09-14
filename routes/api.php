@@ -94,6 +94,9 @@ Route::group(['namespace' => 'V2'], function () {
     Route::post('v2/maintenance/upload/photo/{mantenance_id}', 'MaintenanceController@uploadPhoto');
     Route::post('v2/maintenance/upload/quotation/{mantenance_id}', 'MaintenanceController@uploadQuotation');
 
+
+    Route::get('v2/maintenance/{mantenance_id}/customsearch', 'MaintenanceController@customsearch');
+
     Route::get('v2/maintenance/{mantenance_id}/photo_files', 'MaintenanceController@getPhotoFiles');
     Route::get('v2/maintenance/{mantenance_id}/report_files', 'MaintenanceController@getReportFiles');
     Route::get('v2/maintenance/{mantenance_id}/quotation_files', 'MaintenanceController@getQuotationFiles');//tie9.5 add

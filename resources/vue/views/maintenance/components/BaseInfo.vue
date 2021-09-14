@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- {{ detail.shop }} -->
     <h3>基本情報</h3>
 
     <el-row :gutter="0">
@@ -13,11 +14,11 @@
             </tr>
             <tr>
               <th>TEL</th>
-              <td colspan="2" style="text-align:center">0533-66-6277</td>
+              <td colspan="2" style="text-align:center">{{detail.shop.shop_phone_number}}</td>
             </tr>
             <tr>
               <th>開店日</th>
-              <td colspan="2" style="text-align:center">2014/01/28</td>
+              <td colspan="2" style="text-align:center">{{ detail.shop.shop_open_date }}</td>
             </tr>
           </tbody>
         </table>
@@ -31,11 +32,11 @@
             </tr>
             <tr>
               <th>FAX</th>
-              <td>0533-66-6277</td>
+              <td>{{ detail.shop.shop_fax_number }}</td>
             </tr>
             <tr>
               <th>店舗担当</th>
-              <td>高橋</td>
+              <td>{{ userName }}</td>
             </tr>
           </tbody>
         </table>
@@ -107,6 +108,8 @@ export default {
   },
   data() {
     return {
+      
+      userName: '',
       tableData: [
         { title: '地域会社', name: '-', manager: '-', to: false, cc: false },
         { title: '営業部', name: '西日本', manager: '町野', to: false, cc: false },
@@ -115,6 +118,11 @@ export default {
         { title: 'エリア', name: '安城', manager: '細川', to: false, cc: false },
       ],
     };
+  },
+  created(){
+    this.$store.dispatch('user/getInfo').then(user => {
+      this.userName = user.name;
+    });
   },
   methods: {
   },

@@ -183,7 +183,7 @@ export default {
     customsearch() {
       // customer_code = this.customer_code;
       resource.customsearch(this.customer_code).then(res => {
-        this.customer_name = res[].customer_name;
+        // this.customer_name = res[].customer_name;
         this.customer_alias = res;
         // [detail.customerInformation.length - 1]
       });

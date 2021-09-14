@@ -280,6 +280,16 @@ class MaintenanceController extends Controller
         return response($files);
     }
 
+    public function customsearch(Request $request, $custom_code)
+    {
+        $result = Customer_information::select('customer_code', 'customer_name', 'customer_id', 'TEL', 'FAX', 'customer_alias')
+        ->distinct()
+        ->where('customer_code', $custom_code)
+        ->get();
+        echo $result;
+        return response($result);
+    }
+
     public function getReportFiles(Request $request, $maintenance_id)
     {
         $files = Report_file::where('maintenance_id', $maintenance_id)->get();
@@ -357,22 +367,26 @@ class MaintenanceController extends Controller
             'shop.business_category',
             'orderType', 'progress',
             'user',
+
             'maintenanceProgress.entered_by',
             'maintenanceImages',
             'orderReasons',
             'category', 'subCategory',
             'maintenanceMatters.matter_value',
             'maintenanceMatters.matter_option',
-            'photoFiles', 'reportFiles', 'quotationFiles', 'quotationInfo', 'accountingInfo',
+            'photoFiles', 'reportFiles', 'quotationFiles', 'quotationInfo', 'accountingInfo'
         ])->find($maintenance_id);
 
-        $quotation = Bmcategory_table::select('big_id','big_name')->distinct()->get();
-        $maintenance['bmcategoryTable_big'] = $quotation; 
+        // $quotation = Bmcategory_table::select('big_id','big_name')->distinct()->get();
+        // $maintenance['bmcategoryTable_big'] = $quotation; 
 
-        $quotationm = Bmcategory_table::select('middle_id', 'middle_name')->distinct()->get();
-        $maintenance['bmcategoryTable_middle'] = $quotationm; 
+        // $quotationm = Bmcategory_table::select('middle_id', 'middle_name')->distinct()->get();
+        // $maintenance['bmcategoryTable_middle'] = $quotationm; 
 
-        $quotationcus = Customer_information::select('customer_code', 'customer_name', 'customer_id', 'TEL', 'FAX')->distinct()->get();
+        $quotationcus = Customer_information::select('customer_code', 'customer_name', 'customer_id', 'TEL', 'FAX')
+            ->distinct()
+            ->where('customer_code', $maintenance['customer_code'])
+            ->get();
         $maintenance['customerInformation'] = $quotationcus; 
         // $quotation = DB::table('quotation_files')
         //     ->where('maintenance_id',$maintenance_id)

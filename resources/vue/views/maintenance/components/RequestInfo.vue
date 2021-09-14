@@ -1,7 +1,8 @@
 <template>
   <el-card class="box-card">
     <!-- {{detail}}wwww -->
-    <!-- {{detail.customerInformation}} -->
+    <!-- {{detail.shop}} -->
+    <!-- {{detail.maintenance_progress[detail.maintenance_progress.length - 1].created_at}}  -->
     <div slot="header" class="clearfix">
       <span>依頼情報</span>
      
@@ -60,7 +61,7 @@
           <tbody>
             <tr>
               <th>大分類*</th>
-              <td class="select-td">
+              <!-- <td class="select-td">
                 <el-select size="small" :multiple="false" placeholder="大分類名" clearable style="width: 100%" class="filter-item" v-model="detail.bmcategoryTable_big.big_id">
                     <el-option
                       v-for="item in detail.bmcategoryTable_big"
@@ -69,13 +70,13 @@
                       :value="item.big_id">
                     </el-option>
                 </el-select>
-              </td>
-              <!-- <td>{{ detail.category ? detail.category.category_name : '' }}</td> -->
+              </td> -->
+              <td>{{ detail.category ? detail.category.category_name : '' }}</td>
             </tr>
             <tr>
               <th>中分類*</th>
-              <!-- <td>{{ detail.sub_category ? detail.sub_category.sub_category_name : '' }}</td> -->
-              <td class="select-td">
+              <td>{{ detail.sub_category ? detail.sub_category.sub_category_name : '' }}</td>
+              <!-- <td class="select-td">
                 <el-select v-model="detail.bmcategoryTable_middle.middle_id" size="small" :multiple="false" placeholder="中分類名" clearable style="width: 100%" class="filter-item">
                     <el-option
                       v-for="item in detail.bmcategoryTable_middle"
@@ -84,7 +85,7 @@
                       :value="item.middle_id">
                     </el-option>
                 </el-select>
-              </td>
+              </td> -->
             </tr>
           </tbody>
         </table>
@@ -102,7 +103,7 @@
           <tbody>
             <tr>
               <th>取引先コード</th>
-              <td class="select-td">
+              <td> {{detail.customer_code}}
                 <!-- <el-select v-model="progressId" size="small" :multiple="false" placeholder="中分類名" clearable style="width: 100%" class="filter-item">
                     <el-option
                       v-for="item in detail.customerInformation"
@@ -111,11 +112,11 @@
                       :value="{ id: item.customer_code, name: item.customer_name }">{{ item.customer_code }}
                     </el-option>
                 </el-select> -->
-<select v-model="custom" style="width: 100%; height: 36px; border-color: #C0C4CC; line-height: 32px;" class="filter-item" placeholder="" clearable size="small">
+<!-- <select v-model="custom" style="width: 100%; height: 36px; border-color: #C0C4CC; line-height: 32px;" class="filter-item" placeholder="" clearable size="small">
   <option v-for="option in detail.customerInformation" v-bind:value="{ id: option.customer_code, name: option.customer_name, tel: option.TEL, fax: option.FAX }" >
     {{ option.customer_code }}
   </option>
-</select>
+</select> -->
 
               </td>
               <td style="border: none; padding: 0 5px; text-align: right">
@@ -133,12 +134,12 @@
           <tbody>
             <tr>
               <th>取引先名</th>
-              <td colspan="2">{{ custom.name }}</td>
+              <td colspan="2">{{ detail.customerInformation[detail.customerInformation.length - 1].customer_name }}</td>
             </tr>
             <tr>
               <th>TEL/FAX</th>
-              <td>{{custom.tel}}</td>
-              <td>{{custom.fax}}</td>
+              <td>{{detail.customerInformation[detail.customerInformation.length - 1].TEL}}</td>
+              <td>{{detail.customerInformation[detail.customerInformation.length - 1].FAX}}</td>
             </tr>
           </tbody>
         </table>
@@ -279,8 +280,7 @@ export default {
   },
   data() {
     return {
-      custom: 1,
-     
+      // customerInformation: this.detail.customerInformation,
       createMailVisible: false,
       baseInfoVisible: false,
       editVisible: false,
