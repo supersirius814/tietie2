@@ -9,6 +9,7 @@
             <tr>
               <th>取引先コード</th>
               <td class="input-td">
+                <input value="" v-model="customer_id" class="el-input__inner" style="display:none"/>
                 <input value="" v-model="customer_code" class="el-input__inner"/>
                 <!-- <select v-model="custom" style="width: 100%; height: 36px; border-color: #C0C4CC; line-height: 32px;" class="filter-item" placeholder="" clearable size="small">
                   <option v-for="option in detail.customerInformation" v-bind:value="{ id: option.customer_code, name: option.customer_name, tel: option.TEL, fax: option.FAX }" >
@@ -102,11 +103,25 @@
       <el-button type="info" size="small" @click="customsearch()">検索</el-button>
     </el-row>
     <div style="text-align: right; padding-bottom: 15px;">
-      <el-button type="primary" size="small" @click="save()">選択</el-button>
+      <el-button type="primary" size="small" @click="select()">選択</el-button>
       <el-button type="default" size="small">閉じる</el-button>
     </div>    
 
-
+    <el-table
+      :data="custom"
+      :show-header="true"
+      border
+      style="width: 100%; margin: auto"
+    >
+      <el-table-column align="center" prop="customer_id" label="NO"></el-table-column>
+      <el-table-column align="center" prop="customer_code" label="取引先コード"></el-table-column>
+      <el-table-column align="center" prop="customer_name" label="取引先名"></el-table-column>
+      <el-table-column align="center" prop="customer_alias" label="取引先名(カナ)"></el-table-column>
+      <el-table-column align="center" prop="customergroup_code" label="区分コード"></el-table-column>
+      <el-table-column align="center" prop="customergroup" label="区分"></el-table-column>
+      <el-table-column align="center" prop="TEL" label="TEL"></el-table-column>
+      <el-table-column align="center" prop="FAX" label="FAX"></el-table-column>
+    </el-table>
   </div>
 
 </template>
@@ -133,15 +148,17 @@ export default {
   },
   data() {
     return {
+      custom: [],
       accounting_year: new Date(),
       format: "yyyy/MM/ddd",
       customer_code: this.detail.customer_code,
+      customer_id: 0,
       customer_name: '',
       customer_tel: '',
       customer_fax: '',
       customer_alias: '',
-      relation_code: '',
-      employee: '',
+      customergroup_code: '',
+      customergroup: '',
       faxedToClient: 0,
       faxedToShop: 0,
       progressId: 1,
@@ -183,6 +200,7 @@ export default {
     customsearch() {
       // customer_code = this.customer_code;
       resource.customsearch(this.customer_code).then(res => {
+        this.custom = res;
         this.customer_name = res[res.length - 1].customer_name;
         this.customer_code = res[res.length - 1].customer_code;
         this.customer_alias = res[res.length - 1].customer_alias;
@@ -190,36 +208,30 @@ export default {
         this.customer_fax = res[res.length - 1].FAX;
         this.customergroup = res[res.length - 1].customergroup;
         this.customergroup_code = res[res.length - 1].customergroup_code;
+        this.customer_id = res[res.length - 1].customer_id;
         // console.log(res); 
         // this.customer_alias = res.customer_name;
         // [detail.customerInformation.length - 1]
       });
     },
-    save() {
-    
-      const insertData = {
-        relation_code: this.relation_code,
-        relation_name: this.relation_name,
-        unincluding_price: this.unincluding_price,
-        including_price: this.including_price,
-        accounting_year: this.accounting_year.year + '-' + ('0'+this.accounting_year.monthIndex).slice(-2),
-        editor: this.userName,
-        employee: this.employee,
-        accounting_amount: this.accounting_amount,
-      };
-      resource.createAccounting(this.detail.maintenance_id, insertData).then(res => {
-        this.detail.accounting_info = res;
-        this.detail.progress_id = this.progressId;
-        this.detail.progress = {
-          progress_id: this.progressId,
-          status: this.progress[this.progressId],
-          // updated_at: this.detail.maintenance_id,
-        };
+    select() {
+      const updatedata = {customer_code: this.customer_code};
+      // alert(this.detail.maintenance_id); return false;
+      resource.update_customerid(this.detail.maintenance_id, updatedata).then(res => {
+        this.detail.customer_code = this.customer_code;
+        // this.customer_code = res;
+        // this.detail.accounting_info = res;
+        // this.detail.progress_id = this.progressId;
+        // this.detail.progress = {
+        //   progress_id: this.progressId,
+        //   status: this.progress[this.progressId],
+        //   // updated_at: this.detail.maintenance_id,
+        // };
        
         // this.comment = '';
         // this.faxedToClient = false;
         // this.faxedToShop = false;
-        this.$emit('create');
+        // this.$emit('create');
       });
     },
 

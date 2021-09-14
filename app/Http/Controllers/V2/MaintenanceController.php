@@ -289,6 +289,15 @@ class MaintenanceController extends Controller
         // echo $result;
         return response($result);
     }
+    
+
+    public function update_customerid(Request $request, $maintenance_id)
+    {
+        $aa = $request->input('customer_code');
+        // echo "cdod == >>>> ".$aa.">>>>>>>".$maintenance_id; die;
+        $files = Maintenance::where('maintenance_id', $maintenance_id)->update(['customer_code'=> $aa]);
+        return response($files);
+    }
 
     public function getReportFiles(Request $request, $maintenance_id)
     {

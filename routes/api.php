@@ -96,6 +96,7 @@ Route::group(['namespace' => 'V2'], function () {
 
 
     Route::get('v2/maintenance/{mantenance_id}/customsearch', 'MaintenanceController@customsearch');
+    Route::post('v2/maintenance/{mantenance_id}/update_customerid', 'MaintenanceController@update_customerid');
 
     Route::get('v2/maintenance/{mantenance_id}/photo_files', 'MaintenanceController@getPhotoFiles');
     Route::get('v2/maintenance/{mantenance_id}/report_files', 'MaintenanceController@getReportFiles');

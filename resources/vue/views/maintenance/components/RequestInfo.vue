@@ -281,6 +281,7 @@ export default {
   data() {
     return {
       // customerInformation: this.detail.customerInformation,
+    
       createMailVisible: false,
       baseInfoVisible: false,
       editVisible: false,

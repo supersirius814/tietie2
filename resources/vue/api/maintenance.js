@@ -82,6 +82,13 @@ class MaintenanceResource extends Resource {
             method: 'get',
         });
     }
+    update_customerid(id, updateData) {
+        return request({
+            url: this.baseUrl + this.uri + '/' + id + '/update_customerid',
+            method: 'post',
+            data: updateData,
+        });
+    }
 }
 
 export { MaintenanceResource as default };
