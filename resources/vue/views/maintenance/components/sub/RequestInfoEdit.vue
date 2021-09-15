@@ -1,6 +1,6 @@
 <template>
   <div>
-  {{subCategories}}
+  <!-- {{subCategories}} -->
     <el-checkbox v-model="data.is_emergency" :checked="data.is_emergency == 1" label="緊急・重要" />
     <el-checkbox v-model="data.is_disaster" :checked="data.is_disaster == 1" label="災害（地震・台風・大雨など）" />
     <br>
