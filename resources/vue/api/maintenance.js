@@ -89,6 +89,12 @@ class MaintenanceResource extends Resource {
             data: updateData,
         });
     }
+    big_middleconnect(id) {
+        return request({
+            url: this.baseUrl + this.uri + '/' + id + '/big_middleconnect',
+            method: 'get',
+        });
+    }
 }
 
 export { MaintenanceResource as default };

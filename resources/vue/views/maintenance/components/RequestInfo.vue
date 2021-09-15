@@ -228,7 +228,7 @@
     <el-dialog
       title="【取引先メール作成】"
       :visible.sync="createMailVisible"
-      width="700px"
+      width="45%"
     >
       <create-client-mail />
       <span slot="footer" class="dialog-footer">

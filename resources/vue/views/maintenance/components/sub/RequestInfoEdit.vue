@@ -1,6 +1,6 @@
 <template>
   <div>
-  <!-- {{detail.shop}} -->
+  {{subCategories}}
     <el-checkbox v-model="data.is_emergency" :checked="data.is_emergency == 1" label="緊急・重要" />
     <el-checkbox v-model="data.is_disaster" :checked="data.is_disaster == 1" label="災害（地震・台風・大雨など）" />
     <br>
@@ -12,7 +12,7 @@
             <tr>
               <th>大分類*</th>
               <td class="select-td">
-                <el-select v-model="data.category_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+                <el-select v-model="data.category_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item" v-on:change="big_middleconnect()">
                   <el-option v-for="item in categories" :key="item.category_id" :label="item.category_name" :value="item.category_id" />
                 </el-select>
               </td>
@@ -250,6 +250,14 @@ export default {
     this.getList();
   },
   methods: {
+
+    big_middleconnect () {
+            // alert(this.data.category_id);
+            // alert("ddd");
+            maintenanceResource.big_middleconnect(this.data.category_id).then(res =>{
+                this.subCategories = res;
+            }); 
+    },
     async getList() {
       const categoryResource = new Resource('categories');
       const subCategoryResource = new Resource('sub_categories');

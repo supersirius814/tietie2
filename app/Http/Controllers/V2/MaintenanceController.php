@@ -22,7 +22,7 @@ use App\Bmcategory_table;
 use App\Customer_information;  
 use App\Role;
 use App\Shop;
-
+use App\Sub_category;
 use DB;
 use Validator;
 
@@ -290,6 +290,16 @@ class MaintenanceController extends Controller
         return response($result);
     }
     
+
+    public function big_middleconnect(Request $request, $category_id)
+    {
+        $result = Sub_category::select('sub_category_id', 'category_id', 'sub_category_name')
+        ->distinct()
+        ->where('category_id', $category_id)
+        ->get();
+        // echo $result;
+        return response($result);
+    }
 
     public function update_customerid(Request $request, $maintenance_id)
     {
