@@ -3,7 +3,7 @@
   <div>
 
     <el-row :gutter="20">
-      <el-col :span="10">
+      <el-col :span="15">
         <table class="detail-table">
           <tbody>
             <tr>
@@ -104,7 +104,7 @@
     </el-row>
     <div style="text-align: right; padding-bottom: 15px;">
       <el-button type="primary" size="small" @click="select()">選択</el-button>
-      <el-button type="default" size="small">閉じる</el-button>
+      <el-button type="default" size="small" @click="$emit('close')">閉じる</el-button>
     </div>    
 
     <el-table
@@ -215,13 +215,16 @@ export default {
       });
     },
     select() {
-      const updatedata = {customer_code: this.customer_code};
+      const updatedata = {
+        customer_code: this.customer_code,
+      };
       // alert(this.detail.maintenance_id); return false;
       resource.update_customerid(this.detail.maintenance_id, updatedata).then(res => {
         this.detail.customer_code = this.customer_code;
+        // this.hide();
         // this.customer_code = res;
         // this.detail.accounting_info = res;
-        // this.detail.progress_id = this.progressId;
+        // this.detail.progress_id = this.progressId; 
         // this.detail.progress = {
         //   progress_id: this.progressId,
         //   status: this.progress[this.progressId],
@@ -231,8 +234,10 @@ export default {
         // this.comment = '';
         // this.faxedToClient = false;
         // this.faxedToShop = false;
-        // this.$emit('create');
+        
       });
+      // alert(createCustomerVisible);
+      this.$emit('create');
     },
 
     getPhotoFiles() {
