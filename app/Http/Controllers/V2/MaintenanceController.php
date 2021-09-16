@@ -282,12 +282,19 @@ class MaintenanceController extends Controller
 
     public function customsearch(Request $request, $custom_code)
     {
-        $result = Customer_information::select('customer_code', 'customer_name', 'customer_id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
+        $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
         ->distinct()
         ->where('customer_code', $custom_code)
         ->get();
+        if(Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
+        ->distinct()
+        ->where('customer_code', $custom_code)->exists()) {
+            return response($result);
+        }
+        else return response(0);
+        // var_export($result->customer_code); die;
         // echo $result;
-        return response($result);
+        
     }
     
 
@@ -303,10 +310,42 @@ class MaintenanceController extends Controller
 
     public function update_customerid(Request $request, $maintenance_id)
     {
-        $aa = $request->input('customer_code');
-        // echo "cdod == >>>> ".$aa.">>>>>>>".$maintenance_id; die;
+        $id = $request->input('id');
+        if($id > 0) {
+            $aa = $request->input('customer_code');
+            // echo "cdod == >>>> ".$aa.">>>>>>>".$maintenance_id; die;
+       
+        }
+        else {
+
+
+            $row = new Customer_information();
+            $row->customer_code = $request->input('customer_code');
+            $row->customer_name = $request->input('customer_name');
+            $row->customer_alias = $request->input('customer_alias');
+            $row->customergroup = $request->input('customergroup');
+            $row->customergroup_code = $request->input('customergroup_code');
+            $row->TEL = $request->input('customer_tel');
+            $row->FAX = $request->input('customer_fax');
+            $row->save();
+            // echo "input";
+            // die;
+
+            $aa = $request->input('customer_code');
+            $maintenance = Maintenance::find($maintenance_id);
+            $maintenance->customer_code = $request->input('customer_code');
+            $maintenance->save();
+        }
+        // echo $aa;
+
         $files = Maintenance::where('maintenance_id', $maintenance_id)->update(['customer_code'=> $aa]);
-        return response($files);
+
+
+        $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
+        ->distinct()
+        ->where('customer_code', $aa)
+        ->get();
+        return response($result);    
     }
 
     public function getReportFiles(Request $request, $maintenance_id)

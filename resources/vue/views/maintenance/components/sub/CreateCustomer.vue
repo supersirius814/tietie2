@@ -1,7 +1,7 @@
 <template>
 
   <div>
-
+<!-- {{this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL }} -->
     <el-row :gutter="20">
       <el-col :span="15">
         <table class="detail-table">
@@ -9,7 +9,7 @@
             <tr>
               <th>取引先コード</th>
               <td class="input-td">
-                <input value="" v-model="customer_id" class="el-input__inner" style="display:none"/>
+                <input value="" v-model="id" class="el-input__inner" style="display:none"/>
                 <input value="" v-model="customer_code" class="el-input__inner"/>
                 <!-- <select v-model="custom" style="width: 100%; height: 36px; border-color: #C0C4CC; line-height: 32px;" class="filter-item" placeholder="" clearable size="small">
                   <option v-for="option in detail.customerInformation" v-bind:value="{ id: option.customer_code, name: option.customer_name, tel: option.TEL, fax: option.FAX }" >
@@ -113,7 +113,7 @@
       border
       style="width: 100%; margin: auto"
     >
-      <el-table-column align="center" prop="customer_id" label="NO"></el-table-column>
+      <el-table-column align="center" prop="id" label="NO"></el-table-column>
       <el-table-column align="center" prop="customer_code" label="取引先コード"></el-table-column>
       <el-table-column align="center" prop="customer_name" label="取引先名"></el-table-column>
       <el-table-column align="center" prop="customer_alias" label="取引先名(カナ)"></el-table-column>
@@ -152,7 +152,7 @@ export default {
       accounting_year: new Date(),
       format: "yyyy/MM/ddd",
       customer_code: this.detail.customer_code,
-      customer_id: 0,
+      id: 0,
       customer_name: '',
       customer_tel: '',
       customer_fax: '',
@@ -208,34 +208,45 @@ export default {
         this.customer_fax = res[res.length - 1].FAX;
         this.customergroup = res[res.length - 1].customergroup;
         this.customergroup_code = res[res.length - 1].customergroup_code;
-        this.customer_id = res[res.length - 1].customer_id;
+        this.id = res[res.length - 1].id;
         // console.log(res); 
         // this.customer_alias = res.customer_name;
         // [detail.customerInformation.length - 1]
       });
     },
     select() {
-      const updatedata = {
-        customer_code: this.customer_code,
-      };
-      // alert(this.detail.maintenance_id); return false;
-      resource.update_customerid(this.detail.maintenance_id, updatedata).then(res => {
-        this.detail.customer_code = this.customer_code;
-        // this.hide();
-        // this.customer_code = res;
-        // this.detail.accounting_info = res;
-        // this.detail.progress_id = this.progressId; 
-        // this.detail.progress = {
-        //   progress_id: this.progressId,
-        //   status: this.progress[this.progressId],
-        //   // updated_at: this.detail.maintenance_id,
-        // };
-       
-        // this.comment = '';
-        // this.faxedToClient = false;
-        // this.faxedToShop = false;
+      resource.customsearch(this.customer_code).then(res => {
         
+          if(res == 0) {
+            this.id = 0;
+            alert(res);
+          }
+          else this.id = res[res.length - 1].id;
+          
+
+          const updatedata = {
+            id: this.id,
+            customer_code: this.customer_code,
+            customer_tel: this.customer_tel,
+            customer_alias: this.customer_alias,
+            customer_fax: this.customer_fax,
+            customergroup_code: this.customergroup_code,
+            customergroup: this.customergroup,
+            customer_name: this.customer_name,
+            
+          };
+          
+          // alert(this.detail.maintenance_id); return false;
+          resource.update_customerid(this.detail.maintenance_id, updatedata).then(res => {
+            this.detail.customer_code = this.customer_code;
+            this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL = res[res.length - 1].TEL; 
+            this.detail.customerInformation[this.detail.customerInformation.length - 1].FAX = res[res.length - 1].FAX; 
+            this.detail.customerInformation[this.detail.customerInformation.length - 1].customer_name = res[res.length - 1].customer_name;
+          });
+          // alert(this.customer_id);
       });
+      // alert(this.customer_id); return false;
+
       // alert(createCustomerVisible);
       this.$emit('create');
     },
