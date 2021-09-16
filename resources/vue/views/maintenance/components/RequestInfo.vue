@@ -187,7 +187,7 @@
             >
               <el-image
                 style="width: 100px; height: 100px; display: block; padding: 10px "
-                :src="firstimage"
+                :src="aa"
                 :preview-src-list="fileList"
               />
               <a href="#" style="margin-bottom: 10px; display: block">全体写真</a>
@@ -335,6 +335,7 @@ export default {
     return {
       // customerInformation: this.detail.customerInformation,
       firstimage: '',
+      aa: 'https://s3.us-west-1.amazonaws.com/aws-codestar-us-west-1-369921469778/zensho-mainte/images/101/M000000101_SK_999998_20210720_1.jpg',
       secondimage: '',
       thirdimage: '',
       createMailVisible: false,
