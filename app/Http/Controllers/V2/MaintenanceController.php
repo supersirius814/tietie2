@@ -370,7 +370,7 @@ class MaintenanceController extends Controller
         $file_name = $request->input('file_name');
         // var_export($file_name); die;
 		$image = Storage::disk('s3')->get("zensho-mainte/images/$maintenance_id/$file_name");  
-		header('Content-type: image/jpeg');
+		// header('Content-type: image/jpeg');
 		// echo $image;
         return response($image);
         // echo "dkdkdkdk//ddkkddkdk";
