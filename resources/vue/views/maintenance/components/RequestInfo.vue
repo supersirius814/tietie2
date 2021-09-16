@@ -1,6 +1,6 @@
 <template>
   <el-card class="box-card">
-    <!-- {{ detail.maintenance_images[0].file_name }} -->
+    <!-- {{ detail.maintenance_images }} -->
     <!-- {{detail.order_type.order_type_id}} -->
 
 
@@ -187,19 +187,19 @@
             >
               <el-image
                 style="width: 100px; height: 100px; display: block; padding: 10px "
-                src="https://picsum.photos/id/0/300/200"
+                :src="getImage(this.detail.maintenance_images[0].file_name)"
                 :preview-src-list="fileList"
               />
               <a href="#" style="margin-bottom: 10px; display: block">全体写真</a>
               <el-image
                 style="width: 100px; height: 100px; display: block;  padding: 10px"
-                src="https://picsum.photos/id/1/300/200"
+                :src="getImage(this.detail.maintenance_images[1].file_name)"
                 :preview-src-list="fileList"
               />
               <a href="#" style="margin-bottom: 10px; display: block; ">細部写真</a>
               <el-image     
                 style="width: 100px; height: 100px; display: block;  padding: 10px"
-                src="https://picsum.photos/id/2/300/200"
+                :src="getImage(this.detail.maintenance_images[2].file_name)"
                 :preview-src-list="fileList"
               />
               <a href="#" style="margin-bottom: 10px; display: block">型番写真</a>
@@ -334,7 +334,7 @@ export default {
   data() {
     return {
       // customerInformation: this.detail.customerInformation,
-    
+      imageone: '',
       createMailVisible: false,
       setting: false,
       baseInfoVisible: false,
@@ -367,7 +367,11 @@ export default {
     });
   },
   created() {
-    this.getImage();
+    // alert(this.detail.maintenance_images[1].file_name)
+    // this.getImage(this.detail.maintenance_images[1].file_name);
+    // this.getImageone();
+    // this.getImagetwo();
+    // this.getImagethree();
   },
   methods: {
     async save(){
@@ -376,9 +380,10 @@ export default {
       this.$emit('get-detail');
     },
 
-    getImage() {
+    getImage(imageone) {
+      // alert(imageone);
       const data = {
-        file_name: this.detail.maintenance_images[0].file_name,
+        file_name: imageone,
       }
       // alert(this.detail.maintenance_images[0].file_name)
       // alert(this.detail.maintenance_id);
@@ -387,7 +392,7 @@ export default {
 
       });
     },
-
+  
   },
 };
 </script>
