@@ -264,7 +264,7 @@
     <el-dialog
       title="【依頼内容】"
       :visible.sync="setting"
-      width="45%"
+      width="45%" 
     >
     <create-setting :detail="detail"/>
       <span slot="footer" class="dialog-footer">
