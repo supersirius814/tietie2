@@ -4,6 +4,7 @@ namespace App\Http\Controllers\V2;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Storage;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,7 +20,8 @@ use App\Photo_file;
 use App\Report_file;
 use App\Quotation_file;
 use App\Bmcategory_table;
-use App\Customer_information;  
+use App\Customer_information;
+use App\Order_reason;
 use App\Role;
 use App\Shop;
 use App\Sub_category;
@@ -308,6 +310,21 @@ class MaintenanceController extends Controller
         return response($result);
     }
 
+    public function selectreason(Request $request, $maintenance_id)
+    {
+        $maintenance = Maintenance::find($maintenance_id);
+        $maintenance->order_reason_id = $request->input('reason'); 
+
+        if($request->input('other')) $maintenance->order_type_other_text = $request->input('other');
+        $maintenance->save();
+
+        $order_reason = Order_reason::find($request->input('reason'));       
+        // $order_reason['other'] = $request->input('other');
+        
+        return response($order_reason);  
+
+    }
+
     public function update_customerid(Request $request, $maintenance_id)
     {
         $id = $request->input('id');
@@ -347,6 +364,15 @@ class MaintenanceController extends Controller
         ->get();
         return response($result);    
     }
+
+	public function getImage(Request $request, $maintenance_id)
+	{
+        $file_name = $request->input('file_name');
+        // var_export($file_name); die;
+		$image = Storage::disk('s3')->get("zensho-mainte/images/$maintenance_id/$file_name");  
+		header('Content-type: image/jpeg');
+		echo $image;
+	}
 
     public function getReportFiles(Request $request, $maintenance_id)
     {
@@ -446,6 +472,12 @@ class MaintenanceController extends Controller
             ->where('customer_code', $maintenance['customer_code'])
             ->get();
         $maintenance['customerInformation'] = $quotationcus; 
+
+        $order_reason = Order_reason::select('order_reason_id', 'reason')
+            ->distinct()
+            ->where('order_reason_id', $maintenance['order_reason_id'])
+            ->get();
+        $maintenance['order_reason'] = $order_reason; 
         // $quotation = DB::table('quotation_files')
         //     ->where('maintenance_id',$maintenance_id)
         //     ->get();

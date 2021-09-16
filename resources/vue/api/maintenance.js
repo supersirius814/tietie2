@@ -76,12 +76,29 @@ class MaintenanceResource extends Resource {
         });
     }
 
+    getImage(id, updateData) {
+        return request({
+            url: this.baseUrl + this.uri + '/' + id + '/getImage',
+            method: 'post',
+            data: updateData,
+        });
+    }
+
     getQuotationFiles(id) {
         return request({
             url: this.baseUrl + this.uri + '/' + id + '/quotation_files',
             method: 'get',
         });
     }
+
+    selectreason(id, updateData) {
+        return request({
+            url: this.baseUrl + this.uri + '/' + id + '/selectreason',
+            method: 'post',
+            data: updateData,
+        });
+    }
+
     update_customerid(id, updateData) {
         return request({
             url: this.baseUrl + this.uri + '/' + id + '/update_customerid',

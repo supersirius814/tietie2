@@ -1,8 +1,10 @@
 <template>
   <el-card class="box-card">
-    <!-- {{detail}}wwww -->
-    <!-- {{detail.shop}} -->
-    <!-- {{detail.maintenance_progress[detail.maintenance_progress.length - 1].created_at}}  -->
+    <!-- {{ detail.maintenance_images[0].file_name }} -->
+    <!-- {{detail.order_type.order_type_id}} -->
+
+
+
     <div slot="header" class="clearfix">
       <span>依頼情報</span>
      
@@ -93,7 +95,27 @@
           <tbody>
             <tr>
               <th>依頼区分*</th>
-              <td>{{ detail.order_type.type }}</td>
+              <td style=" display: flex">
+                  <el-button v-if="detail.order_type.order_type_id > 3"
+                  style="width: 100%; background-color: transparant; border: 0;"
+                  width="70%"
+                  @click="setting = true"
+                >{{ detail.order_type.type }}</el-button>
+                  <el-button 
+                      v-if="detail.order_type.order_type_id > 3" 
+                      @click="otherinfo = true"
+                      style="width: 30%; background-color: transparant; border: 0; color:blue;">&#128489;</el-button>
+
+                  <el-button v-if="detail.order_type.order_type_id < 4"
+                  style="width: 100%; background-color: transparant; border: 0"
+                  width="100%"
+                  @click="setting = true"
+                >{{ detail.order_type.type }}({{detail.order_reason[0].reason}})</el-button>
+         
+                </td>
+                <!-- <td>
+                  <el-button v-if="detail.order_type.order_type_id > 3" style="width: 100%; background-color: transparant; border: 0; color:blue;">&#128489;</el-button>
+                </td> -->
             </tr>
           </tbody>
         </table>
@@ -238,6 +260,30 @@
         <el-button @click="createMailVisible = false">閉じる</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog
+      title="【依頼内容】"
+      :visible.sync="setting"
+      width="45%"
+    >
+    <create-setting :detail="detail"/>
+      <span slot="footer" class="dialog-footer">
+        <!-- <span>宛先とCC宛先、それぞれ選択してください。</span> -->
+      <!-- <a target="_blank" href="mailto:name@email.com?cc=name1@email.com;name2@mail.com">Link text</a> -->
+        <!-- <el-button type="primary" @click="selectreason()">選択</el-button> -->
+        <!-- <el-button @click="setting = false">閉じる</el-button> -->
+      </span>
+    </el-dialog>
+
+    <el-dialog
+        title="【依頼内容】"
+        :visible.sync="otherinfo"
+        width="45%"
+    >
+     <span>{{ detail.order_type_other_text }}</span>
+    </el-dialog>
+
+
     <el-dialog title="" :visible.sync="baseInfoVisible" width="700px" top="0px">
       <base-info  :detail="detail"/>
     </el-dialog>
@@ -260,12 +306,19 @@
 </template>
 
 <script>
+import MaintenanceResource from '@/api/maintenance';
 import CreateClientMail from './sub/CreateClientMail.vue';
+import CreateSetting from './sub/CreateSetting.vue';
 import BaseInfo from './BaseInfo.vue';
 import RequestInfoEdit from './sub/RequestInfoEdit.vue';
+// import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+// import 'bootstrap/dist/css/bootstrap.css'
+// import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+const resource = new MaintenanceResource();
 
 export default {
-  components: { CreateClientMail, BaseInfo, RequestInfoEdit },
+  components: { CreateClientMail, BaseInfo, RequestInfoEdit, CreateSetting },
   props: {
      selected: '',
     detail: {
@@ -283,13 +336,20 @@ export default {
       // customerInformation: this.detail.customerInformation,
     
       createMailVisible: false,
+      setting: false,
       baseInfoVisible: false,
       editVisible: false,
+      otherinfo: false,
       fileList: [
         'https://picsum.photos/id/0/300/200',
         'https://picsum.photos/id/1/300/200',
         'https://picsum.photos/id/2/300/200',
       ],
+      // fileList: [
+      //   'https://picsum.photos/id/0/300/200',
+      //   'https://picsum.photos/id/1/300/200',
+      //   'https://picsum.photos/id/2/300/200',
+      // ],
       
       tableData: [
         { title: '特記①', value: '20’10/13〜10/25改装 浄化槽店舗' },
@@ -307,6 +367,7 @@ export default {
     });
   },
   created() {
+    // this.getImage();
   },
   methods: {
     async save(){
@@ -314,6 +375,19 @@ export default {
       await this.$refs.editForm.save();
       this.$emit('get-detail');
     },
+
+    getImage() {
+      const data = {
+        file_name: this.detail.maintenance_images[0].file_name,
+      }
+      // alert(this.detail.maintenance_images[0].file_name)
+      // alert(this.detail.maintenance_id);
+
+      resource.getImage(this.detail.maintenance_id, data).then(res => {
+
+      });
+    },
+
   },
 };
 </script>

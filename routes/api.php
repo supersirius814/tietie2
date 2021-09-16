@@ -88,6 +88,7 @@ Route::group(['namespace' => 'V2'], function () {
 
     Route::post('v2/maintenance/{mantenance_id}/quotation/create', 'MaintenanceController@createQuotation');//tie9.5 add
     Route::post('v2/maintenance/{mantenance_id}/accounting/create', 'MaintenanceController@createAccounting');
+    Route::post('v2/maintenance/{mantenance_id}/selectreason', 'MaintenanceController@selectreason');
     
 
     Route::post('v2/maintenance/upload/report/{mantenance_id}', 'MaintenanceController@uploadReport');
@@ -100,6 +101,8 @@ Route::group(['namespace' => 'V2'], function () {
     Route::post('v2/maintenance/{mantenance_id}/update_customerid', 'MaintenanceController@update_customerid');
 
     Route::get('v2/maintenance/{mantenance_id}/photo_files', 'MaintenanceController@getPhotoFiles');
+    Route::post('v2/maintenance/{mantenance_id}/getImage', 'MaintenanceController@getImage');
+    
     Route::get('v2/maintenance/{mantenance_id}/report_files', 'MaintenanceController@getReportFiles');
     Route::get('v2/maintenance/{mantenance_id}/quotation_files', 'MaintenanceController@getQuotationFiles');//tie9.5 add
 

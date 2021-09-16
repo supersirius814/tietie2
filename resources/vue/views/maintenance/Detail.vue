@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <!-- {{detail}} -->
+  
     <div style="position: fixed;top:10px;left:300px;z-index:10;">
       <el-button type="primary" size="mini" @click="bottomVisible=true"><svg-icon icon-class="upload" />  同一中分類過去履歴</el-button>
       <el-button type="primary" size="mini" @click="qaVisible=true"><svg-icon icon-class="upload" style="transform: rotate(270deg);" />  見積 / 会計 情報</el-button>
