@@ -187,19 +187,19 @@
             >
               <el-image
                 style="width: 100px; height: 100px; display: block; padding: 10px "
-                :src="getImage(this.detail.maintenance_images[0].file_name)"
+                :src="firstimage"
                 :preview-src-list="fileList"
               />
               <a href="#" style="margin-bottom: 10px; display: block">全体写真</a>
               <el-image
                 style="width: 100px; height: 100px; display: block;  padding: 10px"
-                :src="getImage(this.detail.maintenance_images[1].file_name)"
+                :src="secondimage"
                 :preview-src-list="fileList"
               />
               <a href="#" style="margin-bottom: 10px; display: block; ">細部写真</a>
               <el-image     
                 style="width: 100px; height: 100px; display: block;  padding: 10px"
-                :src="getImage(this.detail.maintenance_images[2].file_name)"
+                :src="thirdimage"
                 :preview-src-list="fileList"
               />
               <a href="#" style="margin-bottom: 10px; display: block">型番写真</a>
@@ -264,7 +264,7 @@
     <el-dialog
       title="【依頼内容】"
       :visible.sync="setting"
-      width="45%" 
+      width="45%"
     >
     <create-setting :detail="detail"/>
       <span slot="footer" class="dialog-footer">
@@ -334,7 +334,9 @@ export default {
   data() {
     return {
       // customerInformation: this.detail.customerInformation,
-      imageone: '',
+      firstimage: '',
+      secondimage: '',
+      thirdimage: '',
       createMailVisible: false,
       setting: false,
       baseInfoVisible: false,
@@ -367,11 +369,9 @@ export default {
     });
   },
   created() {
-    // alert(this.detail.maintenance_images[1].file_name)
-    // this.getImage(this.detail.maintenance_images[1].file_name);
-    // this.getImageone();
-    // this.getImagetwo();
-    // this.getImagethree();
+    this.getImageone();
+    this.getImagetwo();
+    this.getImagethree();
   },
   methods: {
     async save(){
@@ -380,16 +380,36 @@ export default {
       this.$emit('get-detail');
     },
 
-    getImage(imageone) {
-      // alert(imageone);
+    getImageone() {
       const data = {
-        file_name: imageone,
+        file_name: this.detail.maintenance_images[0].file_name,
       }
       // alert(this.detail.maintenance_images[0].file_name)
       // alert(this.detail.maintenance_id);
 
       resource.getImage(this.detail.maintenance_id, data).then(res => {
+          this.firstimage = res;
+          console.log(res);
+      });
+    },
 
+    getImagetwo() {
+      const data = {
+        file_name: this.detail.maintenance_images[1].file_name,
+      }
+
+      resource.getImage(this.detail.maintenance_id, data).then(res => {
+          this.secondimage = res;
+      });
+    },
+
+    getImagethree() {
+      const data = {
+        file_name: this.detail.maintenance_images[2].file_name,
+      }
+
+      resource.getImage(this.detail.maintenance_id, data).then(res => {
+          this.thirdimage = res;
       });
     },
   
