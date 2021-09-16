@@ -367,7 +367,7 @@ export default {
     });
   },
   created() {
-    // this.getImage();
+    this.getImage();
   },
   methods: {
     async save(){
