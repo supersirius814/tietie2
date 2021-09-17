@@ -373,9 +373,9 @@ export default {
     });
   },
   created() {
-    this.getImageone();
-    this.getImagetwo();
-    this.getImagethree();
+    // this.getImageone();
+    // this.getImagetwo();
+    // this.getImagethree();
   },
   methods: {
     async save(){
