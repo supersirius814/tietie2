@@ -3,7 +3,7 @@
     <!-- {{ detail.maintenance_images }} -->
     <!-- {{detail.order_type.order_type_id}} -->
 
-
+{{aa}}
 
     <div slot="header" class="clearfix">
       <span>依頼情報</span>
@@ -335,7 +335,7 @@ export default {
     return {
       // customerInformation: this.detail.customerInformation,
       firstimage: '',
-      aa: 'https://s3.us-west-1.amazonaws.com/aws-codestar-us-west-1-369921469778/zensho-mainte/images/101/M000000101_SK_999998_20210720_1.jpg',
+      aa: Object,
       secondimage: '',
       thirdimage: '',
       createMailVisible: false,
@@ -400,7 +400,7 @@ export default {
       }
 
       resource.getImage(this.detail.maintenance_id, data).then(res => {
-          this.secondimage = res;
+          this.aa = res;
       });
     },
 
