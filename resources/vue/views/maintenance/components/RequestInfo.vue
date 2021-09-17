@@ -184,7 +184,7 @@
                 overflow-y: auto;
               "
             >
-            dddddddddd
+            
             <!-- <img src="{{ url("maintenance/image/$maintenance_id") }}/' + image['file_name'] + '"> -->
             <!-- <el-image src="http://160.16.127.12:8080/maintenance/image/101/M000000101_SK_999998_20210720_1.jpg"></el-image>
 ssssssssssssssss <el-image src="./maintenance/image/101/M000000101_SK_999998_20210720_1.jpg"></el-image> -->
@@ -395,30 +395,11 @@ export default {
       // alert(this.detail.maintenance_id);
 
       resource.getImage(this.detail.maintenance_id, data).then(res => {
-          this.firstimage = res;
-          console.log(res);
+          // this.firstimage = res;
+          // console.log(res);
       });
     },
 
-    getImagetwo() {
-      const data = {
-        file_name: this.detail.maintenance_images[1].file_name,
-      }
-
-      resource.getImage(this.detail.maintenance_id, data).then(res => {
-          this.aa = res;
-      });
-    },
-
-    getImagethree() {
-      const data = {
-        file_name: this.detail.maintenance_images[2].file_name,
-      }
-
-      resource.getImage(this.detail.maintenance_id, data).then(res => {
-          this.thirdimage = res;
-      });
-    },
   
   },
 };
