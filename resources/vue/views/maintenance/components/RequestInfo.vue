@@ -3,8 +3,10 @@
     <!-- {{ detail.maintenance_images }} -->
     <!-- {{detail.order_type.order_type_id}} -->
 
-{{aa}}
-
+dddddddddd
+            <!-- <img src="{{ url("maintenance/image/$maintenance_id") }}/' + image['file_name'] + '"> -->
+            <el-image src="http://160.16.127.12:8080/maintenance/image/101/M000000101_SK_999998_20210720_1.jpg"></el-image>
+ssssssssssssssss <el-image src="./maintenance/image/101/M000000101_SK_999998_20210720_1.jpg"></el-image>
     <div slot="header" class="clearfix">
       <span>依頼情報</span>
      
