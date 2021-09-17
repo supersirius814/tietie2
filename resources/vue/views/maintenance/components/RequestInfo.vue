@@ -3,10 +3,7 @@
     <!-- {{ detail.maintenance_images }} -->
     <!-- {{detail.order_type.order_type_id}} -->
 
-dddddddddd
-            <!-- <img src="{{ url("maintenance/image/$maintenance_id") }}/' + image['file_name'] + '"> -->
-            <el-image src="http://160.16.127.12:8080/maintenance/image/101/M000000101_SK_999998_20210720_1.jpg"></el-image>
-ssssssssssssssss <el-image src="./maintenance/image/101/M000000101_SK_999998_20210720_1.jpg"></el-image>
+
     <div slot="header" class="clearfix">
       <span>依頼情報</span>
      
@@ -187,21 +184,25 @@ ssssssssssssssss <el-image src="./maintenance/image/101/M000000101_SK_999998_202
                 overflow-y: auto;
               "
             >
+            dddddddddd
+            <!-- <img src="{{ url("maintenance/image/$maintenance_id") }}/' + image['file_name'] + '"> -->
+            <!-- <el-image src="http://160.16.127.12:8080/maintenance/image/101/M000000101_SK_999998_20210720_1.jpg"></el-image>
+ssssssssssssssss <el-image src="./maintenance/image/101/M000000101_SK_999998_20210720_1.jpg"></el-image> -->
               <el-image
                 style="width: 100px; height: 100px; display: block; padding: 10px "
-                :src="aa"
+                :src="getsrc(this.detail.maintenance_images[0].file_name)"
                 :preview-src-list="fileList"
               />
               <a href="#" style="margin-bottom: 10px; display: block">全体写真</a>
               <el-image
                 style="width: 100px; height: 100px; display: block;  padding: 10px"
-                :src="secondimage"
+                :src="getsrc(this.detail.maintenance_images[1].file_name)"
                 :preview-src-list="fileList"
               />
               <a href="#" style="margin-bottom: 10px; display: block; ">細部写真</a>
               <el-image     
                 style="width: 100px; height: 100px; display: block;  padding: 10px"
-                :src="thirdimage"
+                :src="getsrc(this.detail.maintenance_images[2].file_name)"
                 :preview-src-list="fileList"
               />
               <a href="#" style="margin-bottom: 10px; display: block">型番写真</a>
@@ -382,7 +383,10 @@ export default {
       await this.$refs.editForm.save();
       this.$emit('get-detail');
     },
-
+    getsrc(firstimage) {
+        const fsrc = './maintenance/image/' + this.detail.maintenance_id + '/' + firstimage;
+        return fsrc;
+    },
     getImageone() {
       const data = {
         file_name: this.detail.maintenance_images[0].file_name,
