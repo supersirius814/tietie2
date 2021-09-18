@@ -118,7 +118,7 @@ export default {
         { title: 'エリア', name: '安城', manager: '細川', to: false, cc: false },
       ],
     };
-  },
+  },  
   created(){
     this.$store.dispatch('user/getInfo').then(user => {
       this.userName = user.name;
