@@ -96,7 +96,7 @@
               <th>依頼区分*</th>
               <td style=" display: flex">
                   <el-button v-if="detail.order_type.order_type_id > 3"
-                  style="width: 100%; background-color: transparant; border: 0;"
+                  style="width: 100%; background-color: transparant; border: 0;pointer-events: none;"
                   width="70%"
                   @click="setting = true"
                 >{{ detail.order_type.type }}</el-button>
@@ -106,7 +106,7 @@
                       style="width: 30%; background-color: transparant; border: 0; color:blue;">&#128489;</el-button>
 
                   <el-button v-if="detail.order_type.order_type_id < 4"
-                  style="width: 100%; background-color: transparant; border: 0"
+                  style="width: 100%; background-color: transparant; border: 0; pointer-events: none;"
                   width="100%"
                   @click="setting = true"
                 >{{ detail.order_type.type }}({{detail.order_reason[0].reason}})</el-button>
