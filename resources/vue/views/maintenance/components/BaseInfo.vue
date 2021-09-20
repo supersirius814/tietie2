@@ -61,6 +61,13 @@
     </el-table>
     <div style="text-align:right;margin-top:10px;">
       <span>宛先とCC宛先、それぞれ選択してください。</span>
+      <a style="background-color: green;
+    color: white;     padding: 9px 15px;
+    font-size: 12px;
+    border-radius: 3px;"
+          target="_blank"
+          :href="mail_data"
+          >メーラー起動【テスト】</a        >
       <el-button type="primary" size="small">メーラー起動</el-button>
     </div>
 
@@ -108,8 +115,8 @@ export default {
   },
   data() {
     return {
-      
-      userName: '',
+      mail_data: 'mailto:' + this.detail.user.email,
+      userName: '', 
       tableData: [
         { title: '地域会社', name: '-', manager: '-', to: false, cc: false },
         { title: '営業部', name: '西日本', manager: '町野', to: false, cc: false },
