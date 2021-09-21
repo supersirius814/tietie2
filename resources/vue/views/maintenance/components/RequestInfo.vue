@@ -137,7 +137,7 @@
                     pointer-events: none;
                   "
                   width="100%"
-                  @click="setting = true"
+                  @click="setting = false"
                   >{{ detail.order_type.type }}({{
                     detail.order_reason[0].reason
                   }})</el-button

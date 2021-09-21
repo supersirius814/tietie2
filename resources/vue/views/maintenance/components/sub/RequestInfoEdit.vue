@@ -32,9 +32,10 @@
             <tr>
               <th>依頼区分*</th>
               <td class="select-td">
-                <el-select v-model="data.order_type_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+                {{data.order_type_id}}
+                <!-- <el-select v-model="data.order_type_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
                   <el-option v-for="item in orderTypes" :key="item.order_type_id" :label="item.type" :value="item.order_type_id" />
-                </el-select>
+                </el-select> -->
               </td>
             </tr>
           </tbody>
