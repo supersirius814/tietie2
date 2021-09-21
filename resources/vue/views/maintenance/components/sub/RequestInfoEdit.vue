@@ -31,8 +31,8 @@
           <tbody>
             <tr>
               <th>依頼区分*</th>
-              <td class="select-td">
-                {{data.order_type_id}}
+              <td>
+                {{detail.order_type.type}}
                 <!-- <el-select v-model="data.order_type_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
                   <el-option v-for="item in orderTypes" :key="item.order_type_id" :label="item.type" :value="item.order_type_id" />
                 </el-select> -->
