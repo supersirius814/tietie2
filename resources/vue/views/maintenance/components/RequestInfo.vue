@@ -138,10 +138,11 @@
                   "
                   width="100%"
                   @click="setting = false"
-                  >{{ detail.order_type.type }}({{
-                    detail.order_reason[0].reason
-                  }})</el-button
+                  >{{ detail.order_type.type }}</el-button
                 >
+                <!-- ({{
+                    detail.order_reason[0].reason
+                  }}) -->
               </td>
               <!-- <td>
                   <el-button v-if="detail.order_type.order_type_id > 3" style="width: 100%; background-color: transparant; border: 0; color:blue;">&#128489;</el-button>
