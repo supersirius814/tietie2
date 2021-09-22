@@ -21,9 +21,14 @@ use App\Report_file;
 use App\Quotation_file;
 use App\Bmcategory_table;
 use App\Customer_information;
+use App\General_manager;
+use App\Department;
+use App\District;
+use App\District_manager;
 use App\Order_reason;
 use App\Role;
 use App\Shop;
+use App\User;
 use App\Sub_category;
 use DB;
 use Validator;
@@ -463,6 +468,46 @@ class MaintenanceController extends Controller
             'photoFiles', 'reportFiles', 'quotationFiles', 'quotationInfo', 'accountingInfo'
         ])->find($maintenance_id);
 
+
+        $cc1 = Shop::select('block_id')->where('shop_id', $maintenance['shop_id'])->get();
+        $cc_name = Block::select('block_name')->where('block_id', $cc1[0]['block_id'])->get();
+        $cc3 = Block_manager::select('user_id')->where('block_id', $cc1[0]['block_id'])->get();
+        $cc_user = User::select('name', 'email')->where('user_id', $cc3[0]['user_id'])->get();
+        $maintenance['mail_data3']= $cc_user;
+        $maintenance['mail_data33']= $cc_name;
+
+
+        $bb1 = Block::select('district_id')->where('block_id', $cc1[0]['block_id'])->get();
+        $bb_name = District::select('district_name')->where('district_id', $bb1[0]['district_id'])->get();
+        $bb2 = District_manager::select('user_id')->where('district_id', $bb1[0]['district_id'])->get();
+        $bb_user = User::select('name', 'email')->where('user_id', $bb2[0]['user_id'])->get();
+
+
+        $maintenance['mail_data2']= $bb_user;
+        $maintenance['mail_data22']= $bb_name;
+
+        $aa1 = District::select('department_id')->where('district_id', $bb1[0]['district_id'])->get();
+        $aa_name = Department::select('department_name')->where('department_id', $aa1[0]['department_id'])->get();
+        $aa2 = General_manager::select('user_id')->where('department_id', $aa1[0]['department_id'])->get();
+        $aa_user = User::select('name', 'email')->where('user_id', $aa2[0]['user_id'])->get();
+
+        $maintenance['mail_data1']= $aa_user;
+        $maintenance['mail_data11']= $aa_name;
+
+
+
+        // $aa1 = User::select('user_id')->where('shop_id',$maintenance['shop_id'])->get();
+        // $aa2 = General_manager::select('department_id')->where('user_id', $aa1[0]['user_id'])->get();
+        // $aa3 = Department::select('department_name')->where('department_id', $aa2[0]['department_id'])->get();
+        // $maintenance['mail_data2'] = $aa3;
+
+        // $bb2 = District_manager::select('district_id')->where('user_id', $aa1[0]['user_id'])->get();
+        // $bb3 = District::select('district_name')->where('district_id', $bb2[0]['district_id'])->get();
+        // $maintenance['mail_data3']= $bb3;
+
+        // $cc2 = Block_manager::select('block_id')->where('user_id', $aa1[0]['user_id'])->get();
+        // $cc3 = Block::select('block_name')->where('block_id', $cc2[0]['block_id'])->get();
+        // $maintenance['mail_data1']= $cc3;
         // $quotation = Bmcategory_table::select('big_id','big_name')->distinct()->get();
         // $maintenance['bmcategoryTable_big'] = $quotation; 
 

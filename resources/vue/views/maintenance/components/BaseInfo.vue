@@ -44,14 +44,52 @@
     </el-row>
     <el-divider />
     <h3>担当者メール</h3>
+    <!-- <table class="detail-table">
+      <tr>
+        <td></td>
+        <td>名称</td>
+        <td>担当者</td>
+        <td>メール宛先</td>
+        <td>メールCC</td>
+      </tr>
+      <tr>
+        <td>営業部</td>
+        <th>{{ detail.mail_data11[0]['department_name'] ? detail.mail_data11[0]['department_name'] : '' }}</th>
+        <td>{{ detail.mail_data1[0]['name'] }}</td>
+        <td prop="to">
+          <template slot-scope="scope">
+            <el-checkbox v-model="scope.row.to" />
+          </template>
+        </td>
+        <td prop="cc">
+          <template slot-scope="scope">
+            <el-checkbox v-model="scope.row.cc" />
+          </template>
+        </td>
+      </tr>
+      <tr>
+        <th>{{ detail.mail_data11[0]['department_name'] ? detail.mail_data11[0]['department_name'] : '' }}</th>
+        <td>{{ detail.mail_data1[0]['name'] }}</td>
+        <td prop="to">
+          <template slot-scope="scope">
+            <el-checkbox v-model="scope.row.to" />
+          </template>
+        </td>
+        <td prop="cc">
+          <template slot-scope="scope">
+            <el-checkbox v-model="scope.row.cc" />
+          </template>
+        </td>
+      </tr>
+    </table> -->
     <el-table :data="tableData" :show-header="true" border style="width: 100%; margin:auto;">
       <el-table-column align="center" prop="title" class-name="header-1" label="" />
       <el-table-column align="center" prop="name" label="名称" />
       <el-table-column align="center" prop="manager" label="担当者" />
       <el-table-column align="center" prop="to" label="メール宛先">
-        <template slot-scope="scope">
-          <el-checkbox v-model="scope.row.to" />
-        </template>
+          <template slot-scope="scope">
+            <el-checkbox v-model="scope.row.to" />
+          </template>
       </el-table-column>
       <el-table-column align="center" prop="cc" label="メールCC">
         <template slot-scope="scope">
@@ -61,14 +99,14 @@
     </el-table>
     <div style="text-align:right;margin-top:10px;">
       <span>宛先とCC宛先、それぞれ選択してください。</span>
-      <a style="background-color: green;
+      <!-- <a style="background-color: green;
     color: white;     padding: 9px 15px;
     font-size: 12px;
     border-radius: 3px;"
           target="_blank"
           :href="mail_data"
-          >メーラー起動【テスト】</a        >
-      <el-button type="primary" size="small">メーラー起動</el-button>
+          >メーラー起動【テスト】</a        > -->
+      <el-button type="primary" size="small" @click="getsend()" >メーラー起動</el-button>
     </div>
 
     <el-divider />
@@ -86,7 +124,7 @@
       </tbody>
     </table>
     <div style="text-align:right;margin-top:10px;">
-      <el-button type="primary" size="small">特記編集</el-button>
+      <el-button type="primary" size="small" >特記編集</el-button>
     </div>
 
   </div>
@@ -117,12 +155,20 @@ export default {
     return {
       mail_data: 'mailto:' + this.detail.user.email,
       userName: '', 
+      // tableData: [
+      //   { title: '地域会社', name: '-', manager: '-', to: false, cc: false },
+      //   { title: '営業部', name: '西日本', manager: '町野', to: false, cc: false },
+      //   { title: 'ディストリクト', name: '東海', manager: '高木', to: false, cc: false },
+      //   { title: 'ブロック', name: '東愛知', manager: '山田克', to: false, cc: false },
+      //   { title: 'エリア', name: '安城', manager: '細川', to: false, cc: false },
+      // ],
+
       tableData: [
         { title: '地域会社', name: '-', manager: '-', to: false, cc: false },
-        { title: '営業部', name: '西日本', manager: '町野', to: false, cc: false },
-        { title: 'ディストリクト', name: '東海', manager: '高木', to: false, cc: false },
-        { title: 'ブロック', name: '東愛知', manager: '山田克', to: false, cc: false },
-        { title: 'エリア', name: '安城', manager: '細川', to: false, cc: false },
+        { title: '営業部', name: this.detail.mail_data11[0]['department_name'], manager: this.detail.mail_data1[0]['name'], email: this.detail.mail_data1[0]['email'], to: false, cc: false },
+        { title: 'ディストリクト', name: this.detail.mail_data22[0]['district_name'], manager: this.detail.mail_data2[0]['name'], email: this.detail.mail_data2[0]['email'], to: false, cc: false },
+        { title: 'ブロック', name: this.detail.mail_data33[0]['block_name'], manager: this.detail.mail_data3[0]['name'], email: this.detail.mail_data3[0]['email'], to: false, cc: false },
+        // { title: 'エリア', name: '安城', manager: '細川', to: false, cc: false },
       ],
     };
   },  
@@ -132,6 +178,27 @@ export default {
     });
   },
   methods: {
+    getsend() {
+      var emails = "";
+      var flag = 0;
+      // console.log(this.tableData);
+      this.tableData.forEach(element => {
+        if(flag < 1) {
+          if(element.cc == true || element.to ==true){
+            emails += element.email;
+            flag ++;
+          }
+        } else if(flag > 0) {
+          if(element.cc == true || element.to ==true){
+            emails += ",";
+            emails += element.email;
+          }         
+        }
+
+      });
+      window.location.href = "mailto:" + emails;
+      // console.log(emails);
+    },
   },
 };
 </script>

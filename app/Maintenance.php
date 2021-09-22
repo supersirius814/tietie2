@@ -114,4 +114,9 @@ class Maintenance extends Model
 	{
 		return $this->hasMany('App\Customer_information');
 	}
+
+	public function generalManager()
+	{
+		return $this->hasMany('App\General_manager');
+	}
 }
