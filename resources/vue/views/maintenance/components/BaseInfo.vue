@@ -188,12 +188,18 @@ export default {
             emails += element.email;
             flag ++;
           }
-        } else if(flag > 0) {
+        } else if(flag < 2) {
+          if(element.cc == true || element.to ==true){
+            emails += "?cc=";
+            emails += element.email;
+          }       
+        }
+        else if(flag > 1) {
           if(element.cc == true || element.to ==true){
             emails += ",";
-            emails += element.email;
-          }         
-        }
+            emails += element.email;            
+          }   
+        }       
 
       });
       window.location.href = "mailto:" + emails;
