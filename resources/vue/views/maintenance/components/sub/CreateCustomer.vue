@@ -2,6 +2,7 @@
 
   <div>
 <!-- {{this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL }} -->
+<!-- {{this.detail.customgroup_list}} -->
     <el-row :gutter="20">
       <el-col :span="15">
         <table class="detail-table">
@@ -59,7 +60,12 @@
           <tbody>
             <tr>
               <th>区分コード</th>
-              <td class="input-td"><input value="" v-model="customergroup_code" class="el-input__inner"/></td>
+              <td class="select-td">
+                <el-select  size="small" v-model="customergroup_code" placeholder="" clearable style="width: 100%" class="filter-item">
+                  <el-option v-for="item in this.detail.customgroup_list" :key="item.id" :label="item.customergroup_code" :value="item.customergroup_code" />
+                </el-select>
+              </td>
+              <!-- <td class="input-td"><input value="" v-model="customergroup_code" class="el-input__inner"/></td> -->
               <!-- <td class="input-td"><input value="110000060" /></td> -->
             </tr>
           </tbody>
@@ -70,7 +76,10 @@
           <tbody>
             <tr>
               <th>区分</th>
-              <td class="input-td"><input value="" v-model="customergroup" class="el-input__inner"/></td>
+              <!-- <td class="input-td"><input value="" v-model="customergroup" class="el-input__inner"/></td> -->
+                <el-select  size="small" v-model="customergroup" placeholder="" clearable style="width: 100%" class="filter-item">
+                  <el-option v-for="item in this.detail.customgroup_list" :key="item.id" :label="item.customergroup" :value="item.customergroup" />
+                </el-select>
             </tr>
           </tbody>
         </table>
@@ -148,6 +157,7 @@ export default {
   },
   data() {
     return {
+      tt: 353,
       custom: [],
       accounting_year: new Date(),
       format: "yyyy/MM/ddd",

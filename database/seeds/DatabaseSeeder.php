@@ -33,5 +33,13 @@ class DatabaseSeeder extends Seeder
         $this->call(Client_equipmentsTableSeeder::class);
         $this->call(Maintenance_progressTableSeeder::class);
         $this->call(Maintenance_imagesTableSeeder::class);
+        $this->call(Quotation_infoTableSeeder::class);
+        $this->call(Accounting_infoTableSeeder::class);
+        $this->call(Bmcategory_tableTableSeeder::class);
+        $this->call(Business_category_optionsTableSeeder::class);
+        $this->call(Customer_informationTableSeeder::class);
+        $this->call(Maintenance_order_reasonsTableSeeder::class);
+        $this->call(Order_reasonsTableSeeder::class);
+        $this->call(SqlFileTableSeeder::class);
     }
 }

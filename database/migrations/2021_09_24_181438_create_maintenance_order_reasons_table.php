@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateQuotationFilesTable extends Migration
+class CreateMaintenanceOrderReasonsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateQuotationFilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('quotation_files', function (Blueprint $table) {
+        //
+        Schema::create('maintenance_order_reasons', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-			$table->bigIncrements('quotation_file_id');
+			$table->bigIncrements('maintenance_order_reason_id');
 			$table->unsignedBigInteger('maintenance_id');
-			$table->foreign('maintenance_id')->references('maintenance_id')->on('maintenances');
-            $table->string('file_name', 100);
-            $table->string('file_path', 100);
+            $table->foreign('maintenance_id')->references('maintenance_id')->on('maintenances');
+            $table->string('order_reason_id', 30);
 			$table->timestamps();
         });
     }
@@ -31,6 +31,7 @@ class CreateQuotationFilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('quotation_files');
+        //
+        Schema::dropIfExists('maintenance_order_reasons');
     }
 }

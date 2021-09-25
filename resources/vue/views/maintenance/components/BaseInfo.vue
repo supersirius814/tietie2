@@ -179,29 +179,43 @@ export default {
   },
   methods: {
     getsend() {
-      var emails = "";
-      var flag = 0;
+      var emails_ge = "", emails_cc = "", emails = "";
+      var flag = 0, flag_re = 0;
       // console.log(this.tableData);
       this.tableData.forEach(element => {
         if(flag < 1) {
-          if(element.cc == true || element.to ==true){
-            emails += element.email;
+          if(element.to ==true){
+            emails_ge += element.email;
             flag ++;
           }
-        } else if(flag < 2) {
-          if(element.cc == true || element.to ==true){
-            emails += "?cc=";
-            emails += element.email;
+        }
+        else if(flag > 0) {
+          if(element.to ==true){
+            emails_ge += ",";
+            emails_ge += element.email;            
+          }   
+        }         
+        if(flag_re < 1) {
+          if(element.cc == true){
+            emails_cc += "cc=";
+            emails_cc += element.email;
+            flag_re ++;
           }       
         }
-        else if(flag > 1) {
-          if(element.cc == true || element.to ==true){
-            emails += ",";
-            emails += element.email;            
+        else if(flag_re > 0) {
+          if(element.cc == true){
+            emails_cc += ",";
+            emails_cc += element.email;            
           }   
         }       
-
       });
+      if(emails_ge == "") {
+        emails = emails_cc;
+      } else if((emails_cc != "")){
+        emails = emails_ge + "?" + emails_cc;
+      } else if(emails_ge != ""){
+        emails = emails_ge; 
+      }
       window.location.href = "mailto:" + emails;
       // console.log(emails);
     },

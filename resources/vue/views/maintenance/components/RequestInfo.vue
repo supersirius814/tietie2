@@ -1,6 +1,6 @@
 <template>
   <el-card class="box-card">
-    <!-- {{ detail.mail_data1 }} -->
+    <!-- {{ detail.customgroup_list.length }} -->
     <!-- {{detail.order_type.order_type_id}} -->
 
     <div slot="header" class="clearfix">
@@ -524,7 +524,6 @@ export default {
     return {
       // customerInformation: this.detail.customerInformation,
       firstimage: '',
-      aa: Object,
       secondimage: '',
       thirdimage: '',
       createMailVisible: false,
