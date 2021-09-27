@@ -524,6 +524,7 @@ export default {
     return {
       // customerInformation: this.detail.customerInformation,
       firstimage: '',
+      customer_name:'',
       secondimage: '',
       thirdimage: '',
       createMailVisible: false,
