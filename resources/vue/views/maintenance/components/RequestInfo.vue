@@ -1,6 +1,6 @@
 <template>
   <el-card class="box-card">
-    <!-- {{ detail.customerInformation }} -->
+    <!-- {{ detail }} -->
     <!-- {{detail.order_type.order_type_id}} -->
 
     <div slot="header" class="clearfix">

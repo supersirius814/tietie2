@@ -132,7 +132,8 @@ class MaintenanceController extends Controller
         $maintenance->progress_id = $row->progress_id;
         $maintenance->save();
 
-        $maintenance_progress = Maintenance_progress::with('entered_by')->where('maintenance_id', $maintenance_id)->get();
+        // $maintenance_progress = Maintenance_progress::with('entered_by')->where('maintenance_id', $maintenance_id)->orderBy('updated_at', 'desc')->get();
+        $maintenance_progress = Maintenance_progress::where('maintenance_id', $maintenance_id)->orderBy('updated_at', 'desc')->get();
         return response($maintenance_progress);
     }
 
