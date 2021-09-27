@@ -40,6 +40,6 @@ class DatabaseSeeder extends Seeder
         $this->call(Customer_informationTableSeeder::class);
         $this->call(Maintenance_order_reasonsTableSeeder::class);
         $this->call(Order_reasonsTableSeeder::class);
-        $this->call(SqlFileSeeder::class);
+        $this->call(SqlFileSeeder::class);  
     }
 }
