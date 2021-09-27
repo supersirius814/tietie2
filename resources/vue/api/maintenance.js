@@ -62,6 +62,14 @@ class MaintenanceResource extends Resource {
         });
     }
 
+    customsearch_again(search_data) {
+        return request({
+            url: this.baseUrl + this.uri + '/' + id + '/customsearch_again',
+            method: 'post',
+            data: search_data,
+        });
+    }
+
     getPhotoFiles(id) {
         return request({
             url: this.baseUrl + this.uri + '/' + id + '/photo_files',

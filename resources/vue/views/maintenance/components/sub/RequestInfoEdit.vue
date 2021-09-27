@@ -227,6 +227,7 @@ export default {
   data() {
     return {
       data: null,
+      sub_data: this.data.sub_category_id,
       createCustomerVisible: false,
       categories: [],
       subCategories: [],
@@ -257,6 +258,7 @@ export default {
             // alert("ddd");
             maintenanceResource.big_middleconnect(this.data.category_id).then(res =>{
                 this.subCategories = res;
+                this.sub_data = '';
             }); 
     },
     async getList() {

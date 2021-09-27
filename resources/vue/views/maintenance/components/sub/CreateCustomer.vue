@@ -209,16 +209,25 @@ export default {
     },
     customsearch() {
       // customer_code = this.customer_code;
-      resource.customsearch(this.customer_code).then(res => {
+      const search_data = {
+        customer_code: this.customer_code,
+        customer_name: this.customer_name,
+        customer_tel: this.customer_tel,
+        customer_alias: this.customer_alias,
+        customer_fax: this.customer_fax,
+        customergroup_code: this.customergroup_code,
+        customergroup: this.customergroup,
+      }
+      resource.customsearch_again(search_data).then(res => {
         this.custom = res;
-        this.customer_name = res[res.length - 1].customer_name;
-        this.customer_code = res[res.length - 1].customer_code;
-        this.customer_alias = res[res.length - 1].customer_alias;
-        this.customer_tel = res[res.length - 1].TEL;
-        this.customer_fax = res[res.length - 1].FAX;
-        this.customergroup = res[res.length - 1].customergroup;
-        this.customergroup_code = res[res.length - 1].customergroup_code;
-        this.id = res[res.length - 1].id;
+        // this.customer_name = res[res.length - 1].customer_name;
+        // this.customer_code = res[res.length - 1].customer_code;
+        // this.customer_alias = res[res.length - 1].customer_alias;
+        // this.customer_tel = res[res.length - 1].TEL;
+        // this.customer_fax = res[res.length - 1].FAX;
+        // this.customergroup = res[res.length - 1].customergroup;
+        // this.customergroup_code = res[res.length - 1].customergroup_code;
+        // this.id = res[res.length - 1].id;
         // console.log(res); 
         // this.customer_alias = res.customer_name;
         // [detail.customerInformation.length - 1]
