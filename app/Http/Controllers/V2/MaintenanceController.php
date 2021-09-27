@@ -518,19 +518,49 @@ class MaintenanceController extends Controller
             ->distinct()
             ->where('customer_code', $maintenance['customer_code'])
             ->get();
+        
+        
+        if($quotationcus->isEmpty()){
+            $quotationcus[0] = array(
+                'customer_code' => '',
+                'customer_name' => '',
+                'customer_id' => '',
+                'TEL' => '',
+                'FAX' => '',
+            );
+        }
+        
         $maintenance['customerInformation'] = $quotationcus; 
  
         $customgroup_list = Customer_information::select('customergroup',  'customergroup_code')
             ->distinct()
             ->whereNotNull('customergroup_code')
             ->get();
+
+        if($customgroup_list->isEmpty()){
+            $customgroup_list[0] = array(
+                'customergroup' => '',
+                'customergroup_code' => '',
+            );
+        }
+
         $maintenance['customgroup_list'] = $customgroup_list; 
 
         $order_reason = Order_reason::select('order_reason_id', 'reason')
             ->distinct()
             ->where('order_reason_id', $maintenance['order_reason_id'])
             ->get();
+
+        if($order_reason->isEmpty()){
+            $order_reason[0] = array(
+                'order_reason_id' => '',
+                'reason' => '',
+            );
+        }
+
         $maintenance['order_reason'] = $order_reason; 
+
+
         // $quotation = DB::table('quotation_files')
         //     ->where('maintenance_id',$maintenance_id)
         //     ->get();
