@@ -367,6 +367,14 @@ class MaintenanceController extends Controller
         ->distinct()
         ->where('category_id', $category_id)
         ->get();
+
+        if($result->isEmpty()){
+            $result[0] = array(
+                'sub_category_id' => '',
+                'category_id' => '',
+                'sub_category_name' => '',
+            );
+        }
         // echo $result;
         return response($result);
     }
