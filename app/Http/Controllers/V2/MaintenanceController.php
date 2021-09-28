@@ -311,38 +311,74 @@ class MaintenanceController extends Controller
         // var_export($request->input('customer_code'));
         $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
         ->distinct();
-
+        // echo '%'.$request->input('customer_code').'%'; die;
         if($request->input('customer_code')) {
-            $result->where('customer_code', $request->input('customer_code'));
+            // echo '%'.$request->input('customer_code').'%';
+            $result->where('customer_code', 'like', '%'.$request->input('customer_code').'%');
         }
 
-        // if($request->input('id')) {
-        //     $result->where('id', $request->input('id'));
-        // }
+        if($request->input('id')) {
+            $result->where('customer_code', 'like', '%'.$request->input('id').'%');
+        }
 
         if($request->input('customer_name')) {
-            $result->where('customer_name', $request->input('customer_name'));
+            $result->where('customer_name', 'like', '%'.$request->input('customer_name').'%');
         }
 
         if($request->input('customer_tel')) {
-            $result->where('TEL', $request->input('customer_tel'));
+            $result->where('TEL', 'like', '%'.$request->input('customer_tel').'%');
         }
 
         if($request->input('customer_alias')) {
-            $result->where('customer_alias', $request->input('customer_alias'));
+            $result->where('customer_alias', 'like', '%'.$request->input('customer_alias').'%');
         }
 
         if($request->input('customer_fax')) {
-            $result->where('FAX', $request->input('customer_fax'));
+            $result->where('FAX', 'like', '%'.$request->input('customer_fax').'%');
         }
 
         if($request->input('customergroup_code')) {
-            $result->where('customergroup_code', $request->input('customergroup_code'));
+            $result->where('customergroup_code', 'like', '%'.$request->input('customergroup_code').'%');
         }
 
         if($request->input('customergroup')) {
-            $result->where('customergroup', $request->input('customergroup'));
+            $result->where('customergroup', 'like', '%'.$request->input('customergroup').'%');
         }
+
+
+
+
+        // if($request->input('customer_code')) {
+        //     $result->where('customer_code', $request->input('customer_code'));
+        // }
+
+        // // if($request->input('id')) {
+        // //     $result->where('id', $request->input('id'));
+        // // }
+
+        // if($request->input('customer_name')) {
+        //     $result->where('customer_name', $request->input('customer_name'));
+        // }
+
+        // if($request->input('customer_tel')) {
+        //     $result->where('TEL', $request->input('customer_tel'));
+        // }
+
+        // if($request->input('customer_alias')) {
+        //     $result->where('customer_alias', $request->input('customer_alias'));
+        // }
+
+        // if($request->input('customer_fax')) {
+        //     $result->where('FAX', $request->input('customer_fax'));
+        // }
+
+        // if($request->input('customergroup_code')) {
+        //     $result->where('customergroup_code', $request->input('customergroup_code'));
+        // }
+
+        // if($request->input('customergroup')) {
+        //     $result->where('customergroup', $request->input('customergroup'));
+        // }
 
         $result_again = $result->get();
         if(!$result_again->isEmpty()) {
@@ -373,38 +409,67 @@ class MaintenanceController extends Controller
     {
         $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
         ->distinct();
-
+        echo '%'.$request->input('customer_code').'%'; die;
         if($request->input('customer_code')) {
-            $result->where('customer_code', $request->input('customer_code'));
+            echo '%'.$request->input('customer_code').'%';
+            $result->where('customer_code', 'like', '%'.$request->input('customer_code').'%');
         }
 
         if($request->input('id')) {
-            $result->where('customer_code', $request->input('id'));
+            $result->where('customer_code', 'like', '%'.$request->input('id').'%');
         }
 
         if($request->input('customer_name')) {
-            $result->where('customer_name', $request->input('customer_name'));
+            $result->where('customer_name', 'like', '%'.$request->input('customer_name').'%');
         }
 
         if($request->input('customer_tel')) {
-            $result->where('TEL', $request->input('customer_tel'));
+            $result->where('TEL', 'like', '%'.$request->input('customer_tel').'%');
         }
 
         if($request->input('customer_alias')) {
-            $result->where('customer_alias', $request->input('customer_alias'));
+            $result->where('customer_alias', 'like', '%'.$request->input('customer_alias').'%');
         }
 
         if($request->input('customer_fax')) {
-            $result->where('FAX', $request->input('customer_fax'));
+            $result->where('FAX', 'like', '%'.$request->input('customer_fax').'%');
         }
 
         if($request->input('customergroup_code')) {
-            $result->where('customergroup_code', $request->input('customergroup_code'));
+            $result->where('customergroup_code', 'like', '%'.$request->input('customergroup_code').'%');
         }
 
         if($request->input('customergroup')) {
-            $result->where('customergroup', $request->input('customergroup'));
+            $result->where('customergroup', 'like', '%'.$request->input('customergroup').'%');
         }
+        
+        // if($request->input('id')) {
+        //     $result->where('customer_code', $request->input('id'));
+        // }
+
+        // if($request->input('customer_name')) {
+        //     $result->where('customer_name', $request->input('customer_name'));
+        // }
+
+        // if($request->input('customer_tel')) {
+        //     $result->where('TEL', $request->input('customer_tel'));
+        // }
+
+        // if($request->input('customer_alias')) {
+        //     $result->where('customer_alias', $request->input('customer_alias'));
+        // }
+
+        // if($request->input('customer_fax')) {
+        //     $result->where('FAX', $request->input('customer_fax'));
+        // }
+
+        // if($request->input('customergroup_code')) {
+        //     $result->where('customergroup_code', $request->input('customergroup_code'));
+        // }
+
+        // if($request->input('customergroup')) {
+        //     $result->where('customergroup', $request->input('customergroup'));
+        // }
 
         $result_again = $result->get();
         if($result_again->exists()) {

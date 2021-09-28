@@ -10,21 +10,21 @@
           <tbody>
             <tr>
               <th>取引先コード</th>
-              <td class="select-td">
+              <!-- <td class="select-td">
                 <el-select  size="small" v-model="customer_code" placeholder="" clearable style="width: 100%" class="filter-item">
                   <el-option v-for="item in this.detail.customgroup_list1" :key="item.id" :label="item.customer_code" :value="item.customer_code" />
                 </el-select>
-              </td>
-              <!-- <td class="input-td">
-                <input value="" v-model="id" class="el-input__inner" style="display:none"/>
-                <input value="" v-model="customer_code" class="el-input__inner"/> -->
+              </td> -->
+              <td class="input-td">
+                <!-- <input value="" v-model="id" class="el-input__inner" style="display:none"/> -->
+                <input value="" v-model="customer_code" class="el-input__inner"/>
                 
                 <!-- <select v-model="custom" style="width: 100%; height: 36px; border-color: #C0C4CC; line-height: 32px;" class="filter-item" placeholder="" clearable size="small">
                   <option v-for="option in detail.customerInformation" v-bind:value="{ id: option.customer_code, name: option.customer_name, tel: option.TEL, fax: option.FAX }" >
                     {{ option.customer_code }}
                   </option>
                 </select> -->
-              <!-- </td> -->
+              </td>
               <!-- <td class="input-td"><input value="110000060" /></td> -->
             </tr>
           </tbody>
@@ -37,15 +37,15 @@
           <tbody>
             <tr>
               <th>取引先名</th>
-              <td class="select-td">
+              <!-- <td class="select-td">
                 <el-select  size="small" v-model="customer_name" placeholder="" clearable style="width: 100%" class="filter-item">
                   <el-option v-for="item in this.detail.customgroup_list2" :key="item.id" :label="item.customer_name" :value="item.customer_name" />
                 </el-select>
-              </td>
-              <!-- <td class="input-td">
-                <input value="" v-model="customer_name" class="el-input__inner"/>                 -->
+              </td> -->
+              <td class="input-td">
+                <input value="" v-model="customer_name" class="el-input__inner"/>                
                 <!-- <input value="パナ産機（あじさい銀行）" /> -->
-              <!-- </td> -->
+              </td>
             </tr>
           </tbody>
         </table>
@@ -57,15 +57,15 @@
           <tbody>
             <tr>
               <th>取引先名(カナ)</th>
-              <!-- <td class="input-td">
-                <input value="" v-model="customer_alias" class="el-input__inner"/>                 -->
+              <td class="input-td">
+                <input value="" v-model="customer_alias" class="el-input__inner"/>                
                 <!-- <input value="パナ産機（あじさい銀行）" /> -->
-              <!-- </td> -->
-              <td class="select-td">
+              </td>
+              <!-- <td class="select-td">
                 <el-select  size="small" v-model="customer_alias" placeholder="" clearable style="width: 100%" class="filter-item">
                   <el-option v-for="item in this.detail.customgroup_list3" :key="item.id" :label="item.customer_alias" :value="item.customer_alias" />
                 </el-select>
-              </td>              
+              </td>               -->
             </tr>
           </tbody>
         </table>
@@ -109,13 +109,13 @@
           <tbody>
             <tr>
               <th>TEL/FAX</th>
-              <!-- <td class="input-td"><input value="" v-model="customer_tel" class="el-input__inner"/></td> -->
+              <td class="input-td"><input value="" v-model="customer_tel" class="el-input__inner"/></td>
               <!-- <td class="input-td"><input value="110000060" /></td> -->
-              <td class="select-td">
+              <!-- <td class="select-td">
                 <el-select  size="small" v-model="customer_tel" placeholder="" clearable style="width: 100%" class="filter-item">
                   <el-option v-for="item in this.detail.customgroup_list4" :key="item.id" :label="item.TEL" :value="item.TEL" />
                 </el-select>
-              </td>              
+              </td>               -->
             </tr>
           </tbody>
         </table>
@@ -124,12 +124,12 @@
         <table class="detail-table">
           <tbody>
             <tr>
-              <!-- <td class="input-td"><input value="" v-model="customer_fax" class="el-input__inner"/></td> -->
-              <td class="select-td">
+              <td class="input-td"><input value="" v-model="customer_fax" class="el-input__inner"/></td>
+              <!-- <td class="select-td">
                 <el-select  size="small" v-model="customer_fax" placeholder="" clearable style="width: 100%" class="filter-item">
                   <el-option v-for="item in this.detail.customgroup_list5" :key="item.id" :label="item.FAX" :value="item.FAX" />
                 </el-select>
-              </td>  
+              </td>   -->
             </tr>
           </tbody>
         </table>
@@ -300,7 +300,7 @@ export default {
     customsearchAgain() {
       // customer_code = this.customer_code;
       const search_data = {
-        id: this.id,
+        // id: this.id,
         customer_code: this.customer_code,
         customer_name: this.customer_name,
         customer_tel: this.customer_tel,
