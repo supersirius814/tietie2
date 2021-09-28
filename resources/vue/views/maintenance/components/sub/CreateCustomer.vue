@@ -214,7 +214,10 @@ export default {
   },
   methods: {
       rowClick(row) {
-       alert('Row Clicked')
+        this.detail.customer_code = row.customer_code;
+        this.detail.customerInformation[detail.customerInformation.length - 1].TEL = row.TEL;
+        this.detail.customerInformation[detail.customerInformation.length - 1].FAX = row.FAX;
+      //  alert('Row Clicked')
       },  
     formatterProgress(row, column) {
       return this.progress[row.progress_id] ?? '';
