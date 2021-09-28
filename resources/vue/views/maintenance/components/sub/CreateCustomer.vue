@@ -1,6 +1,7 @@
 <template>
 
   <div>
+    <!-- {{this.id}} -->
 <!-- {{this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL }} -->
 <!-- {{this.detail.customgroup_list}} -->
     <el-row :gutter="20">
@@ -12,6 +13,7 @@
               <td class="input-td">
                 <input value="" v-model="id" class="el-input__inner" style="display:none"/>
                 <input value="" v-model="customer_code" class="el-input__inner"/>
+                
                 <!-- <select v-model="custom" style="width: 100%; height: 36px; border-color: #C0C4CC; line-height: 32px;" class="filter-item" placeholder="" clearable size="small">
                   <option v-for="option in detail.customerInformation" v-bind:value="{ id: option.customer_code, name: option.customer_name, tel: option.TEL, fax: option.FAX }" >
                     {{ option.customer_code }}
@@ -109,7 +111,7 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-button type="info" size="small" @click="customsearch()">検索</el-button>
+      <el-button type="info" size="small" @click="customsearchAgain()">検索</el-button>
     </el-row>
     <div style="text-align: right; padding-bottom: 15px;">
       <el-button type="primary" size="small" @click="select()">選択</el-button>
@@ -119,6 +121,7 @@
     <el-table
       :data="custom"
       :show-header="true"
+      @row-click="rowClick"
       border
       style="width: 100%; margin: auto"
     >
@@ -131,6 +134,10 @@
       <el-table-column align="center" prop="TEL" label="TEL"></el-table-column>
       <el-table-column align="center" prop="FAX" label="FAX"></el-table-column>
     </el-table>
+<!-- {{this.custom}} -->
+    <!-- <template v-for="item in this.custom">
+
+    </template> -->
   </div>
 
 </template>
@@ -161,8 +168,10 @@ export default {
       custom: [],
       accounting_year: new Date(),
       format: "yyyy/MM/ddd",
-      customer_code: this.detail.customer_code,
+      customer_code: '',
+      // customer_code: this.detail.customer_code,
       id: 0,
+      item: '',
       customer_name: '',
       customer_tel: '',
       customer_fax: '',
@@ -204,12 +213,16 @@ export default {
     });
   },
   methods: {
+      rowClick(row) {
+       alert('Row Clicked')
+      },  
     formatterProgress(row, column) {
       return this.progress[row.progress_id] ?? '';
     },
-    customsearch() {
+    customsearchAgain() {
       // customer_code = this.customer_code;
       const search_data = {
+        id: this.id,
         customer_code: this.customer_code,
         customer_name: this.customer_name,
         customer_tel: this.customer_tel,
@@ -218,7 +231,7 @@ export default {
         customergroup_code: this.customergroup_code,
         customergroup: this.customergroup,
       }
-      resource.customsearch_again(search_data).then(res => {
+      resource.customsearchAgain(this.detail.maintenance_id, search_data).then(res => {
         this.custom = res;
         // this.customer_name = res[res.length - 1].customer_name;
         // this.customer_code = res[res.length - 1].customer_code;

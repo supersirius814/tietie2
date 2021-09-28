@@ -305,15 +305,81 @@ class MaintenanceController extends Controller
         // echo $result;
         
     }
+
+    public function customsearch_again(Request $request, $custom_code)
+    {
+        // var_export($request->input('customer_code'));
+        $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
+        ->distinct();
+
+        if($request->input('customer_code')) {
+            $result->where('customer_code', $request->input('customer_code'));
+        }
+
+        // if($request->input('id')) {
+        //     $result->where('id', $request->input('id'));
+        // }
+
+        if($request->input('customer_name')) {
+            $result->where('customer_name', $request->input('customer_name'));
+        }
+
+        if($request->input('customer_tel')) {
+            $result->where('TEL', $request->input('customer_tel'));
+        }
+
+        if($request->input('customer_alias')) {
+            $result->where('customer_alias', $request->input('customer_alias'));
+        }
+
+        if($request->input('customer_fax')) {
+            $result->where('FAX', $request->input('customer_fax'));
+        }
+
+        if($request->input('customergroup_code')) {
+            $result->where('customergroup_code', $request->input('customergroup_code'));
+        }
+
+        if($request->input('customergroup')) {
+            $result->where('customergroup', $request->input('customergroup'));
+        }
+
+        $result_again = $result->get();
+        if(!$result_again->isEmpty()) {
+            // foreach($result_again as $item) {
+            //     $res = array(
+            //         'customer_code' => $item['customer_code'],
+            //         'customergroup' => $item['customergroup'],
+            //         'customergroup_code' => $item['customergroup_code'],
+            //         'FAX' => $item['FAX'],
+            //         'customer_name' => $item['customer_name'],
+            //         'TEL' => $item['TEL'],
+            //         'customergroup_code' => $item['customergroup_code'],
+            //         'customer_alias' => $item['customer_alias'],
+            //     );
+            // }
+
+
+            return response($result_again);
+        }
+        else return response(0);
+        // var_export($result->customer_code); die;
+        // echo $result;
+        
+    }
     
 
-    public function customsearch_again(Request $request)
+    public function customsearchAgain($maintenance_id, Request $request)
     {
         $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
         ->distinct();
 
         if($request->input('customer_code')) {
             $result->where('customer_code', $request->input('customer_code'));
+        }
+
+        if($request->input('id')) {
+            $result->where('customer_code', $request->input('id'));
         }
 
         if($request->input('customer_name')) {

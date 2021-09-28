@@ -62,11 +62,11 @@ class MaintenanceResource extends Resource {
         });
     }
 
-    customsearch_again(search_data) {
+    customsearchAgain(id, updateData) {
         return request({
-            url: this.baseUrl + this.uri + '/' + id + '/customsearch_again',
+            url: this.baseUrl + this.uri + '/' + id + '/customsearchAgain',
             method: 'post',
-            data: search_data,
+            data: updateData,
         });
     }
 

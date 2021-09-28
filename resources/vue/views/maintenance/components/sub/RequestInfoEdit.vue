@@ -13,7 +13,7 @@
             <tr>
               <th>大分類*</th>
               <td class="select-td">
-                <el-select v-model="data_re.category_id" size="small" placeholder=""  style="width: 100%" class="filter-item" v-on:change="big_middleconnect()">
+                <el-select v-model="data_re.category_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item" v-on:change="big_middleconnect()">
                   <el-option v-for="item in categories" :key="item.category_id" :label="item.category_name" :value="item.category_id" />
                 </el-select>
               </td>
@@ -21,7 +21,7 @@
             <tr>
               <th>中分類*</th>
               <td class="select-td">
-                <el-select v-model="data_re.sub_category_id" size="small" placeholder=""  style="width: 100%" class="filter-item" >
+                <el-select v-model="data_re.sub_category_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item" >
                   <el-option v-for="item in subCategories" :key="item.sub_category_id" :label="item.sub_category_name" :value="item.sub_category_id" />
                 </el-select>
               </td>
