@@ -114,7 +114,7 @@
       <el-button type="info" size="small" @click="customsearchAgain()">検索</el-button>
     </el-row>
     <div style="text-align: right; padding-bottom: 15px;">
-      <el-button type="primary" size="small" @click="select()">選択</el-button>
+      <!-- <el-button type="primary" size="small" @click="select()">選択</el-button> -->
       <el-button type="default" size="small" @click="$emit('close')">閉じる</el-button>
     </div>    
 
@@ -172,7 +172,7 @@ export default {
       // customer_code: this.detail.customer_code,
       id: 0,
       item: '',
-      detail: [],
+      // detail: [],
       customer_name: '',
       customer_tel: '',
       customer_fax: '',
@@ -220,6 +220,37 @@ export default {
         this.detail.customerInformation[this.detail.customerInformation.length - 1].customer_name = row.customer_name;
         this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL = row.TEL;
         this.detail.customerInformation[this.detail.customerInformation.length - 1].FAX = row.FAX;
+
+        resource.customsearch(row.customer_code).then(res => {
+          
+            if(res == 0) {
+              this.id = 0;
+              alert(res);
+            }
+            else this.id = res[res.length - 1].id;
+            
+
+            const updatedata = {
+              id: row.id,
+              customer_code: row.customer_code,
+              customer_tel: row.customer_tel,
+              customer_alias: row.customer_alias,
+              customer_fax: row.customer_fax,
+              customergroup_code: row.customergroup_code,
+              customergroup: row.customergroup,
+              customer_name: row.customer_name,
+              
+            };
+            
+            // alert(this.detail.maintenance_id); return false;
+            resource.update_customerid(this.detail.maintenance_id, updatedata).then(res => {
+              this.detail.customer_code = this.customer_code;
+              this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL = res[res.length - 1].TEL; 
+              this.detail.customerInformation[this.detail.customerInformation.length - 1].FAX = res[res.length - 1].FAX; 
+              this.detail.customerInformation[this.detail.customerInformation.length - 1].customer_name = res[res.length - 1].customer_name;
+            });
+            // alert(this.customer_id);
+        });  
       },  
     formatterProgress(row, column) {
       return this.progress[row.progress_id] ?? '';

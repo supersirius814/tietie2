@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Customer_information extends Model
 {
-	protected $table = 'customer_information';
+	protected $table = 'customers';
 	
 	public function maintenance()
 	{
