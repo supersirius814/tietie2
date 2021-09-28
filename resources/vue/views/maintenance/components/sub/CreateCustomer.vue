@@ -244,10 +244,10 @@ export default {
             
             // alert(this.detail.maintenance_id); return false;
             resource.update_customerid(this.detail.maintenance_id, updatedata).then(res => {
-              this.detail.customer_code = this.customer_code;
-              this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL = res[res.length - 1].TEL; 
-              this.detail.customerInformation[this.detail.customerInformation.length - 1].FAX = res[res.length - 1].FAX; 
-              this.detail.customerInformation[this.detail.customerInformation.length - 1].customer_name = res[res.length - 1].customer_name;
+              // this.detail.customer_code = re.customer_code;
+              // this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL = res[res.length - 1].TEL; 
+              // this.detail.customerInformation[this.detail.customerInformation.length - 1].FAX = res[res.length - 1].FAX; 
+              // this.detail.customerInformation[this.detail.customerInformation.length - 1].customer_name = res[res.length - 1].customer_name;
             });
             // alert(this.customer_id);
         });  
