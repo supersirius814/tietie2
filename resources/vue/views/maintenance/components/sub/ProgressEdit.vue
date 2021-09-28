@@ -1,6 +1,6 @@
 <template>
   <div>
-  {{this.detail.maintenance_progress}}
+  <!-- {{this.detail.maintenance_progress}} -->
   <!-- {{this.detail.maintenance_id}} -->
 
     <el-row :gutter="20">
