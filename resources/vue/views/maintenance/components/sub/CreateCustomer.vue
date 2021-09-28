@@ -172,6 +172,7 @@ export default {
       // customer_code: this.detail.customer_code,
       id: 0,
       item: '',
+      detail: [],
       customer_name: '',
       customer_tel: '',
       customer_fax: '',
@@ -214,10 +215,11 @@ export default {
   },
   methods: {
       rowClick(row) {
+        console.log(row);
         this.detail.customer_code = row.customer_code;
-        this.detail.customerInformation[detail.customerInformation.length - 1].TEL = row.TEL;
-        this.detail.customerInformation[detail.customerInformation.length - 1].FAX = row.FAX;
-      //  alert('Row Clicked')
+        this.detail.customerInformation[this.detail.customerInformation.length - 1].customer_name = row.customer_name;
+        this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL = row.TEL;
+        this.detail.customerInformation[this.detail.customerInformation.length - 1].FAX = row.FAX;
       },  
     formatterProgress(row, column) {
       return this.progress[row.progress_id] ?? '';
