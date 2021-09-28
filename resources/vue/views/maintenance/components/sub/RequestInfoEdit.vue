@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- {{categories}} -->
     <!-- {{categories}}
   {{subCategories}} -->
       <el-checkbox v-model="data_re.is_emergency" :checked="data_re.is_emergency == 1" label="緊急・重要" />
@@ -13,7 +14,7 @@
             <tr>
               <th>大分類*</th>
               <td class="select-td">
-                <el-select v-model="data_re.category_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item" v-on:change="big_middleconnect()">
+                <el-select v-model="big_ca" size="small" placeholder="" clearable style="width: 100%" class="filter-item" v-on:change="big_middleconnect()">
                   <el-option v-for="item in categories" :key="item.category_id" :label="item.category_name" :value="item.category_id" />
                 </el-select>
               </td>
@@ -21,7 +22,7 @@
             <tr>
               <th>中分類*</th>
               <td class="select-td">
-                <el-select v-model="data_re.sub_category_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item" >
+                <el-select v-model="mid_ca" size="small" placeholder="" clearable style="width: 100%" class="filter-item" >
                   <el-option v-for="item in subCategories" :key="item.sub_category_id" :label="item.sub_category_name" :value="item.sub_category_id" />
                 </el-select>
               </td>
@@ -228,7 +229,10 @@ export default {
   data() {
     return {
       data_re: null,
-     
+      big_ca: '',
+      mid_ca: '',
+      // data_re.category_id
+      // data_re.sub_category_id
       createCustomerVisible: false,
       categories: [],
       subCategories: [],
@@ -255,12 +259,18 @@ export default {
   methods: {
 
     big_middleconnect () {
+      console.log(this.data_re.category_id);
+            if(!this.big_ca) {
+              this.mid_ca = '';
+              return;
+            }
             // alert(this.data.category_id);
             // alert("ddd");
-            maintenanceResource.big_middleconnect(this.data_re.category_id).then(res =>{
+            maintenanceResource.big_middleconnect(this.big_ca).then(res =>{
                 this.subCategories = res;
+                this.mid_ca = '';
                 // console.log(res.category_id);
-                this.data_re.sub_category_id = res[0].sub_category_id;
+                // this.data_re.sub_category_id = res[0].sub_category_id;
             }); 
     },
     async getList() {
@@ -276,6 +286,8 @@ export default {
       this.matterValues = await matterValuesResource.list(this.query);
     },
     async save() {
+      this.data_re.category_id = this.big_ca;
+      this.data_re.sub_category_id = this.mid_ca;
       await maintenanceResource.update(this.data_re.maintenance_id, this.data_re);
     },
   },

@@ -571,6 +571,7 @@ export default {
       this.$emit('get-detail');
     },
     getsrc(firstimage) {
+      // return;
       const fsrc =
         './maintenance/image/' + this.detail.maintenance_id + '/' + firstimage;
       return fsrc;

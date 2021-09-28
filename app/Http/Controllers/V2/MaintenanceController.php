@@ -674,7 +674,68 @@ class MaintenanceController extends Controller
             );
         }
 
+        $customgroup_list1 = Customer_information::select('customer_code')
+            ->distinct()
+            ->whereNotNull('customergroup_code')
+            ->get();
+
+        if($customgroup_list1->isEmpty()){
+            $customgroup_list1[0] = array(
+                'customergroup' => '',
+                'customergroup_code' => '',
+            );
+        }
+
+        $customgroup_list2 = Customer_information::select('customer_name')
+            ->distinct()
+            ->whereNotNull('customer_name')
+            ->get();
+
+        if($customgroup_list2->isEmpty()){
+            $customgroup_list2[0] = array(
+                'customer_name' => '',
+            );
+        }
+
+        $customgroup_list3 = Customer_information::select('customer_alias')
+            ->distinct()
+            ->whereNotNull('customer_alias')
+            ->get();
+
+        if($customgroup_list3->isEmpty()){
+            $customgroup_list3[0] = array(
+                'customer_alias' => '',
+            );
+        }
+
+        $customgroup_list4 = Customer_information::select('TEL')
+            ->distinct()
+            ->whereNotNull('TEL')
+            ->get();
+
+        if($customgroup_list4->isEmpty()){
+            $customgroup_list4[0] = array(
+                'TEL' => '',
+            );
+        }
+
+        $customgroup_list5 = Customer_information::select('FAX')
+            ->distinct()
+            ->whereNotNull('FAX')
+            ->get();
+
+        if($customgroup_list5->isEmpty()){
+            $customgroup_list5[0] = array(
+                'FAX' => '',
+            );
+        }
+
         $maintenance['customgroup_list'] = $customgroup_list; 
+        $maintenance['customgroup_list1'] = $customgroup_list1;
+        $maintenance['customgroup_list2'] = $customgroup_list2;
+        $maintenance['customgroup_list3'] = $customgroup_list3;
+        $maintenance['customgroup_list4'] = $customgroup_list4;
+        $maintenance['customgroup_list5'] = $customgroup_list5;
 
         $order_reason = Order_reason::select('order_reason_id', 'reason')
             ->distinct()
