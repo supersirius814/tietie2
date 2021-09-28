@@ -201,10 +201,10 @@
       :modal="false"
     >
       <create-customer :detail="detail"/>
-      <!-- <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="createAccounting = false">登録</el-button>
-        <el-button @click="createAccounting = false">閉じる</el-button>
-      </span> --> 
+      <span slot="footer" class="dialog-footer">
+        <!-- <el-button type="primary" @click="createAccounting = false">登録</el-button> -->
+        <el-button @click="createCustomerVisible = false">閉じる</el-button>
+      </span> 
     </el-dialog>    
   </div>
 </template>
