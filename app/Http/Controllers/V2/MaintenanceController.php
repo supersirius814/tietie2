@@ -445,6 +445,24 @@ class MaintenanceController extends Controller
         return response($result);
     }
 
+    public function depart_name(Request $request, $customergroup_code)
+    {
+        $result = Customer_information::select('customergroup')
+        ->distinct()
+        ->where('customergroup_code', $customergroup_code)
+        ->get();
+
+        if($result->isEmpty()){
+            $result[0] = array(
+                'customergroup_code' => '',
+            );
+        }
+        // echo $result;
+        return response($result);
+    }
+
+    
+
     public function selectreason(Request $request, $maintenance_id)
     {
         $maintenance = Maintenance::find($maintenance_id);
@@ -773,8 +791,18 @@ class MaintenanceController extends Controller
         if($request->input('category_id')) {
             $maintenance->category_id     = $request->input('category_id');
         }
+        if($request->input('category_id') == '') {
+            DB::table('maintenances')
+            ->where('maintenance_id', $maintenance_id)
+            ->update(array('category_id' => NULL));
+        }
         if($request->input('sub_category_id')) {
             $maintenance->sub_category_id = $request->input('sub_category_id');
+        }
+        if($request->input('sub_category_id') == '') {
+            DB::table('maintenances')
+            ->where('maintenance_id', $maintenance_id)
+            ->update(array('sub_category_id' => NULL));
         }
         if($request->input('order_type_id')) {
             $maintenance->order_type_id   = $request->input('order_type_id');

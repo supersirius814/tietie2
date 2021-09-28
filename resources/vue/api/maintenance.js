@@ -120,6 +120,12 @@ class MaintenanceResource extends Resource {
             method: 'get',
         });
     }
+    depart_name(id) {
+        return request({
+            url: this.baseUrl + this.uri + '/' + id + '/depart_name',
+            method: 'get',
+        });
+    }
 }
 
 export { MaintenanceResource as default };

@@ -78,7 +78,7 @@
             <tr>
               <th>区分コード</th>
               <td class="select-td">
-                <el-select  size="small" v-model="customergroup_code" placeholder="" clearable style="width: 100%" class="filter-item">
+                <el-select  size="small" v-model="customergroup_code" placeholder="" clearable style="width: 100%" class="filter-item" v-on:change="depart_name()" >
                   <el-option v-for="item in this.detail.customgroup_list" :key="item.id" :label="item.customergroup_code" :value="item.customergroup_code" />
                 </el-select>
               </td>
@@ -239,6 +239,21 @@ export default {
     });
   },
   methods: {
+      depart_name() {
+        // alert("dfdf");
+        if(!this.customergroup_code) {
+          this.customergroup  = '';
+          return;
+        }
+        // alert(this.data.category_id);
+        // alert("ddd");
+        resource.depart_name(this.customergroup_code).then(res =>{
+            this.customergroup = res[0].customergroup;
+            // this.mid_ca = '';
+            // console.log(res.category_id);
+            // this.data_re.sub_category_id = res[0].sub_category_id;
+        });         
+      },
       rowClick(row) {
         console.log(row);
         this.detail.customer_code = row.customer_code;

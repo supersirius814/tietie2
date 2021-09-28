@@ -259,7 +259,7 @@ export default {
   methods: {
 
     big_middleconnect () {
-      console.log(this.data_re.category_id);
+      // console.log(this.data_re.category_id);
             if(!this.big_ca) {
               this.mid_ca = '';
               return;
@@ -286,6 +286,7 @@ export default {
       this.matterValues = await matterValuesResource.list(this.query);
     },
     async save() {
+      // alert(this.big_ca);
       this.data_re.category_id = this.big_ca;
       this.data_re.sub_category_id = this.mid_ca;
       await maintenanceResource.update(this.data_re.maintenance_id, this.data_re);
