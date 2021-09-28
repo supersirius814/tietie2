@@ -522,6 +522,7 @@ export default {
   },
   data() {
     return {
+      dataa: null,
       // customerInformation: this.detail.customerInformation,
       firstimage: '',
       customer_name:'',
@@ -575,13 +576,13 @@ export default {
       return fsrc;
     },
     getImageone() {
-      const data = {
+      const file_data = {
         file_name: this.detail.maintenance_images[0].file_name,
       };
       // alert(this.detail.maintenance_images[0].file_name)
       // alert(this.detail.maintenance_id);
 
-      resource.getImage(this.detail.maintenance_id, data).then((res) => {
+      resource.getImage(this.detail.maintenance_id, file_data).then((res) => {
         // this.firstimage = res;
         // console.log(res);
       });

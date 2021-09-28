@@ -1,6 +1,6 @@
 <template>
   <div>
-  <!-- {{this.progressId}} -->
+  {{this.detail.maintenance_progress}}
   <!-- {{this.detail.maintenance_id}} -->
 
     <el-row :gutter="20">
@@ -217,7 +217,7 @@ export default {
         faxed_to_shop: this.faxedToShop,
       };
       resource.createProgress(this.detail.maintenance_id, insertData).then(res => {
-        this.detail.maintenance_progress = res;
+        this.detail.maintenance_progress = res[0];
         this.detail.progress_id = this.progressId;
         this.detail.progress = {
           progress_id: this.progressId,
