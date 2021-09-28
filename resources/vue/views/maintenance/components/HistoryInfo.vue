@@ -29,7 +29,7 @@
       </el-col>
     </el-row>
     <el-table :data="detail.maintenance_progress" :show-header="true" border style="width: 100%">
-      <el-table-column align="center" prop="created_at" label="日時" width="160px" />
+      <el-table-column align="center" prop="created_at" label="日時" :formatter="formatterDate" width="160px" />
       <el-table-column align="center" prop="progress_id" label="ステータス" :formatter="formatterProgress" width="100px" />
       <el-table-column align="center" prop="entered_by.name" label="入力者" width="100px" />
       <el-table-column align="center" prop="comment" label="コメント" />
@@ -157,6 +157,20 @@ export default {
     formatterProgress(row, column) {
       return this.progress[row.progress_id] ?? '';
     },
+    formatterDate(row, column) {
+      if(row.created_at == null) return;
+      console.log(row.created_at.split(' ')[0] + "\n" + row.created_at.split(' ')[1]);
+      return row.created_at.replace(" ", "\n");
+ 
+      // if(row.created_at == null) return;
+      // else if(row.created_at != '' ){
+      // var aa = row.created_at.split(' ');
+      // var res = aa[0] + '<br>' + aa[1];
+      // row.created_at = res;
+      // }
+
+      // return res;
+    }
   },
 };
 </script>
