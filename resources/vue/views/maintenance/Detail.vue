@@ -1,25 +1,50 @@
 <template>
   <div class="app-container">
-  <!-- {{ detail.customerInformation }} -->
-    <div style="position: fixed;top:10px;left:300px;z-index:10;">
-      <el-button type="primary" size="mini" @click="bottomVisible=true"><svg-icon icon-class="upload" />  同一中分類過去履歴</el-button>
-      <el-button type="primary" size="mini" @click="qaVisible=true"><svg-icon icon-class="upload" style="transform: rotate(270deg);" />  見積 / 会計 情報</el-button>
+    <!-- {{ detail.customerInformation }} -->
+    <div style="position: fixed; top: 10px; left: 300px; z-index: 10">
+      <el-button type="primary" size="mini" @click="bottomVisible = true"
+        ><svg-icon icon-class="upload" /> 同一中分類過去履歴</el-button
+      >
+      <el-button type="primary" size="mini" @click="qaVisible = true"
+        ><svg-icon icon-class="upload" style="transform: rotate(270deg)" /> 見積
+        / 会計 情報</el-button
+      >
     </div>
     <el-row :gutter="20">
       <el-col :span="12">
-        <request-info v-if="detail" :detail="detail" @get-detail="getDetail()" />
+        <request-info
+          v-if="detail"
+          :detail="detail"
+          @get-detail="getDetail()"
+        />
       </el-col>
       <el-col :span="12">
         <history-info v-if="detail" :detail="detail" />
       </el-col>
     </el-row>
 
-    <el-dialog title="" :visible.sync="qaVisible" width="900px" custom-class="slide-dialog" top="0px">
+    <el-dialog
+      title=""
+      :visible.sync="qaVisible"
+      width="900px"
+      custom-class="slide-dialog"
+      top="0px"
+    >
       <qa-dialog v-if="detail" :detail="detail" />
     </el-dialog>
 
-    <el-dialog v-if="detail" title="" :visible.sync="bottomVisible" width="100%" custom-class="bottom-dialog" top="0px">
-      <bottom-dialog :shop-id="detail.shop_id" :sub-category-id="detail.sub_category_id" />
+    <el-dialog
+      v-if="detail"
+      title=""
+      :visible.sync="bottomVisible"
+      width="100%"
+      custom-class="bottom-dialog"
+      top="0px"
+    >
+      <bottom-dialog
+        :shop-id="detail.shop_id"
+        :sub-category-id="detail.sub_category_id"
+      />
     </el-dialog>
   </div>
 </template>
@@ -51,8 +76,23 @@ export default {
       const id = this.$route.params && this.$route.params.id;
       this.detail = await resource.get(id);
       if (this.detail.maintenance_matters.length < 10) {
-        for (let i = this.detail.maintenance_matters.length; i < 10; i++){
-          this.detail.maintenance_matters.push({ maintenance_matter_id: null, matter_option_id: null, matter_value_id: null });
+        for (let i = this.detail.maintenance_matters.length; i < 10; i++) {
+          this.detail.maintenance_matters.push({
+            maintenance_matter_id: null,
+            matter_option_id: null,
+            matter_value_id: null,
+          });
+        }
+      }
+      if (this.detail.maintenance_progress.length > 0) {
+        // alert(this.detail.maintenance_progress.length);
+        for (let i = 0; i < this.detail.maintenance_progress.length; i++) {
+          var aa = this.detail.maintenance_progress[i].created_at.split(' ');
+
+          // const textContent = doc.documentElement.textContent;
+          var dd = aa[0] + '<br\>' + aa[1];         
+          this.detail.maintenance_progress[i].created_at = dd;
+          // console.log(this.detail.maintenance_progress[i].created_at);
         }
       }
     },

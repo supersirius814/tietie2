@@ -28,7 +28,7 @@
         <el-button type="info" size="mini" @click="reportFilesVisible=true">報告書({{ detail.report_files.length }})</el-button>
       </el-col>
     </el-row>
-    <el-table :data="detail.maintenance_progress" :show-header="true" border style="width: 100%">
+    <!-- <el-table :data="detail.maintenance_progress" :show-header="true" border style="width: 100%">
       <el-table-column align="center" prop="created_at" label="日時" :formatter="formatterDate" width="160px" />
       <el-table-column align="center" prop="progress_id" label="ステータス" :formatter="formatterProgress" width="100px" />
       <el-table-column align="center" prop="entered_by.name" label="入力者" width="100px" />
@@ -45,8 +45,34 @@
           </template>
         </el-table-column>
       </el-table-column>
-    </el-table>
-
+    </el-table> -->
+  <table  class="detail-table">
+    <tr>
+      <th rowspan="2">日時</th>
+      <th rowspan="2">ステータス</th>
+      <th rowspan="2">入力者</th>
+      <th rowspan="2">コメント</th>
+      <th colspan="2">
+        FAX送信
+      </th>       
+    </tr>
+    <tr>
+      <th style="width: 50px">取</th>
+      <th style="width: 50px">店</th>        
+    </tr>
+    <template v-for="item in detail.maintenance_progress">
+      <tr>
+        <td align="center">
+          <span v-html="item.created_at"></span>
+        </td>
+        <td align="center">{{ progress[item.progress_id] }}</td>
+        <td align="center">{{ item.entered_by.name }}</td>
+        <td align="center">{{ item.comment }}</td>
+        <td align="center" width="50px">{{ item.faxed_to_client == 1 ? '済' : '' }}</td>
+        <td align="center" width="50px">{{ item.faxed_to_client == 1 ? '済' : '' }}</td>
+      </tr>
+    </template>
+  </table>
     <el-dialog
       title="【見積書ファイルリスト】"
       :visible.sync="quotationFilesVisible"
@@ -114,6 +140,8 @@ export default {
   },  
   data() {
     return {
+      item: '',
+      key: '',
       editVisible: false,
       quotationFilesVisible: false,
       photoFilesVisible: false,
@@ -158,11 +186,14 @@ export default {
       return this.progress[row.progress_id] ?? '';
     },
     formatterDate(row, column) {
-      if(row.created_at == null) return;
-      console.log(row.created_at.split(' ')[0] + "\n" + row.created_at.split(' ')[1]);
-      return row.created_at.replace(" ", "\n");
- 
       // if(row.created_at == null) return;
+      // console.log(row.created_at.split(' ')[0] + "\r" + row.created_at.split(' ')[1]);
+      // const attr = document.createAttribute('a');
+      // return attr;
+      // return row.created_at.split(' ')[0] + '<<<EOT' + row.created_at.split(' ')[1];
+ 
+      if(row.created_at == null) return;
+      return row.created_at;
       // else if(row.created_at != '' ){
       // var aa = row.created_at.split(' ');
       // var res = aa[0] + '<br>' + aa[1];
