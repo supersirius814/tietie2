@@ -680,8 +680,10 @@ class MaintenanceController extends Controller
             'maintenanceMatters.matter_option',
             'photoFiles', 'reportFiles', 'quotationFiles', 'quotationInfo', 'accountingInfo'
         ])->find($maintenance_id);
-
-
+        
+        // $maintenance->maintenance_progress = '';
+        // var_export($maintenance->maintenance_progress);
+        // unset($maintenance->maintenanceProgress);
         $cc1 = Shop::select('block_id')->where('shop_id', $maintenance['shop_id'])->get();
         $cc_name = Block::select('block_name')->where('block_id', $cc1[0]['block_id'])->get();
         $cc3 = Block_manager::select('user_id')->where('block_id', $cc1[0]['block_id'])->get();
