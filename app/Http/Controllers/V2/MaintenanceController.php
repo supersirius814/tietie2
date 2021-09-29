@@ -83,6 +83,7 @@ class MaintenanceController extends Controller
 
     public function classHistory(Request $request)
     {
+        if($request->input('sub_category_id') == NULL) return array();
         $request->input('action');
 
         $limit = $request->input('limit', 15);
@@ -314,23 +315,23 @@ class MaintenanceController extends Controller
         // echo '%'.$request->input('customer_code').'%'; die;
         if($request->input('customer_code')) {
             // echo '%'.$request->input('customer_code').'%';
-            $result->where('customer_code', 'like', '%'.$request->input('customer_code').'%');
+            $result->where('customer_code', 'like', '%'.$request->input('customer_code').'%')->distinct('customer_code');;
         }
 
         if($request->input('id')) {
-            $result->where('customer_code', 'like', '%'.$request->input('id').'%');
+            $result->where('customer_code', 'like', '%'.$request->input('id').'%')->distinct();;
         }
 
         if($request->input('customer_name')) {
-            $result->where('customer_name', 'like', '%'.$request->input('customer_name').'%');
+            $result->where('customer_name', 'like', '%'.$request->input('customer_name').'%')->distinct();;
         }
 
         if($request->input('customer_tel')) {
-            $result->where('TEL', 'like', '%'.$request->input('customer_tel').'%');
+            $result->where('TEL', 'like', '%'.$request->input('customer_tel').'%')->distinct();;
         }
 
         if($request->input('customer_alias')) {
-            $result->where('customer_alias', 'like', '%'.$request->input('customer_alias').'%');
+            $result->where('customer_alias', 'like', '%'.$request->input('customer_alias').'%')->distinct();;
         }
 
         if($request->input('customer_fax')) {
@@ -338,11 +339,11 @@ class MaintenanceController extends Controller
         }
 
         if($request->input('customergroup_code')) {
-            $result->where('customergroup_code', 'like', '%'.$request->input('customergroup_code').'%');
+            $result->where('customergroup_code', 'like', '%'.$request->input('customergroup_code').'%')->distinct();;
         }
 
         if($request->input('customergroup')) {
-            $result->where('customergroup', 'like', '%'.$request->input('customergroup').'%');
+            $result->where('customergroup', 'like', '%'.$request->input('customergroup').'%')->distinct();;
         }
 
 

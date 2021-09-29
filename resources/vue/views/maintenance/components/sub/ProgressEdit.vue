@@ -129,7 +129,7 @@
     </el-row>
     <div style="text-align:right;">
       <el-button type="primary" size="small" @click="save()">登録</el-button>
-      <el-button type="default" size="small">閉じる</el-button>
+      <!-- <el-button type="default" size="small" @click='handleClose()' >閉じる</el-button> -->
     </div>
     <el-table :data="detail.maintenance_progress" :show-header="true" border style="width: 100%">
       <el-table-column align="center" prop="created_at" label="日時" width="160px" />
@@ -167,6 +167,7 @@ export default {
   },
   data() {
     return {
+      cond1: true,
       userName: '',
       comment: '',
       faxedToClient: 0,
@@ -203,7 +204,15 @@ export default {
       this.userName = user.name;
     });
   },
+
   methods: {
+
+
+ handleClose() {
+   alert("dd");
+    this.$emit("update:editVisible",!this.editVisible);
+ },
+  
     formatterProgress(row, column) {
       return this.progress[row.progress_id] ?? '';
     },
