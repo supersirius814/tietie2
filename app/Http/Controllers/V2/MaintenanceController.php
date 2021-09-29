@@ -381,7 +381,7 @@ class MaintenanceController extends Controller
         //     $result->where('customergroup', $request->input('customergroup'));
         // }
 
-        $result_again = $result->get();
+        $result_again = $result->groupBy('customer_code')->get();
         if(!$result_again->isEmpty()) {
             // foreach($result_again as $item) {
             //     $res = array(

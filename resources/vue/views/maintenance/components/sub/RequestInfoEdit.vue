@@ -200,10 +200,10 @@
       top="0px"
       :modal="false"
     >
-      <create-customer :detail="detail"/>
+      <create-customer :detail="detail" :custom="custom"/>
       <span slot="footer" class="dialog-footer">
         <!-- <el-button type="primary" @click="createAccounting = false">登録</el-button> -->
-        <el-button @click="createCustomerVisible = false">閉じる</el-button>
+        <!-- <el-button @click="createCustomerVisible = false">閉じる</el-button> -->
       </span> 
     </el-dialog>    
   </div>
@@ -228,6 +228,7 @@ export default {
   },
   data() {
     return {
+      custom:[],
       data_re: null,
       big_ca: '',
       mid_ca: '',

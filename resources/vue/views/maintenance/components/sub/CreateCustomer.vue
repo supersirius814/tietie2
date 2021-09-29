@@ -186,11 +186,17 @@ export default {
         return {};
       },
     },
+    custom: {
+      type: Array,
+      default: () => {
+        return {};
+      },     
+    }
   },
   data() {
     return {
       tt: 353,
-      custom: [],
+   
       accounting_year: new Date(),
       format: "yyyy/MM/ddd",
       customer_code: '',
@@ -293,9 +299,9 @@ export default {
             
             // alert(this.detail.maintenance_id); return false;
             resource.update_customerid(this.detail.maintenance_id, updatedata).then(res => {
-              this.custom = '';
+              // this.custom = '';
               // this.createCustomerVisible = false;
-              $emit('close');
+              this.$emit('close');
               // this.detail.customer_code = re.customer_code;
               // this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL = res[res.length - 1].TEL; 
               // this.detail.customerInformation[this.detail.customerInformation.length - 1].FAX = res[res.length - 1].FAX; 

@@ -129,7 +129,7 @@
     </el-row>
     <div style="text-align:right;">
       <el-button type="primary" size="small" @click="save()">登録</el-button>
-      <!-- <el-button type="default" size="small" @click='handleClose()' >閉じる</el-button> -->
+      <!-- <el-button type="default" size="small"  @click="handleClose()"  ref="Dialog" >閉じる</el-button> -->
     </div>
     <el-table :data="detail.maintenance_progress" :show-header="true" border style="width: 100%">
       <el-table-column align="center" prop="created_at" label="日時" width="160px" />
@@ -209,8 +209,9 @@ export default {
 
 
  handleClose() {
-   alert("dd");
-    this.$emit("update:editVisible",!this.editVisible);
+    // this.$refs.Dialog.hide();
+  //  alert("dd");
+    this.hide;
  },
   
     formatterProgress(row, column) {
