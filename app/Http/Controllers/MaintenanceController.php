@@ -58,7 +58,6 @@ class MaintenanceController extends Controller
      */
     public function index(Request $request)
     {
-
 		$request->input('action');
 		$business_category_id = $request->input('business_category_id');
 		$shop_id = $request->input('shop_id');
@@ -159,10 +158,12 @@ class MaintenanceController extends Controller
             'business_category_id'  => $request->input('business_category_id'),
             'shop_id'               => $request->input('shop_id'),
             'applicant_id'          => $request->input('applicant_id'),
+            'applicant_name'        => $request->input('applicant_name'),
             'equipment'             => $request->input('equipment'),
             'manufacturer'          => $request->input('manufacturer'),
             'model_number'          => $request->input('model_number'),
             'when'                  => $request->input('when'),
+            'first_handling'        => $request->input('first_handling'),
             'situation'             => $request->input('situation'),
             'order_type_id'         => $request->input('order_type_id'),
             'order_type'            => $order_type,
@@ -184,17 +185,19 @@ class MaintenanceController extends Controller
      */
     public function post(Request $request)
     {
-        $applicant_id  = $request->input('applicant_id');
-		$shop_id       = $request->input('shop_id');
-		$equipment     = $request->input('equipment');
-		$manufacturer  = $request->input('manufacturer');
-		$model_number  = $request->input('model_number');
-		$when          = $request->input('when');
-		$situation     = $request->input('situation');
-		$order_type_id = $request->input('order_type_id');
+        $applicant_id   = $request->input('applicant_id');
+        $applicant_name = $request->input('applicant_name');
+		$shop_id        = $request->input('shop_id');
+		$equipment      = $request->input('equipment');
+		$manufacturer   = $request->input('manufacturer');
+		$model_number   = $request->input('model_number');
+		$when           = $request->input('when');
+		$first_handling = $request->input('first_handling');
+		$situation      = $request->input('situation');
+		$order_type_id  = $request->input('order_type_id');
         $order_reason_ids      = $request->input('order_reason_ids');
         $order_type_other_text = $request->input('order_type_other_text');
-		$order         = $equipment . ' ' . $manufacturer . ':' . $model_number . ' ' . $when . ' ' . $situation . ' 手配お願いします。';
+		$order          = $equipment . ' ' . $manufacturer . ':' . $model_number . ' ' . $when . ' ' . $situation . ' 手配お願いします。';
 
 		Log::debug('メンテ申請保存処理開始');
 
@@ -203,11 +206,13 @@ class MaintenanceController extends Controller
 			$maintenance = new Maintenance;
             $maintenance->shop_id               = $shop_id;
             $maintenance->applicant_id          = $applicant_id;
+            $maintenance->applicant_name        = $applicant_name;
             $maintenance->order_type_id         = $order_type_id;
             $maintenance->equipment             = $equipment;
             $maintenance->manufacturer          = $manufacturer;
             $maintenance->model_number          = $model_number;
             $maintenance->when                  = $when;
+            $maintenance->first_handling        = $first_handling;
             $maintenance->situation             = $situation;
             $maintenance->order                 = $order;
             $maintenance->progress_id           = 1; // BM承認待ち
@@ -295,7 +300,6 @@ class MaintenanceController extends Controller
 
 		// メール
         Log::debug('申請メール処理開始');
-		$applicant_user  = $maintenance->user;
 		$shop_name       = $maintenance->shop->shop_name;
 		$shop_code       = $maintenance->shop->shop_code;
         $order_type      = $maintenance->orderType->type;
@@ -332,10 +336,11 @@ class MaintenanceController extends Controller
 			'manufacturer'     => $manufacturer,
 			'model_number'     => $model_number,
 			'when'             => $when,
+            'first_handling'   => $first_handling,
 			'situation'        => $situation,
 			'order_type'       => $order_type,
 			'progress_status'  => $progress_status,
-			'applicant_user'   => $applicant_user,
+            'applicant_name'   => $applicant_name,
             'BM'               => $BM,
 		];
         
@@ -346,15 +351,16 @@ class MaintenanceController extends Controller
 				'file_name' => $file->file_name
 			);
 		}
-
-        $cc = [
-            'yasu.fukuhara@interface-design.jp',
-            'nishioka@interface-design.jp', // 西岡さん
-            'satoru.maeki@zensho.com',      // 真栄喜さん
-            'eiji.kawate@hamazushi.com',    // HS担当者
-            'toshifumi.masunaga@hamazushi.com',
-            'kazuya.arakaki@zensho.com',
-        ];
+        
+        $cc = explode(',', $maintenance->shop->business_category->request_email);
+        
+        if ( preg_match('/冷凍庫|エアコン/', $equipment) ) {
+            $cc[] = $maintenance->shop->business_category->headquarters_email;
+        }
+        
+        if ( config('app.env') == 'staging' ){
+			$cc = [];
+        }
         
 		if ( config('app.env') == 'local' ) {
 			$BM = [
@@ -363,11 +369,8 @@ class MaintenanceController extends Controller
             ];
 			$cc = [];
 		}
-        if ( config('app.env') == 'staging' ){
-			$cc = [];
-        }
-        
-		Mail::to($BM)->cc($cc)->send(new MaintenanceRequestMail($data, $attachedFiles));
+
+        Mail::to($BM)->cc($cc)->send(new MaintenanceRequestMail($data, $attachedFiles));
 		Log::debug('request email sent.'.print_r($data,true));
 
 		return redirect('/maintenance/add/completed');
@@ -675,26 +678,24 @@ class MaintenanceController extends Controller
 			);
         }
 
-        $cc = [
-            'yasu.fukuhara@interface-design.jp',
-            'nishioka@interface-design.jp', // 西岡さん
-            'satoru.maeki@zensho.com',      // 真栄喜さん
-            'eiji.kawate@hamazushi.com',    // HS担当者
-            'toshifumi.masunaga@hamazushi.com',
-            'kazuya.arakaki@zensho.com',
-        ];
+        $cc = explode(',', $maintenance->shop->business_category->request_email);
+
+        if ( preg_match('/冷凍庫|エアコン/', $equipment) ) {
+            $cc[] = $maintenance->shop->business_category->headquarters_email;
+        }
+        
+        if (config('app.env') == 'staging') {
+			$cc = [];
+        }
 
         if (config('app.env') == 'local') {
             $BM = [
                 'yasu.fukuhara@interface-design.jp',
-                'nads1012+test1@gmail.com',
+                'nads1012+test1@gmail.com'
             ];
             $cc = [];
         }
-        if (config('app.env') == 'staging') {
-			$cc = [];
-        }
-        
+
 		Mail::to($BM)->cc($cc)->send(new MaintenanceEditMail($data, $attachedFiles));
 		Log::debug('update email sent.'.print_r($data,true));
 		
@@ -719,233 +720,132 @@ class MaintenanceController extends Controller
     public function approve(Request $request, $maintenance_id)
     {
         return DB::transaction(function () use ($request, $maintenance_id) {
-            $maintenance_progress = new Maintenance_progress;
-            $maintenance_progress->maintenance_id = $maintenance_id;
-            $maintenance_progress->progress_id    = 6; // 本部受付前
-            $maintenance_progress->comment        = $request->input('comment');
-            $maintenance_progress->entered_by     = $request->input('entered_by');
-            $maintenance_progress->save();
-
+            
             $maintenance = Maintenance::find($maintenance_id);
-            $maintenance->progress_id = 6; // 本部受付前
-            $maintenance->save();
-
-            // メール
-            $applicant_user        = $maintenance->user;
-            $maintenance_code      = $maintenance->maintenance_code;
-            $shop_name             = $maintenance->shop->shop_name;
-            $shop_code             = $maintenance->shop->shop_code;
-            $business_category     = $maintenance->shop->business_category->business_category;
-            $equipment             = $maintenance->equipment;
-            $manufacturer          = $maintenance->manufacturer;
-            $model_number          = $maintenance->model_number;
-            $when                  = $maintenance->when;
-            $situation             = $maintenance->situation;
-            $order_type            = $maintenance->orderType->type;
-            $order_type_other_text = $maintenance->order_type_other_text;
-            $progress_status       = $maintenance->progress->status;
-            $comment               = $maintenance_progress->comment;
-            if ($progress_status == '本部受付前'){
-                $subject           = 'BM承認済（本部受付前）';
+            
+            if ( $maintenance->progress_id === 6 ) {
+                
+                logger('メンテナンスID '.$maintenance_id.' この申請は承認済みです');
+                
             } else {
-                $subject           = $progress_status;
-            }
-            $subject          .= ' '.$business_category.' '.$shop_code.' '.$shop_name.' '.$equipment;
-            if ($order_type === '発注依頼') {
-                $maintenance_order_reasons = $maintenance->orderReasons;
-                $x = 1;
-                $order_type .= '（理由：';
-                foreach ( $maintenance_order_reasons as $order_reason ) {
-                    if ( $x !== 1 ) {
-                        $order_type .= '・';
-                    }
-                    $order_type .= $order_reason->reason;
-                    $x++;
+                
+                $maintenance->progress_id = 6; // 本部受付前
+                $maintenance->save();
+
+                $maintenance_progress = new Maintenance_progress;
+                $maintenance_progress->maintenance_id = $maintenance_id;
+                $maintenance_progress->progress_id    = 6; // 本部受付前
+                $maintenance_progress->comment        = $request->input('comment');
+                $maintenance_progress->entered_by     = $request->input('entered_by');
+                $maintenance_progress->save();
+
+                // メール
+                $applicant_user        = $maintenance->user;
+                $maintenance_code      = $maintenance->maintenance_code;
+                $shop_name             = $maintenance->shop->shop_name;
+                $shop_code             = $maintenance->shop->shop_code;
+                $business_category     = $maintenance->shop->business_category->business_category;
+                $equipment             = $maintenance->equipment;
+                $manufacturer          = $maintenance->manufacturer;
+                $model_number          = $maintenance->model_number;
+                $when                  = $maintenance->when;
+                $situation             = $maintenance->situation;
+                $order_type            = $maintenance->orderType->type;
+                $order_type_other_text = $maintenance->order_type_other_text;
+                $progress_status       = $maintenance->progress->status;
+                $comment               = $maintenance_progress->comment;
+                if ($progress_status == '本部受付前'){
+                    $subject           = 'BM承認済（本部受付前）';
+                } else {
+                    $subject           = $progress_status;
                 }
-                $order_type .= '）';
-            }
-            if ($order_type === 'その他') {
-                $order_type = $order_type_other_text;
-            }
-            
-            $block_managers = Block_manager::where('block_id', $maintenance->shop->block_id)->get();
-            foreach ($block_managers as $block_manager) {
-                $BM_email = User::find($block_manager->user_id)->email;
-            }
-            if (config('app.env') == 'staging') {
-                $BM_email = 'test@idsweb.cc';
-            }
-            $BM_email = 'ml_k_mainte@zensho.com'; //IDS pre env.
-            $data = [
-                'subject'          => $subject,
-				'maintenance_id'   => $maintenance_id,
-                'maintenance_code' => $maintenance_code,
-                'shop_name'        => $shop_name,
-                'shop_code'        => $shop_code,
-                'equipment'        => $equipment,
-                'manufacturer'     => $manufacturer,
-                'model_number'     => $model_number,
-                'when'             => $when,
-                'situation'        => $situation,
-                'order_type'       => $order_type,
-                'progress_status'  => $progress_status,
-                'comment'          => $comment,
-                'applicant_user'   => $applicant_user,
-                'updater'          => Auth::user(),
-                'BM_email'         => $BM_email,
-            ];
-            $files = Maintenance_image::where('maintenance_id', $maintenance_id)->get();
-            foreach ($files as $file) {
-				$attachedFiles[] = array(
-					'data'      => Storage::disk('s3')->get("zensho-mainte/images/$maintenance_id/$file->file_name"),
-					'file_name' => $file->file_name
-				);
-            }
-            
-            $headquarters = [
-                'qs-mainte@zensho.com',
-            ];
-            
-            $bcc = [
-                'yasu.fukuhara@interface-design.jp',
-                'nishioka@interface-design.jp', // 西岡さん
-                'satoru.maeki@zensho.com',      // 真栄喜さん
-                'eiji.kawate@hamazushi.com',    // HS川手さん
-                'toshifumi.masunaga@hamazushi.com',
-                'kazuya.arakaki@zensho.com',
-            ];
+                $subject          .= ' '.$business_category.' '.$shop_code.' '.$shop_name.' '.$equipment;
+                if ($order_type === '発注依頼') {
+                    $maintenance_order_reasons = $maintenance->orderReasons;
+                    $x = 1;
+                    $order_type .= '（理由：';
+                    foreach ( $maintenance_order_reasons as $order_reason ) {
+                        if ( $x !== 1 ) {
+                            $order_type .= '・';
+                        }
+                        $order_type .= $order_reason->reason;
+                        $x++;
+                    }
+                    $order_type .= '）';
+                }
+                if ($order_type === 'その他') {
+                    $order_type = $order_type_other_text;
+                }
 
-            if (config('app.env') == 'local') {
-                $headquarters = [
-                    'yasu.fukuhara@interface-design.jp',
-                    'nishioka@interface-design.jp', // 西岡さん
+                $block_managers = Block_manager::where('block_id', $maintenance->shop->block_id)->get();
+                foreach ($block_managers as $block_manager) {
+                    $BM_email = User::find($block_manager->user_id)->email;
+                }
+                if (config('app.env') == 'staging') {
+                    $BM_email = 'test@idsweb.cc';
+                }
+                $BM_email = 'ml_k_mainte@zensho.com'; //IDS pre env.
+                $data = [
+                    'subject'          => $subject,
+                    'maintenance_id'   => $maintenance_id,
+                    'maintenance_code' => $maintenance_code,
+                    'shop_name'        => $shop_name,
+                    'shop_code'        => $shop_code,
+                    'equipment'        => $equipment,
+                    'manufacturer'     => $manufacturer,
+                    'model_number'     => $model_number,
+                    'when'             => $when,
+                    'situation'        => $situation,
+                    'order_type'       => $order_type,
+                    'progress_status'  => $progress_status,
+                    'comment'          => $comment,
+                    'applicant_user'   => $applicant_user,
+                    'updater'          => Auth::user(),
+                    'BM_email'         => $BM_email,
                 ];
-                $bcc = [];
-            }
-            if (config('app.env') == 'staging') {
-                $headquarters = [
-                    'yasu.fukuhara@interface-design.jp',
-                    //'nishioka@interface-design.jp', // 西岡さん
-                    //'satoru.maeki@zensho.com',      // 真栄喜さん
-                    //'eiji.kawate@hamazushi.com',    // HS川手さん
-                ];
+                $files = Maintenance_image::where('maintenance_id', $maintenance_id)->get();
+                foreach ($files as $file) {
+                    $attachedFiles[] = array(
+                        'data'      => Storage::disk('s3')->get("zensho-mainte/images/$maintenance_id/$file->file_name"),
+                        'file_name' => $file->file_name
+                    );
+                }
+
+                $headquarters = $maintenance->shop->business_category->headquarters_email;
+
+                $cc  = explode(',', $maintenance->shop->business_category->approve_email);
+
                 $bcc = [
-                    'fukuhara810@gmail.com',
+                    'satoru.maeki@zensho.com',
+                    'kazuya.arakaki@zensho.com',
+                    'nishioka@interface-design.jp',
+                    'yasu.fukuhara@interface-design.jp'
                 ];
+
+                if (config('app.env') == 'staging') {
+                    $headquarters = [
+                        'yasu.fukuhara@interface-design.jp',
+                    ];
+                    $bcc = [
+                        'fukuhara810@gmail.com'
+                    ];
+                }
+
+                if (config('app.env') == 'local') {
+                    $headquarters = [
+                        'yasu.fukuhara@interface-design.jp',
+                        'nishioka@interface-design.jp'
+                    ];
+                    $bcc = [];
+                }
+
+                Mail::to($headquarters)->cc($cc)->bcc($bcc)->send(new ApprovalMail($data, $attachedFiles));
+                Log::debug('approve email sent.'.print_r($data,true));
+
             }
-
-            Mail::to($headquarters)->bcc($bcc)->send(new ApprovalMail($data, $attachedFiles));
-            Log::debug('approve email sent.'.print_r($data,true));
-
-
-            // csv出力
-    //		$business_category = Business_category::find($shop->shop_business_category);
-    //		$order_type = Order_type::find($maintenance->order_type_id);
-    //		$equipment = Equipment::find($maintenance->equipment_id);
-    //		$category = Category::find($equipment->category_id);
-    //		$sub_category = Sub_category::find($equipment->sub_category_id);
-    //		$client = Client::find($maintenance->client_id);
-    //		$progress = Progress::find($maintenance->progress_id);
-    //		$final_status = Final_status::find($maintenance->final_status_code);		
-    //		
-    //		$columns = [
-    //			[
-    //				"申請No",
-    //				"メンテンスNo",
-    //				"業態コード",
-    //				"業態名称",
-    //				"店舗コード",
-    //				"店舗名",
-    //				"店舗担当",
-    //				"依頼区分コード",
-    //				"依頼区分名",
-    //				"設備No",
-    //				"設備名",
-    //				"大分類コード",
-    //				"大分類名",
-    //				"中分類コード",
-    //				"中分類名",
-    //				"取引先コード",
-    //				"取引先名",
-    //				"依頼内容",
-    //				"備考",
-    //				"緊急・重要フラグ",
-    //				"災害（地震・台風・大雨など）フラグ",
-    //				"受付連絡FAX送信日時",
-    //				"予定日",
-    //				"予定時間",
-    //				"予定日（再）",
-    //				"予定時間（再）",
-    //				"経過ステータス区分コード",
-    //				"経過ステータス区分名",
-    //				"原因/修繕内容",
-    //				"予測費用",
-    //				"見積金額（税抜）",
-    //				"完了日",
-    //				"完了判断者コード",
-    //				"完了判断者名",
-    //				"最終ステータス区分コード",
-    //				"最終ステータス区分名"
-    //			],
-    //			[
-    //				$maintenance['maintenance_id'],
-    //				$maintenance['negozio_maintenance_id'],
-    //				$business_category['business_category_id'],
-    //				$business_category['business_category'],
-    //				$shop['shop_code'],
-    //				$shop['shop_name'],
-    //				$applicant['name'],
-    //				$order_type['order_type_id'],
-    //				$order_type['type'],
-    //				$equipment['equipment_id'],
-    //				$equipment['equipment_name'],
-    //				$category['category_id'],
-    //				$category['category_name'],
-    //				$sub_category['sub_category_id'],
-    //				$sub_category['sub_category_name'],
-    //				$client['client_code'],
-    //				$client['client_name'],
-    //				$maintenance['order'],
-    //				$maintenance['remark'],
-    //				$maintenance['is_emergency'],
-    //				$maintenance['is_disaster'],
-    //				$maintenance['scheduled_date'],
-    //				$maintenance['scheduled_time'],
-    //				$maintenance['rescheduled_date'],
-    //				$maintenance['rescheduled_time'],
-    //				$progress['progress_id'],
-    //				$progress['status'],
-    //				$maintenance['cause_repair'],
-    //				$maintenance['estimated_cost'],
-    //				$maintenance['estimated_amount'],
-    //				$maintenance['completed_date'],
-    //				$maintenance['judge_id'],
-    //				$maintenance['judge'],
-    //				$final_status['final_status_id'],
-    //				$final_status['final_status'],
-    //			],
-    //		];
-    //
-    //		mb_convert_variables('SJIS-win', 'UTF-8', $columns);
-    //		
-    //		$fileName = 'maintenance_ID_' . $maintenance['maintenance_id'] . '.csv';
-    //		
-    //		$f = fopen(storage_path('app/public') . '/csv/' . $fileName, 'a');
-    //		
-    //		if ( $f ) {
-    //			foreach($columns as $line){
-    //				fputcsv($f, $line);
-    //			}
-    //		}
-    //		
-    //		fclose($f);
-    //		
-    //		$contents = Storage::get('public/csv/' . $fileName);
-    //		Storage::disk('s3')->put('/zensho-mainte/csv/' . $fileName, $contents, 'private');
-    //		Storage::delete('public/csv/' . $fileName);
-
-
+            
             return redirect('maintenance/' . $maintenance_id . '/approve/completed');
+
         });
     }
 	

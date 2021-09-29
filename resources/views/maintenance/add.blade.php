@@ -13,7 +13,7 @@
 		<input type="hidden" name="role_id" value="{{ Auth::user()->role_id }}">
 		<input type="hidden" name="applicant_id" value="{{ Auth::user()->user_id }}">
 		
-		@if ( 'BM' === $role )
+		@if ( $role === 'BM' )
 			@if ($errors->has('shop_id'))
 				<span class="invalid-feedback" role="alert">
 					<strong>{{ $errors->first('shop_id') }}</strong>
@@ -31,6 +31,19 @@
 			<input type="hidden" name="shop_id" value="{{ Auth::user()->shop_id }}">
 		@endif
 		
+		@if ($errors->has('applicant_name'))
+			<span class="invalid-feedback" role="alert">
+				<strong>{{ $errors->first('applicant_name') }}</strong>
+			</span>
+		@endif
+		<label class="mb-4">申請者 <span class="badge badge-danger">必須</span>
+            @if ( $role === 'BM' )
+    			<input type="text" name="applicant_name" value="{{ Auth::user()->name }}">
+            @else
+    			<input type="text" name="applicant_name" value="{{ session('form.applicant_name') }}">
+            @endif
+		</label>
+
 		@if ($errors->has('equipment'))
 			<span class="invalid-feedback" role="alert">
 				<strong>{{ $errors->first('equipment') }}</strong>
@@ -65,6 +78,15 @@
 		@endif
 		<label class="mb-4">いつから <span class="badge badge-danger">必須</span>
 			<input type="text" name="when" value="{{ session('form.when') }}" class="mt-1">
+		</label>
+
+		@if ($errors->has('first_handling'))
+			<span class="invalid-feedback" role="alert">
+				<strong>{{ $errors->first('first_handling') }}</strong>
+			</span>
+		@endif
+		<label class="mb-4">初期対応 <span class="badge badge-danger">必須</span>
+			<textarea name="first_handling" cols="30" rows="10" class="mt-1">{{ session('form.first_handling') }}</textarea>
 		</label>
 
 		@if ($errors->has('situation'))
@@ -137,7 +159,7 @@
 					@endif
 					<div class="pl-3 my-2"><input type="file" name="image_{{ $i }}" class="image" accept="image/jpeg"></div>
 					<div class="w-75 mx-auto text-center">
-						<img src="{{ asset('img/sample.png') }}" id="preview-image_{{ $i }}" class="preview" alt="プレビュー画像{{ $i }}">
+						<img src="{{ asset('img/sample_image_'.$i.'.png') }}" id="preview-image_{{ $i }}" class="preview" alt="プレビュー画像{{ $i }}">
 						<canvas id="canvas_image_{{ $i }}" class="canvas" hidden></canvas>
 					</div>
 				</div>
@@ -196,7 +218,12 @@
                 
                 // ファイル選択後に選び直す際何も選ばずキャンセルすると前のプレビューが残ったままになるのでリセット入れとく
                 if ( !file ) {
-                    preview.attr('src', '{{ asset('img/sample.png') }}');
+                    if ( inputName === 'image_1' || inputName === 'image_2' || inputName === 'image_3' ) {
+                        let imgName = 'sample_' + inputName + '.png';
+                        preview.attr('src', '{!! asset("img/'+imgName+'") !!}');
+                    } else {
+                        preview.attr('src', '{{ asset('img/sample.png') }}');
+                    }
                     return;
                 }
 
@@ -239,7 +266,12 @@
                         if ( originalBlob['size'] < 8000 ) {
                             input.val('');
                             alert('エラーが発生しました。\nもう一度ファイルを選択してください。');
-                            preview.attr('src', '{{ asset('img/sample.png') }}');
+                            if ( inputName === 'image_1' || inputName === 'image_2' || inputName === 'image_3' ) {
+                                let imgName = 'sample_' + inputName + '.png';
+                                preview.attr('src', '{!! asset("img/'+imgName+'") !!}');
+                            } else {
+                                preview.attr('src', '{{ asset('img/sample.png') }}');
+                            }
                         }
                     }
 
@@ -268,6 +300,9 @@
 		
 		$('#form-add').validate({
 			rules: {
+				applicant_name: {
+					required: true
+				},
 				equipment: {
 					required: true
 				},
@@ -278,6 +313,9 @@
 					required: true
 				},
 				when: {
+					required: true
+				},
+				first_handling: {
 					required: true
 				},
 				situation: {
@@ -308,6 +346,9 @@
                 @endif
 			},
 			messages: {
+				applicant_name: {
+					required: "入力してください"
+				},
 				equipment: {
 					required: "入力してください"
 				},
@@ -318,6 +359,9 @@
 					required: "入力してください"
 				},
 				when: {
+					required: "入力してください"
+				},
+				first_handling: {
 					required: "入力してください"
 				},
 				situation: {
@@ -365,9 +409,12 @@
 				$(element).removeClass('is-invalid');
 			},
 			submitHandler: function(form) {
+                
+                const $btnConfirm = $('.btn-confirm');
+                const $loading    = $('#loading');
 				
-				$('.btn-confirm').prop('disabled', true);
-				$('#loading').fadeIn();
+				$btnConfirm.prop('disabled', true);
+				$loading.fadeIn();
 				let formData = new FormData(form);
 				let i = 1;
                 $('.image').each(function() {
@@ -422,31 +469,36 @@
 //					console.log(value); 
 //				}
 				
-				$.ajax({
-					url: '{{ url('/maintenance/add/confirm') }}',
-					type: 'POST',
-					cache: false,
-					dataType: 'json',
-					processData: false,
-					contentType: false,
-					data: formData,
-				})
-				.done(function(response) {
-					console.log(response);
-                    $('.btn-confirm').prop('disabled', false);
-					window.location.href = response.url;
-				})
-				.fail(function(xhr) {
-					if ( xhr.status == 422 ) {
-						const errors = xhr['responseJSON'];
-						console.log(errors);
-					}
-
-				})
-				.always(function() {
-
-				});
-
+                $.ajax({
+                    url: '{{ url('check-server-communication') }}',
+                    type: 'GET',
+                })
+                .done(function() {
+                    $.ajax({
+                        url: '{{ url('/maintenance/add/confirm') }}',
+                        type: 'POST',
+                        cache: false,
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
+                        data: formData,
+                    })
+                    .done(function(response) {
+//                        console.log(response);
+                        $btnConfirm.prop('disabled', false);
+                        window.location.href = response.url;
+                    })
+                    .fail(function(xhr) {
+                        console.log(xhr);
+                    });
+                })
+                .fail(function(xhr) {
+//                    console.log(xhr);
+                    alert('通信エラーが発生しました。\nWi-Fi電波が届く場所へ移動して再度お試しください。');
+                    $btnConfirm.prop('disabled', false);
+                    $loading.fadeOut();
+                });
+            
 				return false;
 
 //				form.submit();

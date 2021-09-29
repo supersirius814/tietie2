@@ -3,11 +3,10 @@
     <!-- {{ detail }} -->
     <!-- {{detail.order_type.order_type_id}} -->
 
-    <div slot="header" class="clearfix">
+    <div slot="header">
       <span>依頼情報</span>
 
       <el-button
-        style="float: right"
         type="primary"
         size="small"
         @click="editVisible = true"
@@ -104,18 +103,7 @@
             <tr>
               <th>依頼区分*</th>
               <td style="display: flex">
-                <el-button
-                  v-if="detail.order_type.order_type_id > 3"
-                  style="
-                    width: 100%;
-                    background-color: transparant;
-                    border: 0;
-                    pointer-events: none;
-                  "
-                  width="70%"
-                  @click="setting = true"
-                  >{{ detail.order_type.type }}</el-button
-                >
+                {{ detail.order_type.type }}
                 <el-button
                   v-if="detail.order_type.order_type_id > 3"
                   @click="otherinfo = true"
@@ -127,7 +115,7 @@
                   "
                   >💬</el-button
                 >
-
+                <!--
                 <el-button
                   v-if="detail.order_type.order_type_id < 4"
                   style="
@@ -140,6 +128,7 @@
                   @click="setting = false"
                   >{{ detail.order_type.type }}</el-button
                 >
+                -->
                 <!-- ({{
                     detail.order_reason[0].reason
                   }}) -->

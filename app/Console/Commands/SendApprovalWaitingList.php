@@ -55,9 +55,13 @@ class SendApprovalWaitingList extends Command
         
         $business_category_ids = Business_category::pluck('business_category_id');
         foreach ( $business_category_ids as $business_category_id ) {
+            
+            $headquarters = Business_category::where('business_category_id', $business_category_id)->value('headquarters_email');
+            
             $renotification_time = Business_category_option::where('business_category_id', $business_category_id)
                 ->where('option_name', 'renotification_time')
                 ->value('option_value');
+            
             if ( !empty( $renotification_time ) ) {
                 $now = Carbon::now();
                 $backlogged_maintenances = Maintenance::where('progress_id', 1)
@@ -113,16 +117,15 @@ class SendApprovalWaitingList extends Command
 						foreach ( $district_managers as $district_manager ) {
 							$DM[] = User::find($district_manager->user_id);
 						}
-						if ( config('app.env') == 'local' ) {
-							$DM = 'yasu.fukuhara@interface-design.jp';
-						}
-						$headquarters = [
-                    		'qs-mainte@zensho.com',
-						];
-						if ( config('app.env') == 'local' ) {
-							$headquarters = [];
-						}
 						if ( config('app.env') == 'staging' ) {
+							$headquarters = [
+                                'fukuhara810@gmail.com'
+                            ];
+						}
+						if ( config('app.env') == 'local' ) {
+                            $DM = [
+                                'yasu.fukuhara@interface-design.jp'
+                            ];
 							$headquarters = [];
 						}
 						Mail::to($DM)->cc($headquarters)->send(new NotificationMail($data));

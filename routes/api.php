@@ -24,7 +24,7 @@ Route::post('v1', 'VersionController@index');
 
 Route::post('v1/progress', 'ProgressController@index'); // ステータス一覧取得
 
-Route::post('v1/business_category',  function (Request $request) {
+Route::post('v1/business_category',  function(Request $request) {
     return Business_category::all();
 });
 
@@ -68,8 +68,6 @@ Route::post('v1/admin/csv/export', 'CsvController@export');
 Route::get('v1/admin/csv/export', 'CsvController@export');
 
 Route::get('v1/maintenance/{maintenance_id}/changeprogress', 'MaintenanceController@changeProgress')->middleware('auth');
-
-
 
 
 

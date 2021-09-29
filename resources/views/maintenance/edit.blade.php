@@ -295,8 +295,12 @@
 					$(element).removeClass('is-invalid');
 				},
 				submitHandler: function(form) {
-					$('.btn-update').prop('disabled', true);
-					$('#loading').fadeIn();
+                    
+                    const $btnUpdate = $('.btn-update');
+                    const $loading   = $('#loading');
+                    
+					$btnUpdate.prop('disabled', true);
+					$loading.fadeIn();
 
 					let formData = new FormData(form);
 //					for ( let value of formData.entries() ) {
@@ -329,24 +333,33 @@
 //						console.log(value);
 //					}
 					
-					$.ajax({
-						url: '{{ url('/api/v1/maintenance') }}/{{ $maintenance_id }}/put/update',
-						type: 'POST',
-						cache: false,
-						dataType: 'json',
-						processData: false,
-						contentType: false,
-						data: formData,
-					})
-					.done(function(response) {
-						window.location.href = response.url;
-					})
-					.fail(function(xhr) {
-						
-					})
-					.always(function() {
-						
-					});
+                    $.ajax({
+                        url: '{{ url('check-server-communication') }}',
+                        type: 'GET',
+                    })
+                    .done(function() {
+                        $.ajax({
+                            url: '{{ url('/api/v1/maintenance') }}/{{ $maintenance_id }}/put/update',
+                            type: 'POST',
+                            cache: false,
+                            dataType: 'json',
+                            processData: false,
+                            contentType: false,
+                            data: formData,
+                        })
+                        .done(function(response) {
+                            window.location.href = response.url;
+                        })
+                        .fail(function(xhr) {
+                            console.log(xhr);
+                        });
+                    })
+                    .fail(function(xhr) {
+    //                    console.log(xhr);
+                        alert('通信エラーが発生しました。\nWi-Fi電波が届く場所へ移動して再度お試しください。');
+                        $btnUpdate.prop('disabled', false);
+                        $loading.fadeOut();
+                    });
 					
 					return false;
 					

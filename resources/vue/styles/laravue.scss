@@ -22,4 +22,9 @@
     padding: 10px 20px !important;
     background: #6c757d;
     color: #fff;
+    >div{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    }
 }

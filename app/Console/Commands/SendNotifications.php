@@ -61,7 +61,9 @@ class SendNotifications extends Command
         $business_category_ids = Business_category::pluck('business_category_id');
                 
         foreach ( $business_category_ids as $business_category_id ) {
-
+            
+            $headquarters = Business_category::where('business_category_id', $business_category_id)->value('headquarters_email');
+            
             $notification_time = Business_category_option::where('business_category_id', $business_category_id)
                                     ->where('option_name', 'notification_time')
                                     ->value('option_value');
@@ -69,7 +71,7 @@ class SendNotifications extends Command
             if ( $notification_time ) {
                 $type    = '申請処理状況通知';
                 $subject = 'KMS 申請処理状況通知';
-                $this->sendNotification($notification_time, $type, $subject);                            
+                $this->sendNotification($notification_time, $type, $subject, $headquarters);                            
             }
             
         }
@@ -85,7 +87,7 @@ class SendNotifications extends Command
         
     }
     
-    private function sendNotification($hours, $type, $subject)
+    private function sendNotification($hours, $type, $subject, $headquarters)
     {
         
         // ○時間以上「BM承認待ち」のままの申請を取得
@@ -166,16 +168,15 @@ class SendNotifications extends Command
                 foreach ( $district_managers as $district_manager ) {
                     $DM[] = User::find($district_manager->user_id);
                 }
-                $headquarters = [
-                    'qs-mainte@zensho.com',
-                ];
+                if ( config('app.env') == 'staging' ){
+                    $headquarters = [
+                        'fukuhara810@gmail.com'
+                    ];
+                }
                 if ( config('app.env') == 'local' ) {
                     $headquarters = [
                         'yasu.fukuhara@interface-design.jp',
                     ];
-                }
-                if ( config('app.env') == 'staging' ){
-                    $headquarters = [];
                 }
                 Mail::to($DM)->cc($headquarters)->send(new NotificationMail($data));
 

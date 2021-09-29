@@ -22,7 +22,7 @@
 			</tr>
 			<tr>
 				<th>申請者氏名</th>
-				<td>{{ Auth::user()->name }}</td>
+				<td>{{ $form['applicant_name'] }}</td>
 			</tr>
 		</table>
 	</fieldset>
@@ -33,10 +33,12 @@
 		<input type="hidden" name="business_category_id" value="{{ $form['business_category_id'] }}">
 		<input type="hidden" name="shop_id" value="{{ $form['shop_id'] }}">
 		<input type="hidden" name="applicant_id" value="{{ $form['applicant_id'] }}">
+		<input type="hidden" name="applicant_name" value="{{ $form['applicant_name'] }}">
 		<input type="hidden" name="equipment" value="{{ $form['equipment'] }}">
 		<input type="hidden" name="manufacturer" value="{{ $form['manufacturer'] }}">
 		<input type="hidden" name="model_number" value="{{ $form['model_number'] }}">
 		<input type="hidden" name="when" value="{{ $form['when'] }}">
+		<input type="hidden" name="first_handling" value="{{ $form['first_handling'] }}">
 		<input type="hidden" name="situation" value="{{ $form['situation'] }}">
 		<input type="hidden" name="order_type_id" value="{{ $form['order_type_id'] }}">
 		<input type="hidden" name="order_reason_ids" value="{{ $order_reason_ids }}">
@@ -59,6 +61,10 @@
 				
 		<div class="mb-4">いつから
 			<p class="read-only">{{ $form['when'] }}</p>
+		</div>
+		
+		<div class="mb-4">初期対応
+			<p class="read-only">{{ $form['first_handling'] }}</p>
 		</div>
 		
 		<div class="mb-4">どんな状態
@@ -88,7 +94,7 @@
 
 @section('footer-button')
 	<button type="button" class="back">戻って編集</button>
-	<button type="submit" form="form-confirm" class="btn-confirm">この内容で<br>申請する</button>
+	<button type="button" form="form-confirm" class="btn-confirm">この内容で<br>申請する</button>
 @endsection
 
 @push('scripts')
@@ -97,10 +103,30 @@
 		$('button[type="button"].back').on("click",function(){
 			location.href = document.referrer;
 		});
-		$('form').submit(function () {
-			$('.btn-confirm').prop('disabled', true);
-			$('#loading').fadeIn();
-		});
+        
+        $('.btn-confirm').on('click', function() {
+            
+            const $btnConfirm = $(this);
+            const $loading    = $('#loading');
+            
+            $btnConfirm.prop('disabled', true);
+            $loading.fadeIn();
+            
+            $.ajax({
+                url: '{{ url('check-server-communication') }}',
+                type: 'GET',
+            })
+            .done(function() {
+                $('form').submit();
+            })
+            .fail(function() {
+                alert('通信エラーが発生しました。\nWi-Fi電波が届く場所へ移動して再度お試しください。');
+                $btnConfirm.prop('disabled', false);
+                $loading.fadeOut();
+            });
+            
+        });
+        
 	});
 </script>
 @endpush

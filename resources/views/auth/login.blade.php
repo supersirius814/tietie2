@@ -55,7 +55,11 @@
                                     </span>
                                 @endif
                             </div>
+                            
+                            <div class="col-md-6 offset-md-4 mt-2" style="font-size: 90%;">店舗の方は店舗コードの頭に「00」を付け<br>
+                                ６桁入力してください<br>例：店舗コード：1234<br>　　　　　　↓<br>　　従業員コード：001234</div>
                         </div>
+                        
                         <div class="form-group row">
                             <label for="shop_code" class="col-md-4 col-form-label text-md-right">店舗コード</label>
 

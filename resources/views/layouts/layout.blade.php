@@ -19,7 +19,7 @@
 		<div class="header-inner">
 			
 		
-			<div class="shop-logo" style="background-image: url('/img/logo/{{ $business_category['logo'] }}');"></div>
+			<div class="shop-logo"></div>
 			
 			@if ( 'BM' === $role )
 				<div class="shop-name">{{ $block_name }}</div>

@@ -328,8 +328,9 @@ Route::get('maintenance/{maintenance_id}', function($maintenance_id) {
 	]);
 })->middleware('auth');
 
-
-
+Route::get('check-server-communication', function() {
+    return 'Communication success';
+})->middleware('auth');
 
 Route::get('admin/dashboard', function() {
 	return view('admin.dashboard.chartjs');
@@ -386,6 +387,13 @@ Route::get('admin/csv/import', function() {
 Route::get('admin/csv/export', function() {
 	return view('admin.csv.export');
 })->middleware('auth');
+
+Route::get('master_mainte', 'MasterdataController@index')->middleware('auth');
+Route::get('master_mainte/{value}/update', 'MasterdataController@update')->middleware('auth');
+Route::get('master_mainte/{value}/restore', 'MasterdataController@restore')->middleware('auth');
+
+Route::get('master_mainte_export_csv', 'MasterExportCsvController@index')->middleware('auth');
+Route::get('master_mainte_export_csv/{value}', 'MasterExportCsvController@exportCsv')->middleware('auth');
 
 Route::get('vue', function() {
 	return view('admin');
