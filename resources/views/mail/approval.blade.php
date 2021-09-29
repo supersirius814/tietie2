@@ -21,22 +21,8 @@
 		<td>{{ $data['maintenance_code'] }}</td>
 	</tr>
 	<tr>
-		<th>ステータス</th>
-		<td>
-		@if ( '本部受付前' === $data['progress_status'] )
-			BM承認済（本部受付前）
-		@else
-			{{ $data['progress_status'] }}
-		@endif
-		</td>
-	</tr>
-	<tr>
-		<th>コメント</th>
-		<td>{{ $data['comment'] }}</td>
-	</tr>
-	<tr>
-		<th>更新者</th>
-		<td>{{ $data['updater']->name }}<br>{{ $data['updater']->email }}</td>
+		<th>状態</th>
+		<td>{{ $data['situation'] }}</td>
 	</tr>
 	<tr>
 		<th>何が</th>
@@ -55,12 +41,26 @@
 		<td>{{ $data['when'] }}</td>
 	</tr>
 	<tr>
-		<th>状態</th>
-		<td>{{ $data['situation'] }}</td>
-	</tr>
-	<tr>
 		<th>どうする</th>
 		<td>{{ $data['order_type'] }}</td>
+	</tr>
+	<tr>
+		<th>ステータス</th>
+		<td>
+		@if ( '本部受付前' === $data['progress_status'] )
+			BM承認済（本部受付前）
+		@else
+			{{ $data['progress_status'] }}
+		@endif
+		</td>
+	</tr>
+	<tr>
+		<th>コメント</th>
+		<td>{{ $data['comment'] }}</td>
+	</tr>
+	<tr>
+		<th>更新者</th>
+		<td>{{ $data['updater']->name }}<br>{{ $data['updater']->email }}</td>
 	</tr>
 	</tbody>
 </table>

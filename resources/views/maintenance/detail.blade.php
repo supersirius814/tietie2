@@ -198,6 +198,10 @@
 			row += '<td>' + maintenance['when'] + '</td>';
 			row += '</tr>';
 			row += '<tr>';
+			row += '<th>初期対応</th>';
+			row += '<td>' + maintenance['first_handling'] + '</td>';
+			row += '</tr>';
+			row += '<tr>';
 			row += '<th>どんな状態</th>';
 			row += '<td>' + maintenance['situation'] + '</td>';
 			row += '</tr>';
@@ -237,7 +241,7 @@
 			$('.table-request tbody').append(row);
 			
 			$('.applicant-code').text(maintenance['user']['staff_id']);
-			$('.applicant-name').text(maintenance['user']['name']);
+			$('.applicant-name').text(maintenance['applicant_name']);
 		})
 		.fail(function(xhr) {
 			
@@ -246,11 +250,15 @@
 			
 		});
 		
+        // 送信処理
 		$('button[type="submit"]').on('click', function() {
 
-            $(this).toggleClass('on');
+            const $btnSubmit = $(this);
+            const $loading   = $('#loading');
             
-            if ( $(this).hasClass('btn-reject') || $(this).hasClass('btn-suspend') || $(this).hasClass('btn-sendback') ) {
+            $btnSubmit.toggleClass('on');
+            
+            if ( $btnSubmit.hasClass('btn-reject') || $btnSubmit.hasClass('btn-suspend') || $btnSubmit.hasClass('btn-sendback') ) {
                                 
                 $('#form-comment').validate({
                     rules: {
@@ -277,64 +285,86 @@
                 if ( $('#form-comment').valid() ) {
                     
                     $('button[type="submit"]').prop('disabled', true);
+                    $loading.fadeIn();
+                    
+                    $.ajax({
+                        url: '{{ url('check-server-communication') }}',
+                        type: 'GET',
+                    })
+                    .done(function() {
+                        
+                        if($btnSubmit.hasClass('btn-reject')){
+                            txt = "申請を却下します。";
+                        }
+                        if($btnSubmit.hasClass('btn-suspend')){
+                            txt = "申請を保留します。";
+                        }
+                        if($btnSubmit.hasClass('btn-sendback')){
+                            txt = "申請を差戻します。";
+                        }
+                        if(txt){
+                            if(!confirm(txt+'\nよろしいですか？')) {
+                                $btnSubmit.toggleClass('on');
+                                $('button[type="submit"]').prop('disabled', false);
+                                $loading.fadeOut();
+                                return false;
+                            };            				
+                        }
 
-                    if($(this).hasClass('btn-reject')){
-                        txt = "申請を却下します。";
-                    }
+                        var target = $btnSubmit.attr('form');
+                        var action = $btnSubmit.attr('formaction');
+                        $('#'+target).attr('action',action);
+                        $('#'+target).submit();
+                        
+                    })
+                    .fail(function() {
+                        alert('通信エラーが発生しました。\nWi-Fi電波が届く場所へ移動して再度お試しください。');
+                        $('button[type="submit"]').prop('disabled', false);
+                        $loading.fadeOut();
+                    });
 
-                    if($(this).hasClass('btn-suspend')){
-                        txt = "申請を保留します。";
-                    }
-
-                    if($(this).hasClass('btn-sendback')){
-                        txt = "申請を差戻します。";
-                    }
-
-                    if(txt){
-                        if(!confirm(txt+'\nよろしいですか？')) {
-                            $(this).toggleClass('on');
-                            $('button[type="submit"]').prop('disabled', false);
-                            return false;
-                        };            				
-                    }
-
-                    $('#loading').fadeIn();
-                    var target = $(this).attr('form');
-                    var action = $(this).attr('formaction');
-                    $('#'+target).attr('action',action);
-            		$('#'+target).submit();
                 }
                 
             } else {
                 
                 $('button[type="submit"]').prop('disabled', true);
+                $loading.fadeIn();
                 
-                if($(this).hasClass('btn-delete')){
-                    txt = "申請を取り下げます。";
-                }
-                if($(this).hasClass('btn-approve')){
-                    txt = "申請を承認します。";
-                }
-                if($(this).hasClass('btn-edit')){
-                    txt = "";
-                }
+                $.ajax({
+                    url: '{{ url('check-server-communication') }}',
+                    type: 'GET',
+                })
+                .done(function() {
 
-                if(txt){
-                    if(!confirm(txt+'\nよろしいですか？')) {
-                        $(this).toggleClass('on');
-                        $('button[type="submit"]').prop('disabled', false);
-                        return false;
-                    };
-                }
-                
-                $('#loading').fadeIn();
-                var target = $(this).attr('form');
-                var action = $(this).attr('formaction');
-//                console.log(target);
-//                console.log(action);
+                    if($btnSubmit.hasClass('btn-delete')){
+                        txt = "申請を取り下げます。";
+                    }
+                    if($btnSubmit.hasClass('btn-approve')){
+                        txt = "申請を承認します。";
+                    }
+                    if($btnSubmit.hasClass('btn-edit')){
+                        txt = "";
+                    }
+                    if(txt){
+                        if(!confirm(txt+'\nよろしいですか？')) {
+                            $btnSubmit.toggleClass('on');
+                            $('button[type="submit"]').prop('disabled', false);
+                            $loading.fadeOut();
+                            return false;
+                        };
+                    }
 
-                $('#'+target).attr('action',action);
-                $('#'+target).submit();
+                    var target = $btnSubmit.attr('form');
+                    var action = $btnSubmit.attr('formaction');
+                    $('#'+target).attr('action',action);
+                    $('#'+target).submit();
+                    
+                })
+                .fail(function() {
+                    alert('通信エラーが発生しました。\nWi-Fi電波が届く場所へ移動して再度お試しください。');
+                    $('button[type="submit"]').prop('disabled', false);
+                    $loading.fadeOut();
+                });
             }
             
 		});

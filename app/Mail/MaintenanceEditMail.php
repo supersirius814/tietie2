@@ -35,6 +35,10 @@ class MaintenanceEditMail extends Mailable
         $mail = $this->subject($this->data['subject'])
 			->view('mail.maintenance_edit');
 		
+        if ( preg_match( '/冷凍庫|エアコン/', $this->data['equipment'] ) ) {
+            $mail->priority(1);
+        }
+		
 		foreach ($this->attachedFiles as $attachedFile) {
 			$mail->attachData($attachedFile['data'], $attachedFile['file_name']);
 		}

@@ -18,20 +18,8 @@
 		<td>{{ $data['maintenance_code'] }}</td>
 	</tr>
 	<tr>
-		<th>ステータス</th>
-		<td>{{ $data['progress_status'] }}</td>
-	</tr>
-	<tr>
-		<th>担当BM</th>
-		<td>
-            @foreach ($data['BM'] as $BM)
-                @if ($loop->first)
-                    {{ $BM->name }}
-                @else
-                    ・{{ $BM->name }}
-                @endif
-            @endforeach
-        </td>
+		<th>状態</th>
+		<td>{{ $data['situation'] }}</td>
 	</tr>
 	<tr>
 		<th>何が</th>
@@ -50,12 +38,24 @@
 		<td>{{ $data['when'] }}</td>
 	</tr>
 	<tr>
-		<th>状態</th>
-		<td>{{ $data['situation'] }}</td>
-	</tr>
-	<tr>
 		<th>どうする</th>
 		<td>{{ $data['order_type'] }}</td>
+	</tr>
+	<tr>
+		<th>ステータス</th>
+		<td>{{ $data['progress_status'] }}</td>
+	</tr>
+	<tr>
+		<th>担当BM</th>
+		<td>
+            @foreach ($data['BM'] as $BM)
+                @if ($loop->first)
+                    {{ $BM->name }}
+                @else
+                    ・{{ $BM->name }}
+                @endif
+            @endforeach
+        </td>
 	</tr>
 	</tbody>
 </table>
