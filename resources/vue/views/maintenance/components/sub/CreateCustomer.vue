@@ -139,16 +139,38 @@
       <el-button type="info" size="small" @click="customsearchAgain()">検索</el-button>
     </el-row>
     <div style="text-align: right; padding-bottom: 15px;">
-      <!-- <el-button type="primary" size="small" @click="select()">選択</el-button> -->
+      <el-button type="primary" size="small" @click="select_one()">選択</el-button>
       <!-- <el-button type="default" size="small" @click="$emit('close')">閉じる</el-button> -->
     </div>    
-
-    <el-table
+  <!-- @row-click="rowClick" -->
+  <table  class="detail-table">
+    <tr>
+      <th style="width: 75px">NO</th>
+      <th style="width: 111px">取引先コード</th>
+      <th>取引先名</th>
+      <th>取引先名(カナ)</th>
+      <th  style="width: 104px">区分コード</th>
+      <th style="width: 125px">TEL</th>
+      <th style="width: 125px">FAX</th>
+    </tr>
+    <template v-for="citem, key in this.custom">
+      <tr :class="key === selectedRow ? 'custom-highlight-row' : ''" @click="rowSelect(key)">
+        <td align="center" >{{key + 1}}</td>
+        <td align="center">{{citem.customer_code}}</td>
+        <td align="center">{{citem.customer_name}}</td>
+        <td align="center">{{citem.customer_alias}}</td>
+        <td align="center">{{citem.customergroup_code}}</td>
+        <td align="center">{{citem.TEL}}</td>
+        <td align="center">{{citem.FAX}}</td>
+      </tr>
+    </template>
+  </table>
+    <!-- <el-table
       :data="custom"
       :show-header="true"
-      @row-click="rowClick"
+    
       border
-      style="width: 100%; margin: auto"
+      style="width: 100%; margin: auto: display: none;"
     >
       <el-table-column align="center" prop="id" label="NO"></el-table-column>
       <el-table-column align="center" prop="customer_code" label="取引先コード"></el-table-column>
@@ -158,7 +180,18 @@
       <el-table-column align="center" prop="customergroup" label="区分"></el-table-column>
       <el-table-column align="center" prop="TEL" label="TEL"></el-table-column>
       <el-table-column align="center" prop="FAX" label="FAX"></el-table-column>
-    </el-table>
+      <el-table-column align="center" label="FAX">
+      <template slot-scope="scope">
+        <el-button
+          size="mini"
+          @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
+        <el-button
+          size="mini"
+          type="danger"
+          @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+      </template>
+      </el-table-column>
+    </el-table> -->
 <!-- {{this.custom}} -->
     <!-- <template v-for="item in this.custom">
 
@@ -166,7 +199,23 @@
   </div>
 
 </template>
+<style>
+.el-table .warning-row {
+background: 'rgb(252, 230, 190)';
+}
 
+.el-table .success-row {
+background: 'rgb(252, 230, 190)';
+}
+
+.el-table .other-row {
+background: 'rgb(252, 230, 190)';
+}
+
+.custom-highlight-row{
+  background-color: pink
+}
+</style>
 <script>
 import MaintenanceResource from '@/api/maintenance';
 import CurrencyInput from './CurrencyInput.vue';
@@ -195,6 +244,7 @@ export default {
   },
   data() {
     return {
+      selectedRow: null,
       tt: 353,
    
       accounting_year: new Date(),
@@ -202,6 +252,7 @@ export default {
       customer_code: '',
       // customer_code: this.detail.customer_code,
       id: 0,
+      citem: '',
       item: '',
       // detail: [],
       customer_name: '',
@@ -251,8 +302,6 @@ export default {
           this.customergroup  = '';
           return;
         }
-        // alert(this.data.category_id);
-        // alert("ddd");
         resource.depart_name(this.customergroup_code).then(res =>{
             this.customergroup = res[0].customergroup;
             // this.mid_ca = '';
@@ -260,6 +309,64 @@ export default {
             // this.data_re.sub_category_id = res[0].sub_category_id;
         });         
       },
+      select_one(){
+        // alert(this.custom[this.selectedRow].customer_code);
+        this.detail.customer_code = this.custom[this.selectedRow].customer_code;
+        this.detail.customerInformation[this.detail.customerInformation.length - 1].customer_name = this.custom[this.selectedRow].customer_name;
+        this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL = this.custom[this.selectedRow].TEL;
+        this.detail.customerInformation[this.detail.customerInformation.length - 1].FAX = this.custom[this.selectedRow].FAX;
+
+
+        const updatedata = {
+          id: this.custom[this.selectedRow].id,
+          customer_code: this.custom[this.selectedRow].customer_code,
+          customer_tel: this.custom[this.selectedRow].TEL,
+          customer_alias: this.custom[this.selectedRow].customer_alias,
+          customer_fax: this.custom[this.selectedRow].FAX,
+          customergroup_code: this.custom[this.selectedRow].customergroup_code,
+          customergroup: this.custom[this.selectedRow].customergroup,
+          customer_name: this.custom[this.selectedRow].customer_name,
+          
+        };
+
+        this.customer_code = '';
+        this.customer_name ='';
+        this.customer_tel = '';
+        this.customer_alias = '';
+        this.customer_fax = '';
+        this.customergroup_code = '';
+        this.customergroup = '';
+
+        resource.customsearch(this.custom[this.selectedRow].customer_code).then(res => {
+          
+            if(res == 0) {
+              this.id = 0;
+              // alert(res);
+            }
+            else this.id = res[res.length - 1].id;
+            
+
+
+            
+            // alert(this.detail.maintenance_id); return false;
+            resource.update_customerid(this.detail.maintenance_id, updatedata).then(res => {
+              this.selectedRow = null;
+              // this.custom = '';
+              // this.createCustomerVisible = false;
+              // this.$emit('close');
+              // this.detail.customer_code = re.customer_code;
+              // this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL = res[res.length - 1].TEL; 
+              // this.detail.customerInformation[this.detail.customerInformation.length - 1].FAX = res[res.length - 1].FAX; 
+              // this.detail.customerInformation[this.detail.customerInformation.length - 1].customer_name = res[res.length - 1].customer_name;
+            });
+            // alert(this.customer_id);
+        });  
+      },
+    rowSelect(idx) {
+      console.dir(idx)
+      this.selectedRow = idx;
+    },
+
       rowClick(row) {
         console.log(row);
         this.detail.customer_code = row.customer_code;
