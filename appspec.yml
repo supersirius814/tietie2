@@ -37,6 +37,10 @@ files:
     destination: /var/www/phplaravel/
   - source: /package.json
     destination: /var/www/phplaravel/
+  - source: /webpack.config.js
+    destination: /var/www/phplaravel/
+  - source: /webpack.mix.js
+    destination: /var/www/phplaravel/
   - source: /phpunit.xml
     destination: /var/www/phplaravel/
   - source: /server.php

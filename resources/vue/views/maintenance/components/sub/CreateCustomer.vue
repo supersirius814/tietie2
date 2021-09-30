@@ -261,20 +261,11 @@ export default {
         this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL = row.TEL;
         this.detail.customerInformation[this.detail.customerInformation.length - 1].FAX = row.FAX;
 
-        this.customer_code = '';
-        this.customer_name ='';
-        this.customer_tel = '';
-        this.customer_alias = '';
-        this.customer_fax = '';
-        this.customergroup_code = '';
-        this.customergroup = '';
-
-
         resource.customsearch(row.customer_code).then(res => {
           
             if(res == 0) {
               this.id = 0;
-              // alert(res);
+              alert(res);
             }
             else this.id = res[res.length - 1].id;
             
@@ -293,7 +284,6 @@ export default {
             
             // alert(this.detail.maintenance_id); return false;
             resource.update_customerid(this.detail.maintenance_id, updatedata).then(res => {
-              this.custom = '';
               // this.createCustomerVisible = false;
               $emit('close');
               // this.detail.customer_code = re.customer_code;
