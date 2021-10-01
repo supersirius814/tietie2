@@ -397,10 +397,7 @@ export default {
             
             // alert(this.detail.maintenance_id); return false;
             resource.update_customerid(this.detail.maintenance_id, updatedata).then(res => {
-<<<<<<< HEAD
-=======
               // this.custom = '';
->>>>>>> 74c0a3cf60cbbb5e8f348c8a891197fe66dcd0ae
               // this.createCustomerVisible = false;
               this.$emit('close');
               // this.detail.customer_code = re.customer_code;
