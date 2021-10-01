@@ -14,7 +14,7 @@
         </li>
 
         <li class="pull-right">
-          <el-select v-model="query.progress_id" :multiple="false" placeholder="ステータス" clearable style="width: 150px" class="filter-item">
+          <el-select v-model="query.progress_id" :multiple="false" placeholder="ステータス" clearable style="width: 150px" class="filter-item" v-on:change="handleFilter()">
             <el-option label="すべて選択" :value="0" />
             <el-option label="BM承認待" :value="1" />
             <el-option label="BM承認" :value="2" />
@@ -37,7 +37,7 @@
             <el-option label="店完了" :value="20" />
             <el-option label="取完了" :value="21" />
           </el-select>
-          <el-select v-model="query.business_category_id" placeholder="業態" clearable style="width: 100px" class="filter-item" @change="getShops">
+          <el-select v-model="query.business_category_id" placeholder="業態" clearable style="width: 100px" class="filter-item" @change="getShops" v-on:change="handleFilter()">
             <el-option label="全業態" :value="0" />
             <el-option label="ZHD" :value="1" />
             <el-option label="SK" :value="2" />
@@ -169,13 +169,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="アクション">
+      <!-- <el-table-column align="center" label="アクション">
         <template slot-scope="scope">
           <router-link :to="'/maintenance/detail/'+scope.row.maintenance_id" class="link-type">
             <el-button size="small" type="primary">変更</el-button>
           </router-link>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <div style="text-align:center;">
       <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />

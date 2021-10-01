@@ -102,39 +102,66 @@
           <tbody>
             <tr>
               <th>依頼区分*</th>
-              <td style="display: flex">
-                {{ detail.order_type.type }}
-                <el-button
-                  v-if="detail.order_type.order_type_id > 3"
-                  @click="otherinfo = true"
-                  style="
-                    width: 30%;
-                    background-color: transparant;
-                    border: 0;
-                    color: blue;
-                  "
-                  >💬</el-button
-                >
-                <!--
-                <el-button
-                  v-if="detail.order_type.order_type_id < 4"
-                  style="
-                    width: 100%;
-                    background-color: transparant;
-                    border: 0;
-                    pointer-events: none;
-                  "
-                  width="100%"
-                  @click="setting = false"
-                  >{{ detail.order_type.type }}</el-button
-                >
-                -->
-                <!-- ({{
-                    detail.order_reason[0].reason
-                  }}) -->
-              </td>
-              <!-- <td>
-                  <el-button v-if="detail.order_type.order_type_id > 3" style="width: 100%; background-color: transparant; border: 0; color:blue;">&#128489;</el-button>
+                <td style="display: flex">               
+                    <el-button
+                    v-if="detail.order_type.order_type_id < 4"
+                    style="
+                      width: 70%;
+                      background-color: transparant;
+                      border: 0;
+                      pointer-events: none;"
+                    @click="setting = false"
+                    >{{ detail.order_type.type }}</el-button>
+                    <el-button
+                    v-if="detail.order_type.order_type_id < 4"
+                    style="
+                      width: 30%;
+                      background-color: transparant;
+                      border: 0;
+                      pointer-events: none;"
+                    @click="setting = false"
+                    ><span v-if="detail.order_reason[0].reason">({{ detail.order_reason[0].reason }})</span></el-button>
+
+                   <el-button
+                    v-if="detail.order_type.order_type_id > 3 "
+                    style="
+                      width: 70%;
+                      background-color: transparant;
+                      border: 0;
+                      pointer-events: none;"
+                    @click="setting = false"
+                    >{{ detail.order_type.type }}</el-button>
+                    <el-button
+                    v-if="detail.order_type.order_type_id > 3"
+                    style="
+                      width: 30%;
+                      background-color: transparant;
+                      border: 0;
+                      pointer-events: none;
+                      color: blue;"
+                    @click="setting = false"
+                    >💬</el-button>
+                
+                  <!-- ({{
+                      detail.order_reason[0].reason
+                    }}) -->
+
+                  <!-- {{ detail.order_type.type }} -->
+                  <!-- <el-button
+                    v-if="detail.order_type.order_type_id > 3"
+                    @click="otherinfo = true"
+                    style="
+                      width: 30%;
+                      background-color: transparant;
+                      border: 0;
+                      color: blue;
+                    "
+                    ></el-button
+                  > -->
+                </td>
+              <!-- <td style="display: flex">
+                   {{ detail.order_type.type }}
+                   <el-button v-if="detail.order_type.order_type_id > 3" style="width: 30%; background-color: transparant; border: 0; color:blue;">&#128489;</el-button>
                 </td> -->
             </tr>
           </tbody>
@@ -560,7 +587,7 @@ export default {
       this.$emit('get-detail');
     },
     getsrc(firstimage) {
-      // return;
+      return;
       const fsrc =
         './maintenance/image/' + this.detail.maintenance_id + '/' + firstimage;
       return fsrc;
