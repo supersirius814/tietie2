@@ -55,11 +55,6 @@ return [
         ],
 
         's3' => [
-            // 'driver' => 's3',
-            // 'key' => 'AKIAVMIIJVVJIJYLXD32',
-            // 'secret' => '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',
-            // 'region' => 'us-west-1',
-            // 'bucket' => 'aws-codestar-us-west-1-369921469778',
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
