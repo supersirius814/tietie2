@@ -67,7 +67,6 @@ export default {
       var split_path = file_path.split('/');
       var fileName = split_path[split_path.length - 1];
       var actionUrl = './maintenance/photofile/' + fileName;
-
       this.phototitleData = file_name;
       this.photoviewVisible = true;
       this.photoSrc = actionUrl;

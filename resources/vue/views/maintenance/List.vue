@@ -218,8 +218,6 @@ import MaintenanceResource from '@/api/maintenance';
 import ShopResource from '@/api/shop';
 import waves from '@/directive/waves'; // Waves directive
 
-
-
 const resource = new MaintenanceResource();
 const shopResource = new ShopResource();
 

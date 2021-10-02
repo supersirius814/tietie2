@@ -68,7 +68,6 @@ export default {
         this.detail.order_reason[0].order_reason_id = res.order_reason_id;
         this.detail.order_reason[0].reason = res.reason;
         this.detail.order_type_other_text = this.other;
-        // this.detail.order_type_other_text = res.other;
       });
     },
   },

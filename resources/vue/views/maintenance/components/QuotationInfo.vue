@@ -70,7 +70,6 @@
 </template>
 
 <script>
-
 import QuotationFiles from './sub/QuotationFiles.vue';
 import PhotoFiles from './sub/PhotoFiles.vue';
 import ReportFiles from './sub/ReportFiles.vue';

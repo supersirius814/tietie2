@@ -1,8 +1,5 @@
 <template>
   <div>
-  <!-- {{this.detail.maintenance_progress}} -->
-  <!-- {{this.detail.maintenance_id}} -->
-
     <el-row :gutter="20">
       <el-col :span="10">
         <table class="detail-table">

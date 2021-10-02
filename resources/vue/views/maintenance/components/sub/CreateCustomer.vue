@@ -142,7 +142,6 @@
       <el-button type="primary" size="small" @click="select_one()">選択</el-button>
       <!-- <el-button type="default" size="small" @click="$emit('close')">閉じる</el-button> -->
     </div>    
-  <!-- @row-click="rowClick" -->
   <table  class="detail-table" v-if="this.selectedRow">
     <tr>
       <th style="width: 75px">NO</th>

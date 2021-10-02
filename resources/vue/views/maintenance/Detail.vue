@@ -26,8 +26,6 @@
 </template>
 
 <script>
-// var url = this.baseUrl + this.uri + '/' + id + '/progress/create';
-// console.log(url);
 import Resource from '@/api/resource';
 import RequestInfo from './components/RequestInfo';
 import HistoryInfo from './components/HistoryInfo.vue';

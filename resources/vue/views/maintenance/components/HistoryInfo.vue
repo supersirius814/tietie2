@@ -4,13 +4,6 @@
       <span>経過情報</span>
       <el-button style="float: right;" type="primary" size="small" @click="editVisible=true">登録</el-button>
     </div>
-
-<!-- {{ detail.progress.status }} -->
-<!-- {{detail}} -->
-<!-- {{detail.maintenance_progress[detail.maintenance_progress.length - 1].created_at}} -->
-<!-- {{detail.maintenance_progress.length }} -->
-<!-- {{ this.detail.updated_at}}
-{{ detail.progress.updated_at }} -->
     <el-row :gutter="20">
       <el-col :span="12">
         <table class="detail-table">

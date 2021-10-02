@@ -76,7 +76,7 @@ Route::get('maintenance', function(Request $request) {
 Route::get('maintenance/error', 'MaintenanceController@error')->middleware('auth');
 
 Route::get('maintenance/image/{maintenance_id}/{file_name}', 'ImageController@getImage')->middleware('auth');
-Route::get('maintenance/quotationfile/{file_name}', 'FileViewController@getQuotationFile')->middleware('auth');
+Route::get('maintenance/quotationfile/{file_name}', 'FileViewController@getQuotationFile')->middleware('auth');//quotation pdf, report pdf, photo image view
 Route::get('maintenance/reportfile/{file_name}', 'FileViewController@getReportFile')->middleware('auth');
 Route::get('maintenance/photofile/{file_name}', 'FileViewController@getPhotoFile')->middleware('auth');
 

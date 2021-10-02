@@ -30,6 +30,8 @@ export default {
     };
   },
   mounted() {
+    //pop up queryselect from bottom to up
+    
     // const dialogs = document.querySelectorAll('.bottom-dialog');
     // dialogs.forEach(el => {
     //   el.closest('.el-dialog__wrapper').classList.add('bottom-dialog-wrapper');

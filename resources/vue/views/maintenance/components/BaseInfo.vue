@@ -173,13 +173,7 @@ export default {
       mail_data: 'mailto:' + this.detail.user.email,
       userName: '', 
       createAccounting: false,
-      // tableData: [
-      //   { title: '地域会社', name: '-', manager: '-', to: false, cc: false },
-      //   { title: '営業部', name: '西日本', manager: '町野', to: false, cc: false },
-      //   { title: 'ディストリクト', name: '東海', manager: '高木', to: false, cc: false },
-      //   { title: 'ブロック', name: '東愛知', manager: '山田克', to: false, cc: false },
-      //   { title: 'エリア', name: '安城', manager: '細川', to: false, cc: false },
-      // ],
+ 
 
       tableData: [
         { title: '地域会社', name: '-', manager: '-', to: false, cc: false },
@@ -199,7 +193,7 @@ export default {
     getsend() {
       var emails_ge = "", emails_cc = "", emails = "";
       var flag = 0, flag_re = 0;
-      // console.log(this.tableData);
+
       this.tableData.forEach(element => {
         if(flag < 1) {
           if(element.to ==true){
@@ -235,7 +229,6 @@ export default {
         emails = emails_ge; 
       }
       window.location.href = "mailto:" + emails;
-      // console.log(emails);
     },
   },
 };

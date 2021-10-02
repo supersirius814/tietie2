@@ -600,8 +600,7 @@ export default {
       // alert(this.detail.maintenance_id);
 
       resource.getImage(this.detail.maintenance_id, file_data).then((res) => {
-        // this.firstimage = res;
-        // console.log(res);
+
       });
     },
   },

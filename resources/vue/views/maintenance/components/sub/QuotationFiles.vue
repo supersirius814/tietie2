@@ -1,7 +1,5 @@
 <template>
   <div>
-    <!-- {{this.uri}} -->
-    <!-- {{detail.quotation_files}} -->
     <el-row :gutter="20">
       <el-col
         v-for="item in detail.quotation_files"

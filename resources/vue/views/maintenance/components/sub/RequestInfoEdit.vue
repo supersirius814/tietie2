@@ -235,8 +235,6 @@ export default {
       data_re: null,
       big_ca: '',
       mid_ca: '',
-      // data_re.category_id
-      // data_re.sub_category_id
       createCustomerVisible: false,
       categories: [],
       subCategories: [],
