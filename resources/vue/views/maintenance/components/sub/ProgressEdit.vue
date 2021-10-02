@@ -127,28 +127,37 @@
         </table>
       </el-col>
     </el-row>
-    <div style="text-align:right;">
+    <div style="text-align:right; padding-bottom: 15px;">
       <el-button type="primary" size="small" @click="save()">登録</el-button>
       <!-- <el-button type="default" size="small"  @click="handleClose()"  ref="Dialog" >閉じる</el-button> -->
     </div>
-    <el-table :data="detail.maintenance_progress" :show-header="true" border style="width: 100%">
-      <el-table-column align="center" prop="created_at" label="日時" width="160px" />
-      <el-table-column align="center" prop="progress_id" label="ステータス" :formatter="formatterProgress" width="100px" />
-      <el-table-column align="center" prop="entered_by.name" label="入力者" width="100px" />
-      <el-table-column align="center" prop="comment" label="コメント" />
-      <el-table-column align="center" label="FAX送信">
-        <el-table-column align="center" prop="faxed_to_client" label="取" width="50px">
-          <template slot-scope="scope">
-            <span>{{ scope.row.faxed_to_client == 1 ? '済' : '' }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="faxed_to_shop" label="店" width="50px">
-          <template slot-scope="scope">
-            <span>{{ scope.row.faxed_to_shop == 1 ? '済' : '' }}</span>
-          </template>
-        </el-table-column>
-      </el-table-column>
-    </el-table>
+      <table  class="detail-table">
+        <tr>
+          <th rowspan="2">日時</th>
+          <th rowspan="2">ステータス</th>
+          <th rowspan="2">入力者</th>
+          <th rowspan="2">コメント</th>
+          <th colspan="2">
+            FAX送信
+          </th>       
+        </tr>
+        <tr>
+          <th style="width: 50px">取</th>
+          <th style="width: 50px">店</th>        
+        </tr>
+        <template v-for="item in detail.maintenance_progress">
+          <tr>
+            <td align="center">
+              <span v-html="item.created_at"></span>
+            </td>
+            <td align="center">{{ progress[item.progress_id] }}</td>
+            <td align="center">{{ item.entered_by.name }}</td>
+            <td align="center">{{ item.comment }}</td>
+            <td align="center" width="50px">{{ item.faxed_to_client == 1 ? '済' : '' }}</td>
+            <td align="center" width="50px">{{ item.faxed_to_shop == 1 ? '済' : '' }}</td>
+          </tr>
+        </template>
+      </table>
   </div>
 </template>
 
@@ -207,16 +216,6 @@ export default {
 
   methods: {
 
-
- handleClose() {
-    // this.$refs.Dialog.hide();
-  //  alert("dd");
-    this.hide;
- },
-  
-    formatterProgress(row, column) {
-      return this.progress[row.progress_id] ?? '';
-    },
     save() {
       this.$refs.uploadReport.submit();
       this.$refs.uploadPhoto.submit();
@@ -227,7 +226,8 @@ export default {
         faxed_to_shop: this.faxedToShop,
       };
       resource.createProgress(this.detail.maintenance_id, insertData).then(res => {
-        this.detail.maintenance_progress = res[0];
+        this.detail.maintenance_progress = res;
+        console.log(res);
         this.detail.progress_id = this.progressId;
         this.detail.progress = {
           progress_id: this.progressId,

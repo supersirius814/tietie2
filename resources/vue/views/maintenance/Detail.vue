@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    
   <!-- {{ detail.customerInformation }} -->
     <div style="position: fixed;top:10px;left:300px;z-index:10;">
       <el-button type="primary" size="mini" @click="bottomVisible=true"><svg-icon icon-class="upload" />  同一中分類過去履歴</el-button>
@@ -18,7 +19,7 @@
       <qa-dialog v-if="detail" :detail="detail" />
     </el-dialog>
 
-    <el-dialog v-if="detail" title="" :visible.sync="bottomVisible" width="100%" custom-class="bottom-dialog" top="0px">
+    <el-dialog v-if="detail" title="" :visible.sync="bottomVisible" width="100%" custom-class="bottom-dialog el-dialog__wrapper bottom-dialog-wrapper" top="0px">
       <bottom-dialog :shop-id="detail.shop_id" :sub-category-id="detail.sub_category_id" />
     </el-dialog>
   </div>
@@ -65,6 +66,30 @@ export default {
   margin-bottom: 10px;
   &:last-child {
     margin-bottom: 0;
+  }
+}
+</style>
+
+// bottomdialog pop up down, out setting
+<style>
+@keyframes dialog-fade-in {
+  0% {
+    transform: translate3d(0, 100%, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+@keyframes dialog-fade-out {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(0, 100%, 0);
+    opacity: 0;
   }
 }
 </style>

@@ -124,16 +124,33 @@
       </tbody>
     </table>
     <div style="text-align:right;margin-top:10px;">
-      <el-button type="primary" size="small" >特記編集</el-button>
+      <el-button type="primary" size="small" @click="createAccounting=true">特記編集</el-button>
     </div>
-
+    <el-dialog
+      title="【会計情報】"
+      :visible.sync="createAccounting"
+      width="43%"
+      custom-class="slide-dialog"
+      top="0px"
+      :modal="false"
+    >
+      <CreateNotes :detail="detail"/>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="createAccounting = false">閉じる</el-button>
+      </span> 
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import MaintenanceResource from '@/api/maintenance';
+
+import CreateNotes from './sub/CreateNotes.vue';
+
 export default {
+  components: { MaintenanceResource, CreateNotes },
   props: {
-        detail: {
+    detail: {
       type: Object,
       default: () => {
         return {};
@@ -155,6 +172,7 @@ export default {
     return {
       mail_data: 'mailto:' + this.detail.user.email,
       userName: '', 
+      createAccounting: false,
       // tableData: [
       //   { title: '地域会社', name: '-', manager: '-', to: false, cc: false },
       //   { title: '営業部', name: '西日本', manager: '町野', to: false, cc: false },

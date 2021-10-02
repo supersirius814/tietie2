@@ -30,10 +30,10 @@ export default {
     };
   },
   mounted() {
-    const dialogs = document.querySelectorAll('.bottom-dialog');
-    dialogs.forEach(el => {
-      el.closest('.el-dialog__wrapper').classList.add('bottom-dialog-wrapper');
-    });
+    // const dialogs = document.querySelectorAll('.bottom-dialog');
+    // dialogs.forEach(el => {
+    //   el.closest('.el-dialog__wrapper').classList.add('bottom-dialog-wrapper');
+    // });
   },
   methods: {
     toggle(){

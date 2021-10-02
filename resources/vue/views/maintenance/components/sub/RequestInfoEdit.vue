@@ -1,5 +1,6 @@
 <template>
   <div>
+    
     <!-- {{categories}} -->
     <!-- {{categories}}
   {{subCategories}} -->
@@ -50,7 +51,7 @@
               <th>取引先コード</th>
               <td>{{detail.customer_code}}</td>
               <td style="border:none;padding:0 5px;">
-                <el-button type="info" size="small" @click="createCustomerVisible = true">検索</el-button>
+                <el-button type="info" size="small" @click="createCustomerVisibleSetting()">検索</el-button>
               </td>
             </tr>
           </tbody>
@@ -200,7 +201,7 @@
       top="0px"
       :modal="false"
     >
-      <create-customer :detail="detail" :custom="custom"/>
+      <create-customer :detail="detail" :selectedRow="custom"/>
       <span slot="footer" class="dialog-footer">
         <!-- <el-button type="primary" @click="createAccounting = false">登録</el-button> -->
         <!-- <el-button @click="createCustomerVisible = false">閉じる</el-button> -->
@@ -228,7 +229,9 @@ export default {
   },
   data() {
     return {
-      custom:[],
+      row_id:'',
+      custom: null,
+      custom_data: [],
       data_re: null,
       big_ca: '',
       mid_ca: '',
@@ -256,9 +259,14 @@ export default {
   created() {
     this.data_re = JSON.parse(JSON.stringify(this.detail));
     this.getList();
+    // this.$route.params.set('name', 'john');
   },
   methods: {
-
+    createCustomerVisibleSetting() {
+      this.$route.params['custom_tableData'] = '';
+      this.$route.params['selectedRow'] = 0;      
+      this.createCustomerVisible = true;
+    },
     big_middleconnect () {
       // console.log(this.data_re.category_id);
             if(!this.big_ca) {

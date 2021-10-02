@@ -1,26 +1,32 @@
 <template>
-
   <div>
-
     <el-row :gutter="20">
       <el-col :span="10">
         <table class="detail-table">
           <tbody>
             <tr>
               <th>日時</th>
-              <td class="input-td"><datetime v-model="date"   type="datetime"
-  input-class="my-class" placeholder="日付を選択してください。"
-  :format="{ year: 'numeric', 
-month: '2-digit', 
-day: '2-digit', 
-hour: 'numeric', 
-minute: '2-digit', 
-hour12: false}"
-  :phrases="{ok: 'Continue', cancel: 'Exit'}"
-  :hour-step="1"
-  :minute-step="60"
-  :week-start="7"
-  auto></datetime></td>
+              <td class="input-td">
+                <datetime
+                  v-model="date"
+                  type="datetime"
+                  input-class="my-class"
+                  placeholder="日付を選択してください。"
+                  :format="{
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: false,
+                  }"
+                  :phrases="{ ok: 'Continue', cancel: 'Exit' }"
+                  :hour-step="1"
+                  :minute-step="60"
+                  :week-start="7"
+                  auto
+                ></datetime>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -42,8 +48,13 @@ hour12: false}"
           <tbody>
             <tr>
               <th>金額</th>
-              <td class="input-td">  <currency-input v-model="amount" :options="{ currency: 'JPY' }" class="el-input__inner"/>
-                    <!-- <input v-model="amount" /> -->
+              <td class="input-td">
+                <currency-input
+                  v-model="amount"
+                  :options="{ currency: 'JPY' }"
+                  class="el-input__inner"
+                />
+                <!-- <input v-model="amount" /> -->
               </td>
             </tr>
           </tbody>
@@ -56,7 +67,9 @@ hour12: false}"
           <tbody>
             <tr>
               <th>摘要</th>
-              <td class="input-td"><input v-model="comment" class="el-input__inner"/></td>
+              <td class="input-td">
+                <input v-model="comment" class="el-input__inner" />
+              </td>
             </tr>
           </tbody>
         </table>
@@ -72,7 +85,8 @@ hour12: false}"
                 <el-upload
                   ref="uploadQuotation"
                   :action="
-                    '/api/v2/maintenance/upload/quotation/' + detail.maintenance_id
+                    '/api/v2/maintenance/upload/quotation/' +
+                    detail.maintenance_id
                   "
                   :auto-upload="false"
                   :multiple="false"
@@ -150,13 +164,27 @@ hour12: false}"
       border
       style="width: 100%; margin-top: 2%"
     >
-      <el-table-column align="center" prop="date" label="日時"  />
-      <el-table-column align="center" prop="amount" label="金額" :formatter="formatterCurrency"  />
+      <el-table-column align="center" prop="date" label="日時" />
+      <el-table-column
+        align="center"
+        prop="amount"
+        label="金額"
+        :formatter="formatterCurrency"
+      />
       <el-table-column align="center" prop="comment" label="摘要" />
-      <el-table-column align="center" prop="quotation_files_cnt" label="見積書" />
+      <el-table-column
+        align="center"
+        prop="quotation_files_cnt"
+        label="見積書"
+      />
       <el-table-column align="center" prop="photo_files_cnt" label="写真" />
       <el-table-column align="center" prop="report_files_cnt" label="報告書" />
-      <el-table-column align="center" prop="editor" label="入力者" width="100" />
+      <el-table-column
+        align="center"
+        prop="editor"
+        label="入力者"
+        width="100"
+      />
     </el-table>
     <!-- <el-table
       :data="detail.quotation_info"
@@ -240,16 +268,16 @@ hour12: false}"
 <script>
 import MaintenanceResource from '@/api/maintenance';
 import CurrencyInput from './CurrencyInput.vue';
-import 'vue-datetime/dist/vue-datetime.css'
+import 'vue-datetime/dist/vue-datetime.css';
 import { Datetime } from 'vue-datetime';
-import { Settings } from 'luxon'
+import { Settings } from 'luxon';
 import { DateTime } from 'luxon';
 
-Settings.defaultLocale = 'ja'
+Settings.defaultLocale = 'ja';
 const resource = new MaintenanceResource();
 
 export default {
-   components: { CurrencyInput, Datetime },
+  components: { CurrencyInput, Datetime },
   props: {
     detail: {
       type: Object,
@@ -264,7 +292,6 @@ export default {
       comment: '',
       date: '',
       amount: '',
-    
     };
   },
   created() {
@@ -272,15 +299,14 @@ export default {
       this.userName = user.name;
     });
   },
-  
+
   methods: {
     formatterCurrency(row, column) {
-      if(row.amount == null) return;
+      if (row.amount == null) return;
       return '¥' + row.amount;
     },
 
     save() {
-
       this.$refs.uploadReport.submit();
       this.$refs.uploadPhoto.submit();
       this.$refs.uploadQuotation.submit();
@@ -319,7 +345,6 @@ export default {
 
     getQuotationFiles() {
       resource.getQuotationFiles(this.detail.maintenance_id).then((files) => {
-            
         this.detail.quotation_files = files;
       });
     },

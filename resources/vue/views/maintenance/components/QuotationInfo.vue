@@ -69,46 +69,6 @@
   </div>
 </template>
 
-<!--
-// <script>
-// import CreateQuotation from './sub/CreateQuotation.vue';
-// import Resource from '@/api/resource';
-
-// const resource = new Resource('maintenance');  
-// console.log(resource);
-// export default {
-//   components: { CreateQuotation },
-//   props: {
-//     user: {
-//       type: Object,
-//       default: () => {
-//         return {
-//           name: '',
-//           email: '',
-//           avatar: '',
-//           roles: [],
-//         };
-//       },
-//     },
-//   },
-//   data() {
-//     return {
-//       createQuotation: false,
-//       tableData: [
-//         { v1: '2020/05/15 18:00:00', v2: '200,000', v3: '作業後の訂正見積', v4: '川手' },
-//         { v1: '2020/05/15 18:00:00', v2: '200,000', v3: '作業後の訂正見積', v4: '川手' },
-//         { v1: '2020/05/15 18:00:00', v2: '200,000', v3: '作業後の訂正見積', v4: '川手' },
-//         { v1: '2020/05/15 18:00:00', v2: '200,000', v3: '作業後の訂正見積', v4: '川手' },
-//       ],
-//     };
-//   },
-//   methods: {
-//   },
-// };
-// </script>
--->
-
-
 <script>
 
 import QuotationFiles from './sub/QuotationFiles.vue';

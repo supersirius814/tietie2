@@ -139,7 +139,7 @@
                       border: 0;
                       pointer-events: none;
                       color: blue;"
-                    @click="setting = false"
+                    @click="setting = true"
                     >💬</el-button>
                 
                   <!-- ({{
@@ -491,7 +491,7 @@ ssssssssssssssss <el-image src="./maintenance/image/101/M000000101_SK_999998_202
       <span>{{ detail.order_type_other_text }}</span>
     </el-dialog>
 
-    <el-dialog title="" :visible.sync="baseInfoVisible" width="700px" top="0px">
+    <el-dialog title="" :visible.sync="baseInfoVisible" width="700px" top="0px" custom-class="slide-dialog">
       <base-info :detail="detail" />
 
     </el-dialog>

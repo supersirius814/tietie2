@@ -3,11 +3,34 @@
     <el-row :gutter="20">
       <el-col v-for="item in detail.report_files" :key="item.report_file_id" :span="4" style="text-align:center;">
         <span>
-          <i class="el-icon-picture" style="display:block; font-size:60px;margin:auto;margin-bottom:10px;" />
-          {{ item.file_name }}
+          <a
+            href="#"
+            @click.prevent="reportFileView(item.file_path, item.file_name)"
+          >
+            <i class="el-icon-picture" style="display:block; font-size:60px;margin:auto;margin-bottom:10px;" />
+            {{ item.file_name }}
+          </a>
         </span>
       </el-col>
     </el-row>
+
+    <el-dialog
+      :visible.sync="reportpdfviewVisible"
+      width="45%"
+      :modal="false"
+    >
+      <span slot="title" ><i class="el-icon-info"></i> {{ reporttitleData }} </span>
+          <embed
+            v-if="reportpdfSrc"
+                  type="video/webm"
+                  :src="reportpdfSrc"
+                  width="100%"
+                  style="max-height: 50rem; min-height: 30rem"
+            />
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="reportpdfviewVisible = false">閉じる</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -20,6 +43,26 @@ export default {
       default: () => {
         return {};
       },
+    },
+  },
+  data() {
+    return {
+      reportpdfviewVisible: false,
+      reportpdfSrc: '',
+      reporttitleData: '',
+    };
+    
+  },
+  methods: {
+
+    reportFileView(file_path, file_name) {
+      var split_path = file_path.split('/');
+      var fileName = split_path[split_path.length - 1];
+      var actionUrl =  './maintenance/reportfile/' + fileName;
+
+      this.reporttitleData = file_name;
+      this.reportpdfviewVisible = true;
+      this.reportpdfSrc = actionUrl;
     },
   },
 };

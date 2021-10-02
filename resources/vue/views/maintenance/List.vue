@@ -1,5 +1,7 @@
 <template>
+
   <div class="app-container">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <div class="filter-container">
       <ul class="list-inline">
         <li style="margin-left:40px;">
@@ -111,11 +113,11 @@
       </ul>
     </div>
 
-    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%" :row-class-name="tableRowClassName">
       <el-table-column align="center" label="メンテナンスNo">
         <template slot-scope="scope">
           <router-link :to="'/maintenance/detail/'+scope.row.maintenance_id" class="link-type">
-            <span>{{ scope.row.maintenance_code }}</span>
+            <span v-html="scope.row.maintenance_code"></span>
           </router-link>
         </template>
       </el-table-column>
@@ -182,7 +184,34 @@
     </div>
   </div>
 </template>
+<style>
+.el-table .warning-row {
+background: 'rgb(252, 230, 190)';
+}
 
+.el-table .success-row {
+background: 'rgb(252, 230, 190)';
+}
+
+.el-table .other-row {
+background: 'rgb(252, 230, 190)';
+}
+
+.custom-highlight-row{
+  background-color: pink!important;
+}
+
+.custom-danger-row{
+  background-color: #fff8e6!important;
+  content: "\e7a1";
+}
+
+
+.custom-warning-row{
+  background-color: #ffdbdb!important;
+  
+}
+</style>
 <script>
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import MaintenanceResource from '@/api/maintenance';
@@ -221,6 +250,17 @@ export default {
     this.getList();
   },
   methods: {
+   tableRowClassName({row, rowIndex}) {
+     if(row.order_reason_id > 0) {
+       if(row.order_reason_id > 3) {
+         return 'custom-danger-row';
+       } else if(row.order_reason_id < 4) {
+         return 'custom-warning-row';
+       }
+     }
+    return;
+  },
+
     async getList() {
       const { limit, page } = this.query;
       this.loading = true;
@@ -228,6 +268,13 @@ export default {
       this.list = data;
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
+        if(element.order_reason_id > 0){
+          if(element.order_reason_id > 3) {
+            element.maintenance_code = '<i style="color: #ffba00; padding-right: 5px" class="fa">&#xf071;</i>' + element.maintenance_code; 
+          } else {
+             element.maintenance_code = '<i class="el-icon-info" style="color: #ff4949;  padding-right: 5px"></i>' + element.maintenance_code; 
+          }
+        } 
       });
       this.total = meta.total;
       this.loading = false;

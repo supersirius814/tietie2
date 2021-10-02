@@ -134,7 +134,7 @@ class MaintenanceController extends Controller
         // $maintenance->save();
 
         // $maintenance_progress = Maintenance_progress::with('entered_by')->where('maintenance_id', $maintenance_id)->orderBy('updated_at', 'desc')->get();
-        $maintenance_progress = Maintenance_progress::with('entered_by')->where('maintenance_id', $maintenance_id)->get();
+        $maintenance_progress = Maintenance_progress::with('entered_by')->where('maintenance_id', $maintenance_id)->orderBy('updated_at', 'desc')->get();
         
         return response($maintenance_progress);
     }
@@ -267,7 +267,7 @@ class MaintenanceController extends Controller
         if ($request->file('file')) {
 
             //store file into document folder
-            $file = $request->file->store('public/reports');
+            $file = $request->file->store('public/quotations');
 
             //store your file into database
             $reportFile = new Quotation_file();
@@ -595,6 +595,22 @@ class MaintenanceController extends Controller
         // echo "dkdkdkdk//ddkkddkdk";
 	}
 
+    public function getfile(Request $request, $maintenance_id)
+	{
+        $file_path = $request->input('file_path');
+        // $file = Storage::get($file_path);
+        $file = Storage::disk('local')->get($file_path);
+        // header('Content-type: application/pdf');
+        header('Content-type: image/jpeg');
+        // return response::make(file_get_contents($path), 200, [
+        //     'Content-Type' => 'application/pdf',
+        //     'Content-Disposition' => 'inline; filename="'.$file.'"'
+        // ]);
+        
+		return response(asset($file));
+
+	}
+    
     public function getReportFiles(Request $request, $maintenance_id)
     {
         $files = Report_file::where('maintenance_id', $maintenance_id)->get();

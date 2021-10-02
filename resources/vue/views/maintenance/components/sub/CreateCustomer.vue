@@ -143,7 +143,7 @@
       <!-- <el-button type="default" size="small" @click="$emit('close')">閉じる</el-button> -->
     </div>    
   <!-- @row-click="rowClick" -->
-  <table  class="detail-table">
+  <table  class="detail-table" v-if="this.selectedRow">
     <tr>
       <th style="width: 75px">NO</th>
       <th style="width: 111px">取引先コード</th>
@@ -219,6 +219,7 @@ background: 'rgb(252, 230, 190)';
 <script>
 import MaintenanceResource from '@/api/maintenance';
 import CurrencyInput from './CurrencyInput.vue';
+import RequestInfoEdit from './RequestInfoEdit.vue';
 import { MonthPickerInput } from 'vue-month-picker'
 import { Datetime } from 'vue-datetime';
 import { Settings } from 'luxon'
@@ -227,29 +228,24 @@ const resource = new MaintenanceResource();
 
 
 export default {
-  components: { CurrencyInput, MonthPickerInput },
+  components: { CurrencyInput, MonthPickerInput, RequestInfoEdit },
   props: {
     detail: {
       type: Object,
       default: () => {
-        return {};
+        return {
+        };
       },
     },
-    custom: {
-      type: Array,
-      default: () => {
-        return {};
-      },     
-    }
   },
   data() {
     return {
-      selectedRow: null,
+      selectedRow: this.$route.params['selectedRow'],
       tt: 353,
-   
       accounting_year: new Date(),
       format: "yyyy/MM/ddd",
       customer_code: '',
+      custom: '',
       // customer_code: this.detail.customer_code,
       id: 0,
       citem: '',
@@ -294,6 +290,10 @@ export default {
     this.$store.dispatch('user/getInfo').then(user => {
       this.userName = user.name;
     });
+     console.log(RequestInfoEdit.data().createCustomerVisible);
+  },
+  mounted() {
+
   },
   methods: {
       depart_name() {
@@ -341,25 +341,13 @@ export default {
           
             if(res == 0) {
               this.id = 0;
-              // alert(res);
             }
             else this.id = res[res.length - 1].id;
-            
 
-
-            
-            // alert(this.detail.maintenance_id); return false;
             resource.update_customerid(this.detail.maintenance_id, updatedata).then(res => {
-              this.selectedRow = null;
-              // this.custom = '';
-              // this.createCustomerVisible = false;
-              // this.$emit('close');
-              // this.detail.customer_code = re.customer_code;
-              // this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL = res[res.length - 1].TEL; 
-              // this.detail.customerInformation[this.detail.customerInformation.length - 1].FAX = res[res.length - 1].FAX; 
-              // this.detail.customerInformation[this.detail.customerInformation.length - 1].customer_name = res[res.length - 1].customer_name;
+              console.log('custom_code select success');
+              // this.selectedRow = null;
             });
-            // alert(this.customer_id);
         });  
       },
     rowSelect(idx) {
@@ -367,47 +355,6 @@ export default {
       this.selectedRow = idx;
     },
 
-      rowClick(row) {
-        console.log(row);
-        this.detail.customer_code = row.customer_code;
-        this.detail.customerInformation[this.detail.customerInformation.length - 1].customer_name = row.customer_name;
-        this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL = row.TEL;
-        this.detail.customerInformation[this.detail.customerInformation.length - 1].FAX = row.FAX;
-
-        resource.customsearch(row.customer_code).then(res => {
-          
-            if(res == 0) {
-              this.id = 0;
-              alert(res);
-            }
-            else this.id = res[res.length - 1].id;
-            
-
-            const updatedata = {
-              id: row.id,
-              customer_code: row.customer_code,
-              customer_tel: row.customer_tel,
-              customer_alias: row.customer_alias,
-              customer_fax: row.customer_fax,
-              customergroup_code: row.customergroup_code,
-              customergroup: row.customergroup,
-              customer_name: row.customer_name,
-              
-            };
-            
-            // alert(this.detail.maintenance_id); return false;
-            resource.update_customerid(this.detail.maintenance_id, updatedata).then(res => {
-              // this.custom = '';
-              // this.createCustomerVisible = false;
-              this.$emit('close');
-              // this.detail.customer_code = re.customer_code;
-              // this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL = res[res.length - 1].TEL; 
-              // this.detail.customerInformation[this.detail.customerInformation.length - 1].FAX = res[res.length - 1].FAX; 
-              // this.detail.customerInformation[this.detail.customerInformation.length - 1].customer_name = res[res.length - 1].customer_name;
-            });
-            // alert(this.customer_id);
-        });  
-      },  
     formatterProgress(row, column) {
       return this.progress[row.progress_id] ?? '';
     },
@@ -425,6 +372,7 @@ export default {
       }
       resource.customsearchAgain(this.detail.maintenance_id, search_data).then(res => {
         this.custom = res;
+        this.selectedRow = -1; 
         // this.customer_name = res[res.length - 1].customer_name;
         // this.customer_code = res[res.length - 1].customer_code;
         // this.customer_alias = res[res.length - 1].customer_alias;

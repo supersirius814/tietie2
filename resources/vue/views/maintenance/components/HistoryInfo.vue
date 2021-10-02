@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card">
+  <el-card class="box-card"  @get-detail="getBreakDate()">
     <div slot="header" class="clearfix">
       <span>経過情報</span>
       <el-button style="float: right;" type="primary" size="small" @click="editVisible=true">登録</el-button>
@@ -28,7 +28,34 @@
         <el-button type="info" size="mini" @click="reportFilesVisible=true">報告書({{ detail.report_files.length }})</el-button>
       </el-col>
     </el-row>
-    <el-table :data="detail.maintenance_progress" :show-header="true" border style="width: 100%">
+      <table  class="detail-table">
+        <tr>
+          <th rowspan="2">日時</th>
+          <th rowspan="2">ステータス</th>
+          <th rowspan="2">入力者</th>
+          <th rowspan="2">コメント</th>
+          <th colspan="2">
+            FAX送信
+          </th>       
+        </tr>
+        <tr>
+          <th style="width: 50px">取</th>
+          <th style="width: 50px">店</th>        
+        </tr>
+        <template v-for="item in detail.maintenance_progress">
+          <tr>
+            <td align="center">
+              <span v-html="item.created_at"></span>
+            </td>
+            <td align="center">{{ progress[item.progress_id] }}</td>
+            <td align="center">{{ item.entered_by.name }}</td>
+            <td align="center">{{ item.comment }}</td>
+            <td align="center" width="50px">{{ item.faxed_to_client == 1 ? '済' : '' }}</td>
+            <td align="center" width="50px">{{ item.faxed_to_shop == 1 ? '済' : '' }}</td>
+          </tr>
+        </template>
+      </table>
+    <!-- <el-table :data="detail.maintenance_progress" :show-header="true" border style="width: 100%">
       <el-table-column align="center" prop="created_at" label="日時" :formatter="formatterDate" width="160px" />
       <el-table-column align="center" prop="progress_id" label="ステータス" :formatter="formatterProgress" width="100px" />
       <el-table-column align="center" prop="entered_by.name" label="入力者" width="100px" />
@@ -45,7 +72,7 @@
           </template>
         </el-table-column>
       </el-table-column>
-    </el-table>
+    </el-table> -->
 
     <el-dialog
       title="【見積書ファイルリスト】"
@@ -122,6 +149,7 @@ export default {
     };
   },
   created() {
+    this.getBreakDate();
     this.progress = {
       1: 'BM承認待ち',
       2: 'BM承認',
@@ -157,19 +185,12 @@ export default {
     formatterProgress(row, column) {
       return this.progress[row.progress_id] ?? '';
     },
-    formatterDate(row, column) {
-      if(row.created_at == null) return;
-      console.log(row.created_at.split(' ')[0] + "\n" + row.created_at.split(' ')[1]);
-      return row.created_at.replace(" ", "\n");
- 
-      // if(row.created_at == null) return;
-      // else if(row.created_at != '' ){
-      // var aa = row.created_at.split(' ');
-      // var res = aa[0] + '<br>' + aa[1];
-      // row.created_at = res;
-      // }
-
-      // return res;
+    getBreakDate(row, column) {
+        for (let i = 0; i < this.detail.maintenance_progress.length; i++) {
+          var aa = this.detail.maintenance_progress[i].created_at.split(' ');
+          var dd = aa[0] + '<br\>' + aa[1];         
+          this.detail.maintenance_progress[i].created_at = dd;
+        }
     }
   },
 };

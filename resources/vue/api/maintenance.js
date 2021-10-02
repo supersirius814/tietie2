@@ -92,6 +92,14 @@ class MaintenanceResource extends Resource {
         });
     }
 
+    getfile(id, updateData) {
+        return request({
+            url: this.baseUrl + this.uri + '/' + id + '/getfile',
+            method: 'post',
+            data: updateData,
+        });
+    }
+
     getQuotationFiles(id) {
         return request({
             url: this.baseUrl + this.uri + '/' + id + '/quotation_files',
