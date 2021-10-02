@@ -107,7 +107,7 @@ class MaintenanceResource extends Resource {
         });
     }
 
-    selectreason(id, updateData) {
+    saveNotes(id, updateData) {
         return request({
             url: this.baseUrl + this.uri + '/' + id + '/selectreason',
             method: 'post',
