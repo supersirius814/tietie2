@@ -239,12 +239,12 @@ export default {
   methods: {
     
    tableRowClassName({row, rowIndex}) {
-     console.log(row.order_type_id);
+    //  console.log(row.order_type_id);
      if(row.order_type_id > 0) {
        if(row.order_type_id > 3) {
-         return 'custom-danger-row';
-       } else if(row.order_type_id < 4) {
          return 'custom-warning-row';
+       } else if(row.order_type_id < 4) {
+         return 'custom-danger-row';
        }
      }
     return;
@@ -259,9 +259,9 @@ export default {
         element['index'] = (page - 1) * limit + index + 1;
         if(element.order_type_id > 0){
           if(element.order_type_id > 3) {
-            element.maintenance_code = '<i style="color: #ffba00; padding-right: 5px" class="fa">&#xf071;</i>' + element.maintenance_code; 
+            element.maintenance_code = '<i class="el-icon-info" style="color: #ff4949;  padding-right: 5px"></i>' + element.maintenance_code;
           } else {
-             element.maintenance_code = '<i class="el-icon-info" style="color: #ff4949;  padding-right: 5px"></i>' + element.maintenance_code; 
+             element.maintenance_code = '<i style="color: #ffba00; padding-right: 5px" class="fa">&#xf071;</i>' + element.maintenance_code; 
           }
         } 
       });
