@@ -340,10 +340,10 @@ class MaintenanceController extends Controller
         }
         
         $result_again = $result->get();
-        // if($result_again) {
+        if($result_again->count()) {
             return response($result_again);
-        // }
-        // else return response(0);
+        }
+        else return response(0);
         
     }
     
