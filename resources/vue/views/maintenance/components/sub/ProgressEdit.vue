@@ -220,7 +220,8 @@ export default {
   methods: {
     handleClose(){
       document.querySelector('#app > div > div.main-container > section > div > div.el-row > div:nth-child(2) > div > div.el-card__body > div:nth-child(6)').classList.add('close-css');
-      
+      document.querySelector('body').classList.remove('el-popup-parent--hidden');
+      document.querySelector('body > div.v-modal').classList.remove('v-modal');     
     },
     save() {
       this.$refs.uploadReport.submit();
