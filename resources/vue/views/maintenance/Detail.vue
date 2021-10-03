@@ -40,6 +40,7 @@ export default {
       qaVisible: false,
       bottomVisible: false,
       detail: null,
+      visibleflag: true,
     };
   },
   created() {

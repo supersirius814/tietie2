@@ -498,7 +498,6 @@
       width="60%"
       custom-class="slide-dialog"
       top="0px"
-      :modal="false"
     >
       <request-info-edit ref="editForm" :detail="detail" />
       <span slot="footer" class="dialog-footer">
@@ -506,6 +505,7 @@
         <el-button @click="editVisible = false">閉じる</el-button>
       </span>
     </el-dialog>
+
   </el-card>
 </template>
 
@@ -535,6 +535,7 @@ export default {
   data() {
     return {
       dataa: null,
+      show: true,
       // customerInformation: this.detail.customerInformation,
       firstimage: '',
       customer_name:'',
@@ -545,6 +546,7 @@ export default {
       baseInfoVisible: false,
       editVisible: false,
       otherinfo: false,
+      visibleflag: true,
       fileList: [
         'https://picsum.photos/id/0/300/200',
         'https://picsum.photos/id/1/300/200',

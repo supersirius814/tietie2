@@ -219,7 +219,8 @@ export default {
 
   methods: {
     handleClose(){
-      document.querySelector('#app > div > div.main-container > section > div > div.el-row > div:nth-child(2) > div > div.el-card__body > div.el-dialog__wrapper.slide-dialog-wrapper').classList.add('close-css');
+      document.querySelector('#app > div > div.main-container > section > div > div.el-row > div:nth-child(2) > div > div.el-card__body > div:nth-child(6)').classList.add('close-css');
+      
     },
     save() {
       this.$refs.uploadReport.submit();

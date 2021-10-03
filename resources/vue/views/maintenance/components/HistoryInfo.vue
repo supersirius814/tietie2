@@ -119,7 +119,6 @@
       width="60%"
       custom-class="slide-dialog"
       top="0px"
-      :modal="false"
     >
       <progress-edit :detail="detail" @create="editVisible = false" />
     </el-dialog>
@@ -193,7 +192,7 @@ export default {
       this.editVisible = true;
       document
         .querySelector(
-          '#app > div > div.main-container > section > div > div.el-row > div:nth-child(2) > div > div.el-card__body > div.el-dialog__wrapper.slide-dialog-wrapper'
+          '#app > div > div.main-container > section > div > div.el-row > div:nth-child(2) > div > div.el-card__body > div:nth-child(6)'
         )
         .classList.remove('close-css');
     },

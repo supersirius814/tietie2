@@ -119,19 +119,32 @@
     <div style="text-align:right;margin-top:10px;">
       <el-button type="primary" size="small" @click="createNotesShow()">特記編集</el-button>
     </div>
+    <!-- <transition name="notetransition">
+      <template v-if="createNotesVisible"> -->
     <el-dialog
-      title="【会計情報】"
+      title="【特記情報 編集】"
       :visible.sync="createNotesVisible"
       width="43%"
       custom-class="slide-dialog"
       top="0px"
       :modal="false"
     >
-      <CreateNotes :detail="detail"/>
+
+        <CreateNotes :detail="detail"/>
+
     </el-dialog>
+      <!-- </template>
+    </transition> -->
   </div>
 </template>
-
+<style>
+.notetransition-enter-active, .notetransition-leave-active {
+  transition: opacity .5s;
+}
+.notetransition-enter, .notetransition-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+</style>
 <script>
 import MaintenanceResource from '@/api/maintenance';
 
@@ -163,6 +176,7 @@ export default {
       mail_data: 'mailto:' + this.detail.user.email,
       userName: '', 
       createNotesVisible: false,
+      visibleflag: true,
  
 
       tableData: [
@@ -185,8 +199,8 @@ export default {
       document.querySelector('#app > div > div.main-container > section > div > div.el-row > div:nth-child(1) > div > div.el-card__body > div:nth-child(10) > div > div.el-dialog__body > div > div.el-dialog__wrapper').classList.remove('close-css');
     },
     getsend() {
-      var emails_ge = "", emails_cc = "", emails = "";
-      var flag = 0, flag_re = 0;
+      var emails_ge = "", emails_cc = "", emails = "", subject="";
+      var flag = 0, flag_re = 0, first_check = 0;
 
       this.tableData.forEach(element => {
         if(flag < 1) {
@@ -222,8 +236,44 @@ export default {
       } else if(emails_ge != ""){
         emails = emails_ge; 
       }
-      window.location.href = "mailto:" + emails;
+
+      subject = '?subject='
+      if(this.detail.shop.shop_id != '') {
+        subject += '店舗CD: ' + this.detail.shop_id + ' '; 
+      }
+      if(this.detail.shop.shop_name) {
+        subject += '店舗名: ' + this.detail.shop_id + ' ';
+      }
+      if(this.detail.sub_category.sub_category_name) {
+        subject += '中分類: ' + this.detail.sub_category.sub_category_name + ' ';
+      }
+      var mailhref = "mailto:" + emails + subject;
+      // console.log(mailhref);
+      window.location.href = mailhref;
     },
   },
 };
 </script>
+
+<style>
+@keyframes dialog-fade-in {
+  0% {
+    transform: translate3d(0, 100%, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+@keyframes dialog-fade-out {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  } 
+  100% {
+    transform: translate3d(0, -100%, 0);
+    opacity: 0;
+  }
+}
+</style>
