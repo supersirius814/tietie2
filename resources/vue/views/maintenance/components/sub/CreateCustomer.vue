@@ -305,7 +305,7 @@ export default {
         });         
       },
       select_one(){
-        // alert(this.custom[this.selectedRow].customer_code);
+
         this.detail.customer_code = this.custom[this.selectedRow].customer_code;
         this.detail.customerInformation[this.detail.customerInformation.length - 1].customer_name = this.custom[this.selectedRow].customer_name;
         this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL = this.custom[this.selectedRow].TEL;
@@ -341,7 +341,6 @@ export default {
 
             resource.update_customerid(this.detail.maintenance_id, updatedata).then(res => {
               console.log('custom_code select success');
-              // this.selectedRow = null;
             });
         });  
       },

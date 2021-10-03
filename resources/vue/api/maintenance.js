@@ -122,12 +122,14 @@ class MaintenanceResource extends Resource {
             data: updateData,
         });
     }
+
     big_middleconnect(id) {
         return request({
             url: this.baseUrl + this.uri + '/' + id + '/big_middleconnect',
             method: 'get',
         });
     }
+
     depart_name(id) {
         return request({
             url: this.baseUrl + this.uri + '/' + id + '/depart_name',

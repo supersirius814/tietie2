@@ -99,13 +99,6 @@
     </el-table>
     <div style="text-align:right;margin-top:10px;">
       <span>宛先とCC宛先、それぞれ選択してください。</span>
-      <!-- <a style="background-color: green;
-    color: white;     padding: 9px 15px;
-    font-size: 12px;
-    border-radius: 3px;"
-          target="_blank"
-          :href="mail_data"
-          >メーラー起動【テスト】</a        > -->
       <el-button type="primary" size="small" @click="getsend()" >メーラー起動</el-button>
     </div>
 

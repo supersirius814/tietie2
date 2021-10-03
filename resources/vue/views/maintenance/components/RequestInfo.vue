@@ -1,8 +1,5 @@
 <template>
   <el-card class="box-card">
-    <!-- {{ detail.shop.shop_id }} -->
-    <!-- {{detail.order_type.order_type_id}} -->
-
     <div slot="header">
       <span>依頼情報</span>
 
@@ -251,9 +248,6 @@
                 overflow-y: auto;
               "
             >
-              <!-- <img src="{{ url("maintenance/image/$maintenance_id") }}/' + image['file_name'] + '"> -->
-              <!-- <el-image src="http://160.16.127.12:8080/maintenance/image/101/M000000101_SK_999998_20210720_1.jpg"></el-image>
-ssssssssssssssss <el-image src="./maintenance/image/101/M000000101_SK_999998_20210720_1.jpg"></el-image> -->
               <el-image
                 style="
                   width: 100px;

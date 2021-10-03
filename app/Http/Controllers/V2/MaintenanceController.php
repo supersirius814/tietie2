@@ -727,12 +727,7 @@ class MaintenanceController extends Controller
         if($request->input('remark')) {
             $maintenance->remark          = $request->input('remark');
         }
-        // $maintenance->is_disaster     = $request->input('is_disaster');
-        // $maintenance->is_emergency    = $request->input('is_emergency');
-        // $maintenance->category_id     = $request->input('category_id');
-        // $maintenance->sub_category_id = $request->input('sub_category_id');
-        // $maintenance->order_type_id   = $request->input('order_type_id');
-        // $maintenance->remark          = $request->input('remark');
+
         $maintenance->save();
 
         $maintenance_matters = $request->input('maintenance_matters', []);
