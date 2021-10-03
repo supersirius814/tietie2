@@ -237,7 +237,9 @@ export default {
     this.getList();
   },
   methods: {
+    
    tableRowClassName({row, rowIndex}) {
+     console.log(row.order_reason_id);
      if(row.order_reason_id > 0) {
        if(row.order_reason_id > 3) {
          return 'custom-danger-row';

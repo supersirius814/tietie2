@@ -115,6 +115,7 @@
                       width: 30%;
                       background-color: transparant;
                       border: 0;
+                      display: none;
                       pointer-events: none;"
                     @click="setting = false"
                     ><span v-if="detail.order_reason[0].reason">({{ detail.order_reason[0].reason }})</span></el-button>
