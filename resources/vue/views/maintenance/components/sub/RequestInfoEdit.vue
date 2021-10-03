@@ -264,6 +264,7 @@ export default {
       this.$route.params['custom_tableData'] = '';
       this.$route.params['selectedRow'] = 0;      
       this.createCustomerVisible = true;
+      document.querySelector('#app > div > div.main-container > section > div > div.el-row > div:nth-child(1) > div > div.el-card__body > div:nth-child(11) > div > div.el-dialog__body > div > div.el-dialog__wrapper').classList.remove('close-css');
     },
     big_middleconnect () {
       // console.log(this.data_re.category_id);

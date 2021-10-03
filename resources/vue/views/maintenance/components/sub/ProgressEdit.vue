@@ -126,7 +126,7 @@
     </el-row>
     <div style="text-align:right; padding-bottom: 15px;">
       <el-button type="primary" size="small" @click="save()">登録</el-button>
-      <!-- <el-button type="default" size="small"  @click="handleClose()"  ref="Dialog" >閉じる</el-button> -->
+      <el-button type="default" size="small"  @click="handleClose()"  ref="Dialog" >閉じる</el-button>
     </div>
       <table  class="detail-table">
         <tr>
@@ -157,6 +157,12 @@
       </table>
   </div>
 </template>
+
+<style>
+.close-css {
+  display: none;
+}
+</style>
 
 <script>
 import MaintenanceResource from '@/api/maintenance';
@@ -212,7 +218,9 @@ export default {
   },
 
   methods: {
-
+    handleClose(){
+      document.querySelector('#app > div > div.main-container > section > div > div.el-row > div:nth-child(2) > div > div.el-card__body > div.el-dialog__wrapper.slide-dialog-wrapper').classList.add('close-css');
+    },
     save() {
       this.$refs.uploadReport.submit();
       this.$refs.uploadPhoto.submit();

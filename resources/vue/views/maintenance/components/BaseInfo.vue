@@ -98,7 +98,7 @@
       </el-table-column>
     </el-table>
     <div style="text-align:right;margin-top:10px;">
-      <span>宛先とCC宛先、それぞれ選択してください。</span>
+      <span>宛先とCC宛先、それぞれ選択してください。</span> 
       <el-button type="primary" size="small" @click="getsend()" >メーラー起動</el-button>
     </div>
 
@@ -117,20 +117,17 @@
       </tbody>
     </table>
     <div style="text-align:right;margin-top:10px;">
-      <el-button type="primary" size="small" @click="createAccounting=true">特記編集</el-button>
+      <el-button type="primary" size="small" @click="createNotesShow()">特記編集</el-button>
     </div>
     <el-dialog
       title="【会計情報】"
-      :visible.sync="createAccounting"
+      :visible.sync="createNotesVisible"
       width="43%"
       custom-class="slide-dialog"
       top="0px"
       :modal="false"
     >
       <CreateNotes :detail="detail"/>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="createAccounting = false">閉じる</el-button>
-      </span> 
     </el-dialog>
   </div>
 </template>
@@ -165,7 +162,7 @@ export default {
     return {
       mail_data: 'mailto:' + this.detail.user.email,
       userName: '', 
-      createAccounting: false,
+      createNotesVisible: false,
  
 
       tableData: [
@@ -183,6 +180,10 @@ export default {
     });
   },
   methods: {
+    createNotesShow() {
+      this.createNotesVisible = true;
+      document.querySelector('#app > div > div.main-container > section > div > div.el-row > div:nth-child(1) > div > div.el-card__body > div:nth-child(10) > div > div.el-dialog__body > div > div.el-dialog__wrapper').classList.remove('close-css');
+    },
     getsend() {
       var emails_ge = "", emails_cc = "", emails = "";
       var flag = 0, flag_re = 0;
