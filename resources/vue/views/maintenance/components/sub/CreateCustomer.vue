@@ -352,6 +352,8 @@ export default {
   mounted() {},
   methods: {
     close_createComponent() {
+      this.custom = '';
+      this.selectedRow = '';
       document.querySelector('#app > div > div.main-container > section > div > div.el-row > div:nth-child(1) > div > div.el-card__body > div:nth-child(11) > div > div.el-dialog__body > div > div.el-dialog__wrapper').classList.add('close-css');
     },
     depart_name() {
@@ -417,6 +419,7 @@ export default {
       return this.progress[row.progress_id] ?? '';
     },
     ultimateCustomSearch() {
+      this.selectedRow = -1;
       // customer_code = this.customer_code;
       const search_data = {
         // id: this.id,
@@ -433,7 +436,6 @@ export default {
         .then((res) => {
           this.custom = res;
           // console.log(res);
-          this.selectedRow = -1;
         });
     },
 
