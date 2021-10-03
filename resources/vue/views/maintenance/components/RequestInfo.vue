@@ -1,6 +1,6 @@
 <template>
   <el-card class="box-card">
-    <!-- {{ detail }} -->
+    <!-- {{ detail.shop.shop_id }} -->
     <!-- {{detail.order_type.order_type_id}} -->
 
     <div slot="header">
@@ -587,7 +587,7 @@ export default {
       this.$emit('get-detail');
     },
     getsrc(firstimage) {
-      // return;
+      return;
       const fsrc =
         './maintenance/image/' + this.detail.maintenance_id + '/' + firstimage;
       return fsrc;

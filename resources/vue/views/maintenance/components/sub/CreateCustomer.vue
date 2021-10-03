@@ -296,16 +296,12 @@ export default {
   },
   methods: {
       depart_name() {
-        // alert("dfdf");
         if(!this.customergroup_code) {
           this.customergroup  = '';
           return;
         }
         resource.depart_name(this.customergroup_code).then(res =>{
             this.customergroup = res[0].customergroup;
-            // this.mid_ca = '';
-            // console.log(res.category_id);
-            // this.data_re.sub_category_id = res[0].sub_category_id;
         });         
       },
       select_one(){
@@ -336,7 +332,7 @@ export default {
         this.customergroup_code = '';
         this.customergroup = '';
 
-        resource.customsearch(this.custom[this.selectedRow].customer_code).then(res => {
+        resource.customCodeSearch(this.custom[this.selectedRow].customer_code).then(res => {
           
             if(res == 0) {
               this.id = 0;
@@ -357,7 +353,7 @@ export default {
     formatterProgress(row, column) {
       return this.progress[row.progress_id] ?? '';
     },
-    customsearchAgain() {
+    ultimateCustomSearch() {
       // customer_code = this.customer_code;
       const search_data = {
         // id: this.id,
@@ -369,59 +365,12 @@ export default {
         customergroup_code: this.customergroup_code,
         customergroup: this.customergroup,
       }
-      resource.customsearchAgain(this.detail.maintenance_id, search_data).then(res => {
+      resource.ultimateCustomSearch(this.detail.maintenance_id, search_data).then(res => {
         this.custom = res;
         this.selectedRow = -1; 
-        // this.customer_name = res[res.length - 1].customer_name;
-        // this.customer_code = res[res.length - 1].customer_code;
-        // this.customer_alias = res[res.length - 1].customer_alias;
-        // this.customer_tel = res[res.length - 1].TEL;
-        // this.customer_fax = res[res.length - 1].FAX;
-        // this.customergroup = res[res.length - 1].customergroup;
-        // this.customergroup_code = res[res.length - 1].customergroup_code;
-        // this.id = res[res.length - 1].id;
-        // console.log(res); 
-        // this.customer_alias = res.customer_name;
-        // [detail.customerInformation.length - 1]
       });
     },
-    select() {
-      resource.customsearch(this.customer_code).then(res => {
-        
-          if(res == 0) {
-            this.id = 0;
-            alert(res);
-          }
-          else this.id = res[res.length - 1].id;
-          
-
-          const updatedata = {
-            id: this.id,
-            customer_code: this.customer_code,
-            customer_tel: this.customer_tel,
-            customer_alias: this.customer_alias,
-            customer_fax: this.customer_fax,
-            customergroup_code: this.customergroup_code,
-            customergroup: this.customergroup,
-            customer_name: this.customer_name,
-            
-          };
-          
-          // alert(this.detail.maintenance_id); return false;
-          resource.update_customerid(this.detail.maintenance_id, updatedata).then(res => {
-            this.detail.customer_code = this.customer_code;
-            this.detail.customerInformation[this.detail.customerInformation.length - 1].TEL = res[res.length - 1].TEL; 
-            this.detail.customerInformation[this.detail.customerInformation.length - 1].FAX = res[res.length - 1].FAX; 
-            this.detail.customerInformation[this.detail.customerInformation.length - 1].customer_name = res[res.length - 1].customer_name;
-          });
-          // alert(this.customer_id);
-      });
-      // alert(this.customer_id); return false;
-
-      // alert(createCustomerVisible);
-      this.$emit('create');
-    },
-
+ 
     getPhotoFiles() {
       resource.getPhotoFiles(this.detail.maintenance_id).then(files => {
         this.detail.photo_files = files;

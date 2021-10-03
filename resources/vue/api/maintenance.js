@@ -55,16 +55,16 @@ class MaintenanceResource extends Resource {
         });
     }
 
-    customsearch(id) {
+    customCodeSearch(id) {
         return request({
-            url: this.baseUrl + this.uri + '/' + id + '/customsearch',
+            url: this.baseUrl + this.uri + '/' + id + '/customCodeSearch',
             method: 'get',
         });
     }
 
-    customsearchAgain(id, updateData) {
+    ultimateCustomSearch(id, updateData) {
         return request({
-            url: this.baseUrl + this.uri + '/' + id + '/customsearchAgain',
+            url: this.baseUrl + this.uri + '/' + id + '/ultimateCustomSearch',
             method: 'post',
             data: updateData,
         });
@@ -109,7 +109,7 @@ class MaintenanceResource extends Resource {
 
     saveNotes(id, updateData) {
         return request({
-            url: this.baseUrl + this.uri + '/' + id + '/selectreason',
+            url: this.baseUrl + this.uri + '/' + id + '/saveNotes',
             method: 'post',
             data: updateData,
         });

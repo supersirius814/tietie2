@@ -94,8 +94,8 @@ Route::group(['namespace' => 'V2'], function () {
     Route::post('v2/maintenance/upload/quotation/{mantenance_id}', 'MaintenanceController@uploadQuotation');
 
 
-    Route::get('v2/maintenance/{mantenance_id}/customsearch', 'MaintenanceController@customsearch');
-    Route::post('v2/maintenance/{mantenance_id}/customsearchAgain', 'MaintenanceController@customsearch_again');
+    Route::get('v2/maintenance/{mantenance_id}/customCodeSearch', 'MaintenanceController@customCodeSearch');
+    Route::post('v2/maintenance/{mantenance_id}/ultimateCustomSearch', 'MaintenanceController@ultimateCustomSearch');
     Route::get('v2/maintenance/{mantenance_id}/big_middleconnect', 'MaintenanceController@big_middleconnect');
     Route::get('v2/maintenance/{mantenance_id}/depart_name', 'MaintenanceController@depart_name');
     
@@ -104,6 +104,9 @@ Route::group(['namespace' => 'V2'], function () {
     Route::get('v2/maintenance/{mantenance_id}/photo_files', 'MaintenanceController@getPhotoFiles');//pdf view image 
     Route::post('v2/maintenance/{mantenance_id}/getImage', 'MaintenanceController@getImage');
     Route::post('v2/maintenance/{mantenance_id}/getfile', 'MaintenanceController@getfile');
+
+    Route::post('v2/maintenance/{mantenance_id}/saveNotes', 'MaintenanceController@saveNotes');//save note1. note2 for shop
+    
     
     Route::get('v2/maintenance/{mantenance_id}/report_files', 'MaintenanceController@getReportFiles');
     Route::get('v2/maintenance/{mantenance_id}/quotation_files', 'MaintenanceController@getQuotationFiles');//tie9.5 add

@@ -115,11 +115,11 @@
       <tbody>
         <tr>
           <th>特記①</th>
-          <td>20’10/13〜10/25改装<br>浄化槽店舗</td>
+          <td>{{ detail.shop.note1 }}</td>
         </tr>
         <tr>
           <th>特記②</th>
-          <td>20’5/21エアコン全台清掃<br>駐車場案件は大和ハウス様へ</td>
+          <td>{{ detail.shop.note2 }}</td>
         </tr>
       </tbody>
     </table>

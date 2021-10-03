@@ -38,6 +38,8 @@ export default {
     },
   },
   created() {
+    this.note1 = this.detail.shop.note1;
+    this.note2 = this.detail.shop.note2;
     // alert(this.detail.order_reason[0].order_reason_id)
     // this.getImage();
   },
@@ -53,9 +55,11 @@ export default {
         note1: this.note1,
         note2: this.note2,
       };
-      // maintenanceresource.saveNotes(this.shop_id, input_data).then((res)=> {
-      //   console.log(res);
-      // });
+      maintenanceresource.saveNotes(this.detail.shop.shop_id, input_data).then((res)=> {
+        // console.log(res[0].note1);
+        this.detail.shop.note1 = res[0].note1;
+        this.detail.shop.note2 = res[0].note2;
+      });
     },
     selectreason() {
       const data = {

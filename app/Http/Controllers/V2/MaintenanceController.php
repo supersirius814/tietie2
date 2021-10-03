@@ -177,10 +177,6 @@ class MaintenanceController extends Controller
         // $row->entered_by = $request->user()->user_id;
         $row->save();
 
-        // $maintenance = Maintenance::find($maintenance_id);
-        // $maintenance->progress_id = $row->progress_id;
-        // $maintenance->save();
-
         $accounting_info = Accounting_info::where('maintenance_id', $maintenance_id)->get();
         return response($accounting_info);
     }
@@ -290,7 +286,7 @@ class MaintenanceController extends Controller
         return response($files);
     }
 
-    public function customsearch(Request $request, $custom_code)
+    public function customCodeSearch(Request $request, $custom_code)
     {
         $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
         ->distinct()
@@ -302,111 +298,11 @@ class MaintenanceController extends Controller
             return response($result);
         }
         else return response(0);
-        // var_export($result->customer_code); die;
-        // echo $result;
+
         
     }
-
-    public function customsearch_again(Request $request, $custom_code)
-    {
-        // var_export($request->input('customer_code'));
-        $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
-        ->distinct();
-        // echo '%'.$request->input('customer_code').'%'; die;
-        if($request->input('customer_code')) {
-            // echo '%'.$request->input('customer_code').'%';
-            $result->where('customer_code', 'like', '%'.$request->input('customer_code').'%')->distinct('customer_code');;
-        }
-
-        if($request->input('id')) {
-            $result->where('customer_code', 'like', '%'.$request->input('id').'%')->distinct();;
-        }
-
-        if($request->input('customer_name')) {
-            $result->where('customer_name', 'like', '%'.$request->input('customer_name').'%')->distinct();;
-        }
-
-        if($request->input('customer_tel')) {
-            $result->where('TEL', 'like', '%'.$request->input('customer_tel').'%')->distinct();;
-        }
-
-        if($request->input('customer_alias')) {
-            $result->where('customer_alias', 'like', '%'.$request->input('customer_alias').'%')->distinct();;
-        }
-
-        if($request->input('customer_fax')) {
-            $result->where('FAX', 'like', '%'.$request->input('customer_fax').'%');
-        }
-
-        if($request->input('customergroup_code')) {
-            $result->where('customergroup_code', 'like', '%'.$request->input('customergroup_code').'%')->distinct();;
-        }
-
-        if($request->input('customergroup')) {
-            $result->where('customergroup', 'like', '%'.$request->input('customergroup').'%')->distinct();;
-        }
-
-
-
-
-        // if($request->input('customer_code')) {
-        //     $result->where('customer_code', $request->input('customer_code'));
-        // }
-
-        // // if($request->input('id')) {
-        // //     $result->where('id', $request->input('id'));
-        // // }
-
-        // if($request->input('customer_name')) {
-        //     $result->where('customer_name', $request->input('customer_name'));
-        // }
-
-        // if($request->input('customer_tel')) {
-        //     $result->where('TEL', $request->input('customer_tel'));
-        // }
-
-        // if($request->input('customer_alias')) {
-        //     $result->where('customer_alias', $request->input('customer_alias'));
-        // }
-
-        // if($request->input('customer_fax')) {
-        //     $result->where('FAX', $request->input('customer_fax'));
-        // }
-
-        // if($request->input('customergroup_code')) {
-        //     $result->where('customergroup_code', $request->input('customergroup_code'));
-        // }
-
-        // if($request->input('customergroup')) {
-        //     $result->where('customergroup', $request->input('customergroup'));
-        // }
-
-        $result_again = $result->groupBy('customer_code')->get();
-        if(!$result_again->isEmpty()) {
-            // foreach($result_again as $item) {
-            //     $res = array(
-            //         'customer_code' => $item['customer_code'],
-            //         'customergroup' => $item['customergroup'],
-            //         'customergroup_code' => $item['customergroup_code'],
-            //         'FAX' => $item['FAX'],
-            //         'customer_name' => $item['customer_name'],
-            //         'TEL' => $item['TEL'],
-            //         'customergroup_code' => $item['customergroup_code'],
-            //         'customer_alias' => $item['customer_alias'],
-            //     );
-            // }
-
-
-            return response($result_again);
-        }
-        else return response(0);
-        // var_export($result->customer_code); die;
-        // echo $result;
-        
-    }
-    
-
-    public function customsearchAgain($maintenance_id, Request $request)
+ 
+    public function ultimateCustomSearch($maintenance_id, Request $request)
     {
         $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
         ->distinct();
@@ -444,51 +340,11 @@ class MaintenanceController extends Controller
             $result->where('customergroup', 'like', '%'.$request->input('customergroup').'%');
         }
         
-        // if($request->input('id')) {
-        //     $result->where('customer_code', $request->input('id'));
-        // }
-
-        // if($request->input('customer_name')) {
-        //     $result->where('customer_name', $request->input('customer_name'));
-        // }
-
-        // if($request->input('customer_tel')) {
-        //     $result->where('TEL', $request->input('customer_tel'));
-        // }
-
-        // if($request->input('customer_alias')) {
-        //     $result->where('customer_alias', $request->input('customer_alias'));
-        // }
-
-        // if($request->input('customer_fax')) {
-        //     $result->where('FAX', $request->input('customer_fax'));
-        // }
-
-        // if($request->input('customergroup_code')) {
-        //     $result->where('customergroup_code', $request->input('customergroup_code'));
-        // }
-
-        // if($request->input('customergroup')) {
-        //     $result->where('customergroup', $request->input('customergroup'));
-        // }
-
         $result_again = $result->get();
         if($result_again->exists()) {
             return response($result);
         }
         else return response(0);
-        // $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
-        // ->distinct()
-        // ->where('customer_code', $custom_code)
-        // ->get();
-        // if(Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
-        // ->distinct()
-        // ->where('customer_code', $custom_code)->exists()) {
-        //     return response($result);
-        // }
-        // else return response(0);
-        // var_export($result->customer_code); die;
-        // echo $result;
         
     }
     
@@ -538,7 +394,6 @@ class MaintenanceController extends Controller
         $maintenance->save();
 
         $order_reason = Order_reason::find($request->input('reason'));       
-        // $order_reason['other'] = $request->input('other');
         
         return response($order_reason);  
 
@@ -548,8 +403,7 @@ class MaintenanceController extends Controller
     {
         $id = $request->input('id');
         if($id > 0) {
-            $aa = $request->input('customer_code');
-            // echo "cdod == >>>> ".$aa.">>>>>>>".$maintenance_id; die;
+            $custom_code = $request->input('customer_code');
        
         }
         else {
@@ -564,22 +418,20 @@ class MaintenanceController extends Controller
             $row->TEL = $request->input('customer_tel');
             $row->FAX = $request->input('customer_fax');
             $row->save();
-            // echo "input";
-            // die;
 
-            $aa = $request->input('customer_code');
+            $custom_code = $request->input('customer_code');
             $maintenance = Maintenance::find($maintenance_id);
             $maintenance->customer_code = $request->input('customer_code');
             $maintenance->save();
         }
-        // echo $aa;
 
-        $files = Maintenance::where('maintenance_id', $maintenance_id)->update(['customer_code'=> $aa]);
+
+        $files = Maintenance::where('maintenance_id', $maintenance_id)->update(['customer_code'=> $custom_code]);
 
 
         $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
         ->distinct()
-        ->where('customer_code', $aa)
+        ->where('customer_code', $custom_code)
         ->get();
         return response($result);    
     }
@@ -587,25 +439,16 @@ class MaintenanceController extends Controller
 	public function getImage(Request $request, $maintenance_id)
 	{
         $file_name = $request->input('file_name');
-        // var_export($file_name); die;
 		$image = Storage::disk('s3')->get("zensho-mainte/images/$maintenance_id/$file_name");  
 		header('Content-type: image/jpeg');
 		echo $image;
-        // return response($image);
-        // echo "dkdkdkdk//ddkkddkdk";
 	}
 
     public function getfile(Request $request, $maintenance_id)
 	{
         $file_path = $request->input('file_path');
-        // $file = Storage::get($file_path);
         $file = Storage::disk('local')->get($file_path);
-        // header('Content-type: application/pdf');
         header('Content-type: image/jpeg');
-        // return response::make(file_get_contents($path), 200, [
-        //     'Content-Type' => 'application/pdf',
-        //     'Content-Disposition' => 'inline; filename="'.$file.'"'
-        // ]);
         
 		return response(asset($file));
 
@@ -621,6 +464,17 @@ class MaintenanceController extends Controller
     {
         $files = Quotation_file::where('maintenance_id', $maintenance_id)->get();
         return response($files);
+    }
+
+    public function saveNotes(Request $request, $shop_id)
+    {
+        $note1 = $request->input('note1');
+        $note2 = $request->input('note2');
+
+        $update_state = Shop::where('shop_id', $shop_id)->update(['note1'=> $note1, 'note2'=>$note2]);
+
+        $files = Shop::where('shop_id', $shop_id)->get();
+        return $files;
     }
 
     /**
@@ -724,25 +578,6 @@ class MaintenanceController extends Controller
         $maintenance['mail_data1']= $aa_user;
         $maintenance['mail_data11']= $aa_name;
 
-
-
-        // $aa1 = User::select('user_id')->where('shop_id',$maintenance['shop_id'])->get();
-        // $aa2 = General_manager::select('department_id')->where('user_id', $aa1[0]['user_id'])->get();
-        // $aa3 = Department::select('department_name')->where('department_id', $aa2[0]['department_id'])->get();
-        // $maintenance['mail_data2'] = $aa3;
-
-        // $bb2 = District_manager::select('district_id')->where('user_id', $aa1[0]['user_id'])->get();
-        // $bb3 = District::select('district_name')->where('district_id', $bb2[0]['district_id'])->get();
-        // $maintenance['mail_data3']= $bb3;
-
-        // $cc2 = Block_manager::select('block_id')->where('user_id', $aa1[0]['user_id'])->get();
-        // $cc3 = Block::select('block_name')->where('block_id', $cc2[0]['block_id'])->get();
-        // $maintenance['mail_data1']= $cc3;
-        // $quotation = Bmcategory_table::select('big_id','big_name')->distinct()->get();
-        // $maintenance['bmcategoryTable_big'] = $quotation; 
-
-        // $quotationm = Bmcategory_table::select('middle_id', 'middle_name')->distinct()->get();
-        // $maintenance['bmcategoryTable_middle'] = $quotationm; 
 
         $quotationcus = Customer_information::select('customer_code', 'customer_name', 'customer_id', 'TEL', 'FAX')
             ->distinct()
