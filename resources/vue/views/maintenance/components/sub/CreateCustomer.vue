@@ -432,6 +432,7 @@ export default {
         .ultimateCustomSearch(this.detail.maintenance_id, search_data)
         .then((res) => {
           this.custom = res;
+          console.log(res);
           this.selectedRow = -1;
         });
     },
