@@ -196,7 +196,7 @@
         >閉じる</el-button
       >
     </div>
-    <table class="detail-table" v-if="this.selectedRow">
+    <table class="detail-table" v-if="this.selectedRow != null">
       <tr>
         <th style="width: 75px">NO</th>
         <th style="width: 111px">取引先コード</th>
@@ -419,7 +419,7 @@ export default {
       return this.progress[row.progress_id] ?? '';
     },
     ultimateCustomSearch() {
-      this.selectedRow = -1;
+      this.selectedRow = 'visible';
       // customer_code = this.customer_code;
       const search_data = {
         // id: this.id,
