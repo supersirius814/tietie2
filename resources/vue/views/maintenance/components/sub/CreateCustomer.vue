@@ -184,7 +184,7 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-button type="info" size="small" @click="customsearchAgain()"
+      <el-button type="info" size="small" @click="ultimateCustomSearch()"
         >検索</el-button
       >
     </el-row>
