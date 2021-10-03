@@ -33,7 +33,7 @@
       :modal="false"
     >
       <span slot="title" ><i class="el-icon-info"></i> {{ quotationtitleData }} </span>
-        <template>
+        <template v-if="quotationpdfSrc">
           <pdf :src="quotationpdfSrc"></pdf>
         </template>
       <span slot="footer" class="dialog-footer">

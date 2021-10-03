@@ -170,7 +170,7 @@
           <tbody>
             <tr>
               <th>取引先コード</th>
-              <td>
+              <td v-if="detail.customer_code">
                 {{ detail.customer_code }}
                 <!-- <el-select v-model="progressId" size="small" :multiple="false" placeholder="中分類名" clearable style="width: 100%" class="filter-item">
                     <el-option
@@ -186,6 +186,7 @@
   </option>
 </select> -->
               </td>
+              <td v-else style="width: 150px"></td>
               <td style="border: none; padding: 0 5px; text-align: right">
                 <el-button
                   type="info"
