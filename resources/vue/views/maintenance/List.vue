@@ -185,17 +185,6 @@
   </div>
 </template>
 <style>
-.el-table .warning-row {
-background: 'rgb(252, 230, 190)';
-}
-
-.el-table .success-row {
-background: 'rgb(252, 230, 190)';
-}
-
-.el-table .other-row {
-background: 'rgb(252, 230, 190)';
-}
 
 .custom-highlight-row{
   background-color: pink!important;
