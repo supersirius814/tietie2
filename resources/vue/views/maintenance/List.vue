@@ -239,11 +239,11 @@ export default {
   methods: {
     
    tableRowClassName({row, rowIndex}) {
-     console.log(row.order_reason_id);
-     if(row.order_reason_id > 0) {
-       if(row.order_reason_id > 3) {
+     console.log(row.order_type_id);
+     if(row.order_type_id > 0) {
+       if(row.order_type_id > 3) {
          return 'custom-danger-row';
-       } else if(row.order_reason_id < 4) {
+       } else if(row.order_type_id < 4) {
          return 'custom-warning-row';
        }
      }
@@ -257,8 +257,8 @@ export default {
       this.list = data;
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
-        if(element.order_reason_id > 0){
-          if(element.order_reason_id > 3) {
+        if(element.order_type_id > 0){
+          if(element.order_type_id > 3) {
             element.maintenance_code = '<i style="color: #ffba00; padding-right: 5px" class="fa">&#xf071;</i>' + element.maintenance_code; 
           } else {
              element.maintenance_code = '<i class="el-icon-info" style="color: #ff4949;  padding-right: 5px"></i>' + element.maintenance_code; 
