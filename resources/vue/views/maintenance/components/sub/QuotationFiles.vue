@@ -33,13 +33,9 @@
       :modal="false"
     >
       <span slot="title" ><i class="el-icon-info"></i> {{ quotationtitleData }} </span>
-          <embed
-            v-if="quotationpdfSrc"
-                  type="video/webm"
-                  :src="quotationpdfSrc"
-                  width="100%"
-                  style="max-height: 50rem; min-height: 30rem"
-            />
+        <template>
+          <pdf :src="quotationpdfSrc"></pdf>
+        </template>
       <span slot="footer" class="dialog-footer">
         <el-button @click="quotationpdfviewVisible = false">閉じる</el-button>
       </span>
@@ -50,8 +46,13 @@
 
 <script>
 import MaintenanceResource from '@/api/maintenance';
+import pdf from 'vue-pdf'
+
 const resource = new MaintenanceResource();
 export default {
+  components: {
+    pdf
+  },
   props: {
     detail: {
       type: Object,

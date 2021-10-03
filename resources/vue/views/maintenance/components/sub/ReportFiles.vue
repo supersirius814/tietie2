@@ -20,13 +20,16 @@
       :modal="false"
     >
       <span slot="title" ><i class="el-icon-info"></i> {{ reporttitleData }} </span>
-          <embed
+            <template  v-if="reportpdfSrc">
+              <pdf :src="reportpdfSrc" />
+            </template>
+          <!-- <embed
             v-if="reportpdfSrc"
                   type="video/webm"
                   :src="reportpdfSrc"
                   width="100%"
                   style="max-height: 50rem; min-height: 30rem"
-            />
+            /> -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="reportpdfviewVisible = false">閉じる</el-button>
       </span>
@@ -35,8 +38,12 @@
 </template>
 
 <script>
+import pdf from 'vue-pdf'
 
 export default {
+  components: {
+    pdf
+  },
   props: {
     detail: {
       type: Object,
