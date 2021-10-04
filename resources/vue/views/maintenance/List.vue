@@ -249,13 +249,12 @@ export default {
     
    tableRowClassName({row, rowIndex}) {
     //  console.log(row.order_type_id);
-     if(row.order_reason_id > 0) {
-       if(row.order_reason_id > 3) {
+       if(row.is_emergency > 0) {
          return 'custom-warning-row';
-       } else if(row.order_reason_id < 4) {
+       } 
+       if(row.is_disaster > 0) {
          return 'custom-danger-row';
        }
-     }
     return;
   },
 
@@ -266,13 +265,13 @@ export default {
       this.list = data;
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
-        if(element.order_reason_id > 0){
-          if(element.order_reason_id > 3) {
+
+          if(element.is_emergency > 0) {
             element.maintenance_code = '<i class="el-icon-info" style="color: #ff4949;  padding-right: 5px"></i>' + element.maintenance_code;
-          } else {
+          } 
+          if(element.is_disaster > 0) {
              element.maintenance_code = '<i style="color: #ffba00; padding-right: 5px" class="fa">&#xf071;</i>' + element.maintenance_code; 
           }
-        } 
       });
       this.total = meta.total;
       this.loading = false;

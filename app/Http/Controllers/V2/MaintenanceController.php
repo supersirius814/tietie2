@@ -697,12 +697,12 @@ class MaintenanceController extends Controller
         // $order                 = $equipment . ' ' . $manufacturer . ':' . $model_number . ' ' . $when . ' ' . $situation . '手配お願いします。';
 
         $maintenance = Maintenance::find($maintenance_id);
-        if($request->input('is_disaster')) {
+        // if($request->input('is_disaster')) {
             $maintenance->is_disaster     = $request->input('is_disaster');
-        }
-        if($request->input('is_emergency')) {
+        // }
+        // if($request->input('is_emergency')) {
             $maintenance->is_emergency    = $request->input('is_emergency');
-        }
+        // }
         if($request->input('category_id')) {
             $maintenance->category_id     = $request->input('category_id');
         }
