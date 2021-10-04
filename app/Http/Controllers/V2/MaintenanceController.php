@@ -218,6 +218,11 @@ class MaintenanceController extends Controller
             //store file into document folder
             $file = $request->file->store('public/reports');
 
+            $file_name = $request->file('file')->getClientOriginalName();
+            $file_data =  $request->file('file');
+
+            Storage::disk('s3')->put("zensho-mainte/reports/$maintenance_id/$file_name",file_get_contents($file_data), 'public');  
+
             //store your file into database
             $reportFile = new Report_file();
             $reportFile->file_path = $file;
@@ -251,12 +256,18 @@ class MaintenanceController extends Controller
             //store file into document folder
             $file = $request->file->store('public/photos');
 
+            $file_name = $request->file('file')->getClientOriginalName();
+            $file_data =  $request->file('file');
+
+            
             //store your file into database
             $reportFile = new Photo_file();
             $reportFile->file_path = $file;
-            $reportFile->file_name = $request->file('file')->getClientOriginalName();;
+            $reportFile->file_name = $request->file('file')->getClientOriginalName();
             $reportFile->maintenance_id = $maintenance_id;
             $reportFile->save();
+
+            Storage::disk('s3')->put("zensho-mainte/photos/$maintenance_id/$file_name",file_get_contents($file_data), 'public');  
 
             return response()->json([
                 "success" => true,
@@ -282,11 +293,16 @@ class MaintenanceController extends Controller
         if ($request->file('file')) {
 
             //store file into document folder
-            $file = $request->file->store('public/quotations');
+            // $file = $request->file->store('public/quotations');
+
+            $file_name = $request->file('file')->getClientOriginalName();
+            $file_data =  $request->file('file');
+            
+            Storage::disk('s3')->put("zensho-mainte/quotations/$maintenance_id/$file_name",file_get_contents($file_data), 'public');  
 
             //store your file into database
             $reportFile = new Quotation_file();
-            $reportFile->file_path = $file;
+            // $reportFile->file_path = $file;
             $reportFile->file_name = $request->file('file')->getClientOriginalName();;
             $reportFile->maintenance_id = $maintenance_id;
             $reportFile->save();

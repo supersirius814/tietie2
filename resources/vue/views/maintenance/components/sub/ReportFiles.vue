@@ -5,7 +5,7 @@
         <span>
           <a
             href="#"
-            @click.prevent="reportFileView(item.file_path, item.file_name)"
+            @click.prevent="reportFileView(item.file_name)"
           >
             <i class="el-icon-picture" style="display:block; font-size:60px;margin:auto;margin-bottom:10px;" />
             {{ item.file_name }}
@@ -62,10 +62,8 @@ export default {
   },
   methods: {
 
-    reportFileView(file_path, file_name) {
-      var split_path = file_path.split('/');
-      var fileName = split_path[split_path.length - 1];
-      var actionUrl =  './maintenance/reportfile/' + fileName;
+    reportFileView(file_name) {
+      var actionUrl = './zensho-mainte/reports/' + this.detail.maintenance_id + '/' + fileName;
       this.reporttitleData = file_name;
       this.reportpdfviewVisible = true;
       this.reportpdfSrc = actionUrl;

@@ -10,7 +10,7 @@
         <span>
           <a
             href="#"
-            @click.prevent="quotationFileView(item.file_path, item.file_name)"
+            @click.prevent="quotationFileView(item.file_name)"
           >
             <i
               class="el-icon-picture"
@@ -71,11 +71,8 @@ export default {
   },
   methods: {
 
-    quotationFileView(file_path, file_name) {
-      var split_path = file_path.split('/');
-      var fileName = split_path[split_path.length - 1];
-      var actionUrl =  './maintenance/quotationfile/' + fileName;
-      // console.log(actionUrl);
+    quotationFileView(file_name) {
+      var actionUrl = './zensho-mainte/quotations/' + this.detail.maintenance_id + '/' + fileName;
 
       this.quotationtitleData = file_name;
       this.quotationpdfviewVisible = true;
