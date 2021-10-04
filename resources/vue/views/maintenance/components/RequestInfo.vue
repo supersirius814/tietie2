@@ -548,9 +548,9 @@ export default {
       otherinfo: false,
       visibleflag: true,
       fileList: [
-        './maintenance/image/' + this.detail.maintenance_id + '/' + this.detail.maintenance_images[0].file_name,
-        './maintenance/image/' + this.detail.maintenance_id + '/' + this.detail.maintenance_images[1].file_name,
-        './maintenance/image/' + this.detail.maintenance_id + '/' + this.detail.maintenance_images[2].file_name,
+        './zensho-mainte/images/' + this.detail.maintenance_id + '/' + this.detail.maintenance_images[0].file_name,
+        './zensho-mainte/images/' + this.detail.maintenance_id + '/' + this.detail.maintenance_images[1].file_name,
+        './zensho-mainte/images/' + this.detail.maintenance_id + '/' + this.detail.maintenance_images[2].file_name,
       ],
       // fileList: [
       //   'https://picsum.photos/id/0/300/200',
@@ -587,7 +587,7 @@ export default {
     getsrc(firstimage) {
       // return;
       const fsrc =
-        './maintenance/image/' + this.detail.maintenance_id + '/' + firstimage;
+        './zensho-mainte/images/' + this.detail.maintenance_id + '/' + firstimage;
       return fsrc;
     },
     getImageone() {
