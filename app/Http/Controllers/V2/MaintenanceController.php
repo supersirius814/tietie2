@@ -52,7 +52,26 @@ class MaintenanceController extends Controller
         $request->input('action');
         $business_category_id = $request->input('business_category_id', 0);
         $shop_id = $request->input('shop_id', 0);
-        $progress_id = $request->input('progress_id', 0);
+        $progress_ids = $request->input('progress_id');
+
+        $flag = 0;
+        $res = '';
+        if(is_array($progress_ids)){
+
+            foreach ($progress_ids as $key => $value) {
+                if($flag > 0) {
+                    $res .= ','.$value;
+                } else {
+                    $res = $value;
+                    $flag ++;
+                }
+            }
+    
+            // return response($res); die;
+        }
+
+        $progress_id = $res; 
+
 
         $limit = $request->input('limit', 15);
         $page = $request->input('page', 1);

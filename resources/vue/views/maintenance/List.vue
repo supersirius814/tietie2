@@ -16,7 +16,7 @@
         </li>
 
         <li class="pull-right">
-          <el-select v-model="query.progress_id" :multiple="false" placeholder="ステータス" clearable style="width: 150px" class="filter-item" v-on:change="handleFilter()">
+          <el-select v-model="query.progress_id" :multiple="true" placeholder="ステータス" clearable style="width: 350px" class="filter-item" v-on:change="handleFilter()">
             <el-option label="すべて選択" :value="0" />
             <el-option label="BM承認待" :value="1" />
             <el-option label="BM承認" :value="2" />
@@ -224,7 +224,7 @@ export default {
         limit: 15,
         keyword: '',
         role: '',
-        progress_id: null,
+        progress_id:'',
         business_category_id: null,
         shop_id: null,
       },
@@ -259,6 +259,22 @@ export default {
   },
 
     async getList() {
+      // var ids = '', flag = 0;
+      // if(this.query.progress_id != '') {
+      //   this.query.progress_id.forEach(element => {
+      //     if(flag > 0) {
+      //       ids += ',' + element;
+      //     } else{
+      //       ids += element;
+      //       flag ++;
+      //     }
+      //   });
+
+      //   this.query.progress_id = ids;  
+      // }
+      
+    
+      
       const { limit, page } = this.query;
       this.loading = true;
       const { data, meta } = await resource.list(this.query);
@@ -279,6 +295,19 @@ export default {
     handleFilter() {
       this.query.page = 1;
       this.getList();
+      
+    },
+    handleFilter_multi() {
+      var ids = '', flag = 0;
+      this.query.progress_id.forEach(element => {
+        if(flag > 0) {
+          ids += ',' + element;
+        } else{
+          ids += element;
+          flag ++;
+        }
+      });
+      console.log(ids)
     },
     getShops() {
       this.query.shop_id = 0;
