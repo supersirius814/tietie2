@@ -1,4 +1,5 @@
 <template>
+
   <div :class="{'hidden':hidden}" class="pagination-container">
     <el-pagination
       :background="background"
@@ -72,6 +73,10 @@ export default {
         this.$emit('update:limit', val);
       },
     },
+  },
+  mounted() {
+    console.log(this.$refs);
+    console.log('moutn');
   },
   methods: {
     handleSizeChange(val) {

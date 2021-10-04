@@ -232,9 +232,18 @@ export default {
     };
   },
   computed: {
+    
   },
   created() {
     this.getList();
+
+    // var totoalTxt = document.getElementsByClassName('el-pagination__total')[0].textContent;
+    // var split_tt = totoalTxt.split(' ');
+    // totoalTxt = '全' + split_tt[1] + '件';
+    
+  },
+  mounted() {
+
   },
   methods: {
     
@@ -283,9 +292,12 @@ export default {
           this.shops = res;
         });
       }
+      
     },
     formatJson(filterVal, jsonData) {
+      
       return jsonData.map(v => filterVal.map(j => v[j]));
+      
     },
   },
 };
