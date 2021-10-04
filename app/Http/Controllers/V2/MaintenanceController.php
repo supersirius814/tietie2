@@ -307,7 +307,6 @@ class MaintenanceController extends Controller
         $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
         ->distinct();
         if($request->input('customer_code')) {
-            echo '%'.$request->input('customer_code').'%';
             $result->where('customer_code', 'like', '%'.$request->input('customer_code').'%');
         }
 

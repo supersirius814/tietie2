@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <!-- {{ detail.shop }} -->
     <h3>基本情報</h3>
@@ -137,6 +138,28 @@
     </transition> -->
   </div>
 </template>
+<style>
+@keyframes dialog-fade-in {
+  0% {
+    transform: translate3d(0, 100%, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+@keyframes dialog-fade-out {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(0, -100%, 0);
+    opacity: 0;
+  }
+}
+</style>
 <style>
 .notetransition-enter-active, .notetransition-leave-active {
   transition: opacity .5s;
