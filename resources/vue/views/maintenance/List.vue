@@ -259,22 +259,7 @@ export default {
   },
 
     async getList() {
-      // var ids = '', flag = 0;
-      // if(this.query.progress_id != '') {
-      //   this.query.progress_id.forEach(element => {
-      //     if(flag > 0) {
-      //       ids += ',' + element;
-      //     } else{
-      //       ids += element;
-      //       flag ++;
-      //     }
-      //   });
-
-      //   this.query.progress_id = ids;  
-      // }
-      
-    
-      
+          
       const { limit, page } = this.query;
       this.loading = true;
       const { data, meta } = await resource.list(this.query);
@@ -297,18 +282,7 @@ export default {
       this.getList();
       
     },
-    handleFilter_multi() {
-      var ids = '', flag = 0;
-      this.query.progress_id.forEach(element => {
-        if(flag > 0) {
-          ids += ',' + element;
-        } else{
-          ids += element;
-          flag ++;
-        }
-      });
-      console.log(ids)
-    },
+
     getShops() {
       this.query.shop_id = 0;
       if (this.query.business_category_id === 0) {
