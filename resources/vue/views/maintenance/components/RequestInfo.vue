@@ -548,9 +548,9 @@ export default {
       otherinfo: false,
       visibleflag: true,
       fileList: [
-        'https://picsum.photos/id/0/300/200',
-        'https://picsum.photos/id/1/300/200',
-        'https://picsum.photos/id/2/300/200',
+        './maintenance/image/' + this.detail.maintenance_id + '/' + this.detail.maintenance_images[0].file_name,
+        './maintenance/image/' + this.detail.maintenance_id + '/' + this.detail.maintenance_images[1].file_name,
+        './maintenance/image/' + this.detail.maintenance_id + '/' + this.detail.maintenance_images[2].file_name,
       ],
       // fileList: [
       //   'https://picsum.photos/id/0/300/200',

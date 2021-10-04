@@ -9,7 +9,7 @@ Homestead.json
 Homestead.yaml
 public/img/tmp
 .env
-package.json
-package-lock.json
+/package.json
+/package-lock.json
 .editorconfig
 public/mix-manifest.json
