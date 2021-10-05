@@ -1,0 +1,16 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Uploading_files extends Model
+{
+	protected $primaryKey = 'id';
+	protected $table = 'uploding_files';
+	
+	public function maintenance()
+	{
+		return $this->belongsTo('App\Maintenance');
+	}
+}

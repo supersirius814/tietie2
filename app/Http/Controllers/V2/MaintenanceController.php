@@ -20,6 +20,7 @@ use App\Accounting_info;
 use App\Photo_file;
 use App\Report_file;
 use App\Quotation_file;
+use App\Uploading_files;
 use App\Bmcategory_table;
 use App\Customer_information;
 use App\General_manager;
@@ -227,10 +228,11 @@ class MaintenanceController extends Controller
             Storage::disk('s3')->put($filePath, file_get_contents($file_data), 'private');
 
             //store your file into database
-            $reportFile = new Report_file();
+            $reportFile = new Uploading_files();
             // $reportFile->file_path = $file;
             $reportFile->file_name = $request->file('file')->getClientOriginalName();;
             $reportFile->maintenance_id = $maintenance_id;
+            $reportFile->kind = 'report';
             $reportFile->save();
 
             return response()->json([
@@ -278,7 +280,7 @@ class MaintenanceController extends Controller
 
 
             //store your file into database
-            $reportFile = new Photo_file();
+            $reportFile = new Uploading_files();
 
             /* local file upload */
             // $reportFile->file_path = $file;
@@ -286,8 +288,8 @@ class MaintenanceController extends Controller
 
             /* s3 file upload */
             $reportFile->file_name = $file_name;
-
             $reportFile->maintenance_id = $maintenance_id;
+            $reportFile->kind = 'photo';
             $reportFile->save();
 
 
@@ -328,10 +330,11 @@ class MaintenanceController extends Controller
 
 
             //store your file into database
-            $reportFile = new Quotation_file();
+            $reportFile = new Uploading_files();
             // $reportFile->file_path = $file;
             $reportFile->file_name = $request->file('file')->getClientOriginalName();;
             $reportFile->maintenance_id = $maintenance_id;
+            $reportFile->kind = 'quotation';
             $reportFile->save();
 
             return response()->json([
@@ -344,7 +347,9 @@ class MaintenanceController extends Controller
 
     public function getPhotoFiles(Request $request, $maintenance_id)
     {
-        $files = Photo_file::where('maintenance_id', $maintenance_id)->get();
+        $files = Uploading_files::where('maintenance_id', $maintenance_id)
+        ->where('kind', 'photo')
+        ->get();
         return response($files);
     }
 
@@ -508,13 +513,17 @@ class MaintenanceController extends Controller
 
     public function getReportFiles(Request $request, $maintenance_id)
     {
-        $files = Report_file::where('maintenance_id', $maintenance_id)->get();
+        $files = Report_file::where('maintenance_id', $maintenance_id)
+        ->where('kine', 'report')
+        ->get();
         return response($files);
     }
 
     public function getQuotationFiles(Request $request, $maintenance_id)
     {
-        $files = Quotation_file::where('maintenance_id', $maintenance_id)->get();
+        $files = Quotation_file::where('maintenance_id', $maintenance_id)
+        ->where('kind', 'quotation')
+        ->get();
         return response($files);
     }
 
