@@ -63,14 +63,15 @@ export default {
   methods: {
 
     reportFileView(file_name, file_path) {
-      var split_path = file_path.split('/');
-      var fileName = split_path[split_path.length - 1];
-      var actionUrl =  './maintenance/reportfile/' + fileName;
+      // var split_path = file_path.split('/');
+      // var fileName = split_path[split_path.length - 1];
+      // var actionUrl =  './maintenance/reportfile/' + fileName;
 
-      // var actionUrl = './zensho-mainte/reportfiles/' + this.detail.maintenance_id + '/' + file_name;
-      // this.reporttitleData = file_name;
+      /* s3 file get */
+      var actionUrl = './zensho-mainte/reportfile/' + this.detail.maintenance_id + '/' + file_name;
+      this.reporttitleData = file_name;
 
-      this.reporttitleData = fileName;
+      // this.reporttitleData = fileName;
       this.reportpdfviewVisible = true;
       this.reportpdfSrc = actionUrl;
     },
