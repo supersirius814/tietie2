@@ -238,6 +238,7 @@ export default {
     save() {
     
       const insertData = {
+        
         relation_code: this.relation_code,
         relation_name: this.relation_name,
         unincluding_price: this.unincluding_price,
