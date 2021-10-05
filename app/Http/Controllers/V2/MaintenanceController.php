@@ -58,21 +58,21 @@ class MaintenanceController extends Controller
 
         $flag = 0;
         $res = '';
-        if(is_array($progress_ids)){
+        if (is_array($progress_ids)) {
 
             foreach ($progress_ids as $key => $value) {
-                if($flag > 0) {
-                    $res .= ','.$value;
+                if ($flag > 0) {
+                    $res .= ',' . $value;
                 } else {
                     $res = $value;
-                    $flag ++;
+                    $flag++;
                 }
             }
-    
+
             // return response($res); die;
         }
 
-        $progress_id = $res; 
+        $progress_id = $res;
 
 
         $limit = $request->input('limit', 15);
@@ -104,7 +104,7 @@ class MaintenanceController extends Controller
 
     public function classHistory(Request $request)
     {
-        if($request->input('sub_category_id') == NULL) return array();
+        if ($request->input('sub_category_id') == NULL) return array();
         $request->input('action');
 
         $limit = $request->input('limit', 15);
@@ -156,11 +156,11 @@ class MaintenanceController extends Controller
 
         // $maintenance_progress = Maintenance_progress::with('entered_by')->where('maintenance_id', $maintenance_id)->orderBy('updated_at', 'desc')->get();
         $maintenance_progress = Maintenance_progress::with('entered_by')->where('maintenance_id', $maintenance_id)->orderBy('updated_at', 'desc')->get();
-        
+
         return response($maintenance_progress);
     }
 
-//9.5 tietie add
+    //9.5 tietie add
     public function createQuotation(Request $request, $maintenance_id)
     {
         $row = new Quotation_info();
@@ -263,13 +263,15 @@ class MaintenanceController extends Controller
 
             /* s3 file upload  */
 
-          
+
 
             // Storage::disk('local')->put("zensho-mainte/photofiles/$maintenance_id/$file_name",file_get_contents($file_data), 'public');   
-         
 
-            Storage::disk('s3')->put("zensho-mainte/photofiles/$maintenance_id/$file_name",file_get_contents($file_data), 'public');  
-            
+
+            $image = $request->file('file');
+            $filePath = 'images/' . $image->getClientOriginalName();
+            Storage::disk('s3')->put($filePath, file_get_contents($image), 'public');
+
             //store your file into database
             $reportFile = new Photo_file();
 
@@ -316,7 +318,7 @@ class MaintenanceController extends Controller
 
             $file_name = $request->file('file')->getClientOriginalName();
             $file_data =  $request->file('file');
-            
+
 
             // Storage::disk('s3')->put("zensho-mainte/quotationfiles/$maintenance_id/$file_name",file_get_contents($file_data), 'public');  
 
@@ -344,72 +346,68 @@ class MaintenanceController extends Controller
     public function customCodeSearch(Request $request, $custom_code)
     {
         $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
-        ->distinct()
-        ->where('customer_code', $custom_code)
-        ->get();
-        if(Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
-        ->distinct()
-        ->where('customer_code', $custom_code)->exists()) {
+            ->distinct()
+            ->where('customer_code', $custom_code)
+            ->get();
+        if (Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
+            ->distinct()
+            ->where('customer_code', $custom_code)->exists()
+        ) {
             return response($result);
-        }
-        else return response(0);
-
-        
+        } else return response(0);
     }
- 
+
     public function ultimateCustomSearch($maintenance_id, Request $request)
     {
         $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
-        ->distinct();
-        if($request->input('customer_code')) {
-            $result->where('customer_code', 'like', '%'.$request->input('customer_code').'%');
+            ->distinct();
+        if ($request->input('customer_code')) {
+            $result->where('customer_code', 'like', '%' . $request->input('customer_code') . '%');
         }
 
-        if($request->input('id')) {
-            $result->where('customer_code', 'like', '%'.$request->input('id').'%');
+        if ($request->input('id')) {
+            $result->where('customer_code', 'like', '%' . $request->input('id') . '%');
         }
 
-        if($request->input('customer_name')) {
-            $result->where('customer_name', 'like', '%'.$request->input('customer_name').'%');
+        if ($request->input('customer_name')) {
+            $result->where('customer_name', 'like', '%' . $request->input('customer_name') . '%');
         }
 
-        if($request->input('customer_tel')) {
-            $result->where('TEL', 'like', '%'.$request->input('customer_tel').'%');
+        if ($request->input('customer_tel')) {
+            $result->where('TEL', 'like', '%' . $request->input('customer_tel') . '%');
         }
 
-        if($request->input('customer_alias')) {
-            $result->where('customer_alias', 'like', '%'.$request->input('customer_alias').'%');
+        if ($request->input('customer_alias')) {
+            $result->where('customer_alias', 'like', '%' . $request->input('customer_alias') . '%');
         }
 
-        if($request->input('customer_fax')) {
-            $result->where('FAX', 'like', '%'.$request->input('customer_fax').'%');
+        if ($request->input('customer_fax')) {
+            $result->where('FAX', 'like', '%' . $request->input('customer_fax') . '%');
         }
 
-        if($request->input('customergroup_code')) {
-            $result->where('customergroup_code', 'like', '%'.$request->input('customergroup_code').'%');
+        if ($request->input('customergroup_code')) {
+            $result->where('customergroup_code', 'like', '%' . $request->input('customergroup_code') . '%');
         }
 
-        if($request->input('customergroup')) {
-            $result->where('customergroup', 'like', '%'.$request->input('customergroup').'%');
+        if ($request->input('customergroup')) {
+            $result->where('customergroup', 'like', '%' . $request->input('customergroup') . '%');
         }
-        
+
         $result_again = $result->get();
-        if($result_again->count()) {
+        if ($result_again->count()) {
             return response($result_again);
-        }
-        else return response(0);
-        
+        } else return response(0);
     }
-    
+
 
     public function big_middleconnect(Request $request, $category_id)
     {
         $result = Sub_category::select('sub_category_id', 'category_id', 'sub_category_name')
-        ->distinct()
-        ->where('category_id', $category_id)
-        ->get();
+            ->distinct()
+            ->where('category_id', $category_id)
+            ->get();
 
-        if($result->isEmpty()){
+        if ($result->isEmpty()) {
             $result[0] = array(
                 'sub_category_id' => '',
                 'category_id' => '',
@@ -423,11 +421,11 @@ class MaintenanceController extends Controller
     public function depart_name(Request $request, $customergroup_code)
     {
         $result = Customer_information::select('customergroup')
-        ->distinct()
-        ->where('customergroup_code', $customergroup_code)
-        ->get();
+            ->distinct()
+            ->where('customergroup_code', $customergroup_code)
+            ->get();
 
-        if($result->isEmpty()){
+        if ($result->isEmpty()) {
             $result[0] = array(
                 'customergroup_code' => '',
             );
@@ -436,30 +434,27 @@ class MaintenanceController extends Controller
         return response($result);
     }
 
-    
+
 
     public function selectreason(Request $request, $maintenance_id)
     {
         $maintenance = Maintenance::find($maintenance_id);
-        $maintenance->order_reason_id = $request->input('reason'); 
+        $maintenance->order_reason_id = $request->input('reason');
 
-        if($request->input('other')) $maintenance->order_type_other_text = $request->input('other');
+        if ($request->input('other')) $maintenance->order_type_other_text = $request->input('other');
         $maintenance->save();
 
-        $order_reason = Order_reason::find($request->input('reason'));       
-        
-        return response($order_reason);  
+        $order_reason = Order_reason::find($request->input('reason'));
 
+        return response($order_reason);
     }
 
     public function update_customerid(Request $request, $maintenance_id)
     {
         $id = $request->input('id');
-        if($id > 0) {
+        if ($id > 0) {
             $custom_code = $request->input('customer_code');
-       
-        }
-        else {
+        } else {
 
 
             $row = new Customer_information();
@@ -479,34 +474,33 @@ class MaintenanceController extends Controller
         }
 
 
-        $files = Maintenance::where('maintenance_id', $maintenance_id)->update(['customer_code'=> $custom_code]);
+        $files = Maintenance::where('maintenance_id', $maintenance_id)->update(['customer_code' => $custom_code]);
 
 
         $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
-        ->distinct()
-        ->where('customer_code', $custom_code)
-        ->get();
-        return response($result);    
+            ->distinct()
+            ->where('customer_code', $custom_code)
+            ->get();
+        return response($result);
     }
 
-	public function getImage(Request $request, $maintenance_id)
-	{
+    public function getImage(Request $request, $maintenance_id)
+    {
         $file_name = $request->input('file_name');
-		$image = Storage::disk('s3')->get("zensho-mainte/images/$maintenance_id/$file_name");  
-		header('Content-type: image/jpeg');
-		echo $image;
-	}
+        $image = Storage::disk('s3')->get("zensho-mainte/images/$maintenance_id/$file_name");
+        header('Content-type: image/jpeg');
+        echo $image;
+    }
 
     public function getfile(Request $request, $maintenance_id)
-	{
+    {
         $file_path = $request->input('file_path');
         $file = Storage::disk('local')->get($file_path);
         header('Content-type: image/jpeg');
-        
-		return response(asset($file));
 
-	}
-    
+        return response(asset($file));
+    }
+
     public function getReportFiles(Request $request, $maintenance_id)
     {
         $files = Report_file::where('maintenance_id', $maintenance_id)->get();
@@ -524,7 +518,7 @@ class MaintenanceController extends Controller
         $note1 = $request->input('note1');
         $note2 = $request->input('note2');
 
-        $update_state = Shop::where('shop_id', $shop_id)->update(['note1'=> $note1, 'note2'=>$note2]);
+        $update_state = Shop::where('shop_id', $shop_id)->update(['note1' => $note1, 'note2' => $note2]);
 
         $files = Shop::where('shop_id', $shop_id)->get();
         return $files;
@@ -610,8 +604,8 @@ class MaintenanceController extends Controller
         $cc_name = Block::select('block_name')->where('block_id', $cc1[0]['block_id'])->get();
         $cc3 = Block_manager::select('user_id')->where('block_id', $cc1[0]['block_id'])->get();
         $cc_user = User::select('name', 'email')->where('user_id', $cc3[0]['user_id'])->get();
-        $maintenance['mail_data3']= $cc_user;
-        $maintenance['mail_data33']= $cc_name;
+        $maintenance['mail_data3'] = $cc_user;
+        $maintenance['mail_data33'] = $cc_name;
 
 
         $bb1 = Block::select('district_id')->where('block_id', $cc1[0]['block_id'])->get();
@@ -620,25 +614,25 @@ class MaintenanceController extends Controller
         $bb_user = User::select('name', 'email')->where('user_id', $bb2[0]['user_id'])->get();
 
 
-        $maintenance['mail_data2']= $bb_user;
-        $maintenance['mail_data22']= $bb_name;
+        $maintenance['mail_data2'] = $bb_user;
+        $maintenance['mail_data22'] = $bb_name;
 
         $aa1 = District::select('department_id')->where('district_id', $bb1[0]['district_id'])->get();
         $aa_name = Department::select('department_name')->where('department_id', $aa1[0]['department_id'])->get();
         $aa2 = General_manager::select('user_id')->where('department_id', $aa1[0]['department_id'])->get();
         $aa_user = User::select('name', 'email')->where('user_id', $aa2[0]['user_id'])->get();
 
-        $maintenance['mail_data1']= $aa_user;
-        $maintenance['mail_data11']= $aa_name;
+        $maintenance['mail_data1'] = $aa_user;
+        $maintenance['mail_data11'] = $aa_name;
 
 
         $quotationcus = Customer_information::select('customer_code', 'customer_name', 'customer_id', 'TEL', 'FAX')
             ->distinct()
             ->where('customer_code', $maintenance['customer_code'])
             ->get();
-        
-        
-        if($quotationcus->isEmpty()){
+
+
+        if ($quotationcus->isEmpty()) {
             $quotationcus[0] = array(
                 'customer_code' => '',
                 'customer_name' => '',
@@ -647,15 +641,15 @@ class MaintenanceController extends Controller
                 'FAX' => '',
             );
         }
-        
-        $maintenance['customerInformation'] = $quotationcus; 
- 
+
+        $maintenance['customerInformation'] = $quotationcus;
+
         $customgroup_list = Customer_information::select('customergroup',  'customergroup_code')
             ->distinct()
             ->whereNotNull('customergroup_code')
             ->get();
 
-        if($customgroup_list->isEmpty()){
+        if ($customgroup_list->isEmpty()) {
             $customgroup_list[0] = array(
                 'customergroup' => '',
                 'customergroup_code' => '',
@@ -667,7 +661,7 @@ class MaintenanceController extends Controller
             ->whereNotNull('customergroup_code')
             ->get();
 
-        if($customgroup_list1->isEmpty()){
+        if ($customgroup_list1->isEmpty()) {
             $customgroup_list1[0] = array(
                 'customergroup' => '',
                 'customergroup_code' => '',
@@ -679,7 +673,7 @@ class MaintenanceController extends Controller
             ->whereNotNull('customer_name')
             ->get();
 
-        if($customgroup_list2->isEmpty()){
+        if ($customgroup_list2->isEmpty()) {
             $customgroup_list2[0] = array(
                 'customer_name' => '',
             );
@@ -690,7 +684,7 @@ class MaintenanceController extends Controller
             ->whereNotNull('customer_alias')
             ->get();
 
-        if($customgroup_list3->isEmpty()){
+        if ($customgroup_list3->isEmpty()) {
             $customgroup_list3[0] = array(
                 'customer_alias' => '',
             );
@@ -701,7 +695,7 @@ class MaintenanceController extends Controller
             ->whereNotNull('TEL')
             ->get();
 
-        if($customgroup_list4->isEmpty()){
+        if ($customgroup_list4->isEmpty()) {
             $customgroup_list4[0] = array(
                 'TEL' => '',
             );
@@ -712,13 +706,13 @@ class MaintenanceController extends Controller
             ->whereNotNull('FAX')
             ->get();
 
-        if($customgroup_list5->isEmpty()){
+        if ($customgroup_list5->isEmpty()) {
             $customgroup_list5[0] = array(
                 'FAX' => '',
             );
         }
 
-        $maintenance['customgroup_list'] = $customgroup_list; 
+        $maintenance['customgroup_list'] = $customgroup_list;
         $maintenance['customgroup_list1'] = $customgroup_list1;
         $maintenance['customgroup_list2'] = $customgroup_list2;
         $maintenance['customgroup_list3'] = $customgroup_list3;
@@ -730,14 +724,14 @@ class MaintenanceController extends Controller
             ->where('order_reason_id', $maintenance['order_reason_id'])
             ->get();
 
-        if($order_reason->isEmpty()){
+        if ($order_reason->isEmpty()) {
             $order_reason[0] = array(
                 'order_reason_id' => '',
                 'reason' => '',
             );
         }
 
-        $maintenance['order_reason'] = $order_reason; 
+        $maintenance['order_reason'] = $order_reason;
 
 
         // $quotation = DB::table('quotation_files')
@@ -753,31 +747,31 @@ class MaintenanceController extends Controller
 
         $maintenance = Maintenance::find($maintenance_id);
         // if($request->input('is_disaster')) {
-            $maintenance->is_disaster     = $request->input('is_disaster');
+        $maintenance->is_disaster     = $request->input('is_disaster');
         // }
         // if($request->input('is_emergency')) {
-            $maintenance->is_emergency    = $request->input('is_emergency');
+        $maintenance->is_emergency    = $request->input('is_emergency');
         // }
-        if($request->input('category_id')) {
+        if ($request->input('category_id')) {
             $maintenance->category_id     = $request->input('category_id');
         }
-        if($request->input('category_id') == '') {
+        if ($request->input('category_id') == '') {
             DB::table('maintenances')
-            ->where('maintenance_id', $maintenance_id)
-            ->update(array('category_id' => NULL));
+                ->where('maintenance_id', $maintenance_id)
+                ->update(array('category_id' => NULL));
         }
-        if($request->input('sub_category_id')) {
+        if ($request->input('sub_category_id')) {
             $maintenance->sub_category_id = $request->input('sub_category_id');
         }
-        if($request->input('sub_category_id') == '') {
+        if ($request->input('sub_category_id') == '') {
             DB::table('maintenances')
-            ->where('maintenance_id', $maintenance_id)
-            ->update(array('sub_category_id' => NULL));
+                ->where('maintenance_id', $maintenance_id)
+                ->update(array('sub_category_id' => NULL));
         }
-        if($request->input('order_type_id')) {
+        if ($request->input('order_type_id')) {
             $maintenance->order_type_id   = $request->input('order_type_id');
         }
-        if($request->input('remark')) {
+        if ($request->input('remark')) {
             $maintenance->remark          = $request->input('remark');
         }
 
@@ -886,5 +880,3 @@ class MaintenanceController extends Controller
         }
     }
 }
-
-
