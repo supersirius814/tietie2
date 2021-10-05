@@ -115,6 +115,11 @@ class Maintenance extends Model
 		return $this->hasMany('App\Customer_information');
 	}
 
+	public function uploadingFiles()
+	{
+		return $this->hasMany('App\Uploading_files');
+	}
+
 	public function generalManager()
 	{
 		return $this->hasMany('App\General_manager');

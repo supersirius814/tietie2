@@ -263,17 +263,6 @@ export default {
       });
     },
 
-    getPhotoFiles() {
-      resource.getPhotoFiles(this.detail.maintenance_id).then(files => {
-        this.detail.photo_files = files;
-      });
-    },
-
-    getReportFiles() {
-      resource.getReportFiles(this.detail.maintenance_id).then(files => {
-        this.detail.report_files = files;
-      });
-    },
   },
 };
 </script>

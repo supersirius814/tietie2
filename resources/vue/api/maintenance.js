@@ -70,6 +70,13 @@ class MaintenanceResource extends Resource {
         });
     }
 
+    getUploadFiles(id) {
+        return request({
+            url: this.baseUrl + this.uri + '/' + id + '/getUploadFiles',
+            method: 'get',
+        });
+    }
+
     getPhotoFiles(id) {
         return request({
             url: this.baseUrl + this.uri + '/' + id + '/photo_files',
@@ -81,22 +88,6 @@ class MaintenanceResource extends Resource {
         return request({
             url: this.baseUrl + this.uri + '/' + id + '/report_files',
             method: 'get',
-        });
-    }
-
-    getImage(id, updateData) {
-        return request({
-            url: this.baseUrl + this.uri + '/' + id + '/getImage',
-            method: 'post',
-            data: updateData,
-        });
-    }
-
-    getfile(id, updateData) {
-        return request({
-            url: this.baseUrl + this.uri + '/' + id + '/getfile',
-            method: 'post',
-            data: updateData,
         });
     }
 

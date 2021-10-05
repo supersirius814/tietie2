@@ -1,27 +1,50 @@
 <template>
   <div>
-
-  <!-- {{ detail.create_at }}
+    <!-- {{ detail.create_at }}
   {{ detail.photo_files.length }} -->
     <h3>見積情報</h3>
-    <el-table :data="detail.quotation_info" :show-header="true" border style="width: 100%">
+    <el-table
+      :data="detail.quotation_info"
+      :show-header="true"
+      border
+      style="width: 100%"
+    >
       <el-table-column align="center" prop="date" label="日時" />
-      <el-table-column align="center" prop="amount" label="金額" :formatter="formatterCurrency"/>
+      <el-table-column
+        align="center"
+        prop="amount"
+        label="金額"
+        :formatter="formatterCurrency"
+      />
       <el-table-column align="center" prop="comment" label="摘要" />
-      <el-table-column align="center" prop="editor" label="入力者" width="100" />
+      <el-table-column
+        align="center"
+        prop="editor"
+        label="入力者"
+        width="100"
+      />
     </el-table>
-    <div style="margin: 5px 0;">
-      
-      <el-button style="float: right; margin-left:10px;" type="primary" size="small" @click="editVisible=true">見積登録</el-button>
+    <div style="margin: 5px 0">
+      <el-button
+        style="float: right; margin-left: 10px"
+        type="primary"
+        size="small"
+        @click="editVisible = true"
+        >見積登録</el-button
+      >
       <!-- <el-button style="float: right; margin-left:10px;" type="primary" size="small" @click="createQuotation = true">見積登録</el-button> -->
-        <el-button type="info" size="mini" @click="quotationFilesVisible=true">見積書({{ detail.quotation_files.length }})</el-button>
-        <el-button type="info" size="mini" @click="photoFilesVisible=true">写真({{ detail.photo_files.length }})</el-button>
-        <el-button type="info" size="mini" @click="reportFilesVisible=true">報告書({{ detail.report_files.length }})</el-button>
+      <el-button type="info" size="mini" @click="quotationFilesVisible = true"
+        >見積書({{ q_cnt }})</el-button
+      >
+      <el-button type="info" size="mini" @click="photoFilesVisible = true"
+        >写真({{ p_cnt }})</el-button
+      >
+      <el-button type="info" size="mini" @click="reportFilesVisible = true"
+        >報告書({{ r_cnt }})</el-button
+      >
     </div>
 
-
     <el-dialog
-    
       title="【見積書ファイルリスト】"
       :visible.sync="quotationFilesVisible"
       :modal="false"
@@ -31,8 +54,8 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="quotationFilesVisible = false">閉じる</el-button>
       </span>
-      </el-dialog>
-    <el-dialog 
+    </el-dialog>
+    <el-dialog
       :modal="false"
       title="【写真リスト】"
       :visible.sync="photoFilesVisible"
@@ -40,7 +63,7 @@
     >
       <photo-files :detail="detail" />
       <span slot="footer" class="dialog-footer">
-        <el-button @click="photoFilesVisible=false">閉じる</el-button>
+        <el-button @click="photoFilesVisible = false">閉じる</el-button>
       </span>
     </el-dialog>
 
@@ -56,7 +79,7 @@
       </span>
     </el-dialog>
 
-     <el-dialog
+    <el-dialog
       title="見積情報 登録"
       :visible.sync="editVisible"
       width="43%"
@@ -64,8 +87,8 @@
       top="0px"
       :modal="false"
     >
-      <create-quotation :detail="detail" @create="editVisible=false" />
-  </el-dialog>
+      <create-quotation :detail="detail" @create="editVisible = false" />
+    </el-dialog>
   </div>
 </template>
 
@@ -81,7 +104,15 @@ import CreateQuotation from './sub/CreateQuotation.vue';
 import Resource from '@/api/resource';
 
 export default {
-  components: { QuotationFiles, PhotoFiles, ProgressEdit, ReportFiles, QuotationInfo, AccountingInfo , CreateQuotation },
+  components: {
+    QuotationFiles,
+    PhotoFiles,
+    ProgressEdit,
+    ReportFiles,
+    QuotationInfo,
+    AccountingInfo,
+    CreateQuotation,
+  },
   props: {
     detail: {
       type: Object,
@@ -89,7 +120,7 @@ export default {
         return {};
       },
     },
-  },  
+  },
   data() {
     return {
       editVisible: false,
@@ -97,6 +128,9 @@ export default {
       photoFilesVisible: false,
       reportFilesVisible: false,
       progress: [],
+      q_cnt: 0,
+      r_cnt: 0,
+      p_cnt: 0,
     };
   },
   created() {
@@ -126,20 +160,36 @@ export default {
     };
   },
   mounted() {
-
     const dialogs = document.querySelectorAll('.slide-dialog');
-    dialogs.forEach(el => {
+    dialogs.forEach((el) => {
       el.closest('.el-dialog__wrapper').classList.add('slide-dialog-wrapper');
     });
 
-  }, 
+    this.filesCnt();
+  },
   methods: {
     formatterProgress(row, column) {
       return this.progress[row.progress_id] ?? '';
     },
-            formatterCurrency(row, column) {
-      if(row.amount == null) return;
+
+    formatterCurrency(row, column) {
+      if (row.amount == null) return;
       return '¥' + row.amount;
+    },
+
+    filesCnt() {
+      var quotation_cnt = 0,
+        photo_cnt = 0,
+        report_cnt = 0;
+      this.detail.uploading_files.forEach((el) => {
+        if (el.kind == 'quotation') quotation_cnt++;
+        if (el.kind == 'photo') photo_cnt++;
+        if (el.kind == 'report') report_cnt++;
+      });
+
+      this.q_cnt = quotation_cnt;
+      this.p_cnt = photo_cnt;
+      this.r_cnt = report_cnt;
     },
   },
 };

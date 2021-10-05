@@ -90,7 +90,7 @@
                   "
                   :auto-upload="false"
                   :multiple="false"
-                  :on-success="getQuotationFiles()"
+                  :on-success="getUploadFiles()"
                 >
                   <el-button slot="trigger" size="small" type="info"
                     >ファイル選択</el-button
@@ -116,7 +116,7 @@
                   "
                   :auto-upload="false"
                   :multiple="false"
-                  :on-success="getPhotoFiles()"
+                  :on-success="getUploadFiles()"
                 >
                   <el-button slot="trigger" size="small" type="info"
                     >ファイル選択</el-button
@@ -142,7 +142,7 @@
                   "
                   :auto-upload="false"
                   :multiple="false"
-                  :on-success="getReportFiles()"
+                  :on-success="getUploadFiles()"
                 >
                   <el-button slot="trigger" size="small" type="info"
                     >ファイル選択</el-button
@@ -263,6 +263,9 @@ export default {
       comment: '',
       date: '',
       amount: '',
+      q_cnt: 0,
+      r_cnt: 0,
+      p_cnt: 0,
     };
   },
   created() {
@@ -270,8 +273,25 @@ export default {
       this.userName = user.name;
     });
   },
-
+  mounted() {
+    this.filesCnt();
+  },
   methods: {
+    filesCnt() {
+      var quotation_cnt = 0,
+        photo_cnt = 0,
+        report_cnt = 0;
+      this.detail.uploading_files.forEach((el) => {
+        if (el.kind == 'quotation') quotation_cnt++;
+        if (el.kind == 'photo') photo_cnt++;
+        if (el.kind == 'report') report_cnt++;
+      });
+
+      this.q_cnt = quotation_cnt;
+      this.p_cnt = photo_cnt;
+      this.r_cnt = report_cnt;
+    },
+
     formatterCurrency(row, column) {
       if (row.amount == null) return;
       return '¥' + row.amount;
@@ -285,9 +305,9 @@ export default {
         date: DateTime.fromISO(this.date).toFormat('yyyy-MM-dd hh:mm'),
         comment: this.comment,
         amount: this.amount,
-        quotation_files_cnt: this.detail.quotation_files.length,
-        report_files_cnt: this.detail.report_files.length,
-        photo_files_cnt: this.detail.photo_files.length,
+        quotation_files_cnt: this.q_cnt,
+        report_files_cnt: this.r_cnt,
+        photo_files_cnt: this.p_cnt,
         editor: this.userName,
       };
       resource
@@ -308,23 +328,12 @@ export default {
         });
     },
 
-    getPhotoFiles() {
-      resource.getPhotoFiles(this.detail.maintenance_id).then((files) => {
-        this.detail.photo_files = files;
+    getUploadFiles() {
+      resource.getUploadFiles(this.detail.maintenance_id).then((files) => {
+        this.detail.uploading_files = files;
       });
     },
 
-    getQuotationFiles() {
-      resource.getQuotationFiles(this.detail.maintenance_id).then((files) => {
-        this.detail.quotation_files = files;
-      });
-    },
-
-    getReportFiles() {
-      resource.getReportFiles(this.detail.maintenance_id).then((files) => {
-        this.detail.report_files = files;
-      });
-    },
   },
 };
 </script>

@@ -2,12 +2,12 @@
   <div>
     <el-row :gutter="20">
       <el-col
-        v-for="item in detail.photo_files"
-        :key="item.photo_file_id"
+        v-for="item in detail.uploading_files"
+        :key="item.id"
         :span="4"
         style="text-align: center"
       >
-        <span>
+        <span v-if="item.kind == 'photo'">
           <a
             href="#"
             @click.prevent="photoFileView(item.file_path, item.file_name)"

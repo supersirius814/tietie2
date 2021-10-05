@@ -100,9 +100,9 @@ Route::group(['namespace' => 'V2'], function () {
     Route::get('v2/maintenance/{mantenance_id}/customCodeSearch', 'MaintenanceController@customCodeSearch');
     Route::post('v2/maintenance/{mantenance_id}/ultimateCustomSearch', 'MaintenanceController@ultimateCustomSearch');
 
+    Route::get('v2/maintenance/{mantenance_id}/getUploadFiles', 'MaintenanceController@getUploadFiles');
+
     Route::get('v2/maintenance/{mantenance_id}/photo_files', 'MaintenanceController@getPhotoFiles');//pdf view image 
-    Route::post('v2/maintenance/{mantenance_id}/getImage', 'MaintenanceController@getImage');
-    Route::post('v2/maintenance/{mantenance_id}/getfile', 'MaintenanceController@getfile');
 
     Route::post('v2/maintenance/{mantenance_id}/saveNotes', 'MaintenanceController@saveNotes');//save note1. note2 for shop
     

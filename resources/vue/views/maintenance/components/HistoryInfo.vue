@@ -23,13 +23,13 @@
       </el-col>
       <el-col :span="12">
         <el-button type="info" size="mini" @click="quotationFilesVisible = true"
-          >見積書({{ detail.quotation_files.length }})</el-button
+          >見積書({{ q_cnt }})</el-button
         >
         <el-button type="info" size="mini" @click="photoFilesVisible = true"
-          >写真({{ detail.photo_files.length }})</el-button
+          >写真({{ p_cnt }})</el-button
         >
         <el-button type="info" size="mini" @click="reportFilesVisible = true"
-          >報告書({{ detail.report_files.length }})</el-button
+          >報告書({{ r_cnt }})</el-button
         >
       </el-col>
     </el-row>
@@ -152,6 +152,9 @@ export default {
       photoFilesVisible: false,
       reportFilesVisible: false,
       progress: [],
+      q_cnt: 0,
+      r_cnt: 0,
+      p_cnt: 0,
     };
   },
   created() {
@@ -186,8 +189,25 @@ export default {
     dialogs.forEach((el) => {
       el.closest('.el-dialog__wrapper').classList.add('slide-dialog-wrapper');
     });
+
+    this.filesCnt();
   },
   methods: {
+    filesCnt() {
+      var quotation_cnt = 0,
+        photo_cnt = 0,
+        report_cnt = 0;
+      this.detail.uploading_files.forEach((el) => {
+        if (el.kind == 'quotation') quotation_cnt++;
+        if (el.kind == 'photo') photo_cnt++;
+        if (el.kind == 'report') report_cnt++;
+      });
+
+      this.q_cnt = quotation_cnt;
+      this.p_cnt = photo_cnt;
+      this.r_cnt = report_cnt;
+    },
+
     editVisibleChange() {
       this.editVisible = true;
       document

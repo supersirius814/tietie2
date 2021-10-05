@@ -494,34 +494,26 @@ class MaintenanceController extends Controller
         return response($result);
     }
 
-    public function getImage(Request $request, $maintenance_id)
-    {
-        $file_name = $request->input('file_name');
-        $image = Storage::disk('s3')->get("zensho-mainte/images/$maintenance_id/$file_name");
-        header('Content-type: image/jpeg');
-        echo $image;
-    }
+    
 
-    public function getfile(Request $request, $maintenance_id)
+    public function getUploadFiles(Request $request, $maintenance_id)
     {
-        $file_path = $request->input('file_path');
-        $file = Storage::disk('local')->get($file_path);
-        header('Content-type: image/jpeg');
-
-        return response(asset($file));
+        $files = Uploading_files::where('maintenance_id', $maintenance_id)
+        ->get();
+        return response($files);
     }
 
     public function getReportFiles(Request $request, $maintenance_id)
     {
-        $files = Report_file::where('maintenance_id', $maintenance_id)
-        ->where('kine', 'report')
+        $files = Uploading_files::where('maintenance_id', $maintenance_id)
+        ->where('kind', 'report')
         ->get();
         return response($files);
     }
 
     public function getQuotationFiles(Request $request, $maintenance_id)
     {
-        $files = Quotation_file::where('maintenance_id', $maintenance_id)
+        $files = Uploading_files::where('maintenance_id', $maintenance_id)
         ->where('kind', 'quotation')
         ->get();
         return response($files);
@@ -603,14 +595,14 @@ class MaintenanceController extends Controller
             'shop.business_category',
             'orderType', 'progress',
             'user',
-
             'maintenanceProgress.entered_by',
             'maintenanceImages',
             'orderReasons',
             'category', 'subCategory',
             'maintenanceMatters.matter_value',
             'maintenanceMatters.matter_option',
-            'photoFiles', 'reportFiles', 'quotationFiles', 'quotationInfo', 'accountingInfo'
+            'uploadingFiles',
+            'quotationInfo', 'accountingInfo'
         ])->find($maintenance_id);
 
 

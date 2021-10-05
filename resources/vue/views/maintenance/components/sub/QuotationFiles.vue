@@ -2,12 +2,12 @@
   <div>
     <el-row :gutter="20">
       <el-col
-        v-for="item in detail.quotation_files"
-        :key="item.quotation_file_id"
+        v-for="item in detail.uploading_files"
+        :key="item.id"
         :span="4"
         style="text-align: center"
       >
-        <span>
+        <span v-if="item.kind == 'quotation'">
           <a
             href="#"
             @click.prevent="quotationFileView(item.file_name, item.file_path)"

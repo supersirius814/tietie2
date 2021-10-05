@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-row :gutter="20">
-      <el-col v-for="item in detail.report_files" :key="item.report_file_id" :span="4" style="text-align:center;">
-        <span>
+      <el-col v-for="item in detail.uploading_files" :key="item.id" :span="4" style="text-align:center;">
+        <span v-if="item.kind == 'report'">
           <a
             href="#"
             @click.prevent="reportFileView(item.file_name, item.file_path)"
