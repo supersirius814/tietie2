@@ -19,7 +19,7 @@ class FileViewController extends Controller
 	}
 	
 	//report pdf file get
-	public function getReportFile($file_name)
+	public function getReportFile($maintenance_id, $file_name)
 	{
 		// $file_url = 'public/reports/'.$file_name;
 		// $file = Storage::get($file_url);
@@ -30,7 +30,7 @@ class FileViewController extends Controller
 	}
 
 	//photo file image get 
-	public function getPhotoFile($file_name)
+	public function getPhotoFile($maintenance_id,$file_name)
 	{
 		// $file_url = 'public/photos/'.$file_name;
 		// $file = Storage::get($file_url);
