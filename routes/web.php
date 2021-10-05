@@ -76,13 +76,16 @@ Route::get('maintenance', function(Request $request) {
 Route::get('maintenance/error', 'MaintenanceController@error')->middleware('auth');
 
 Route::get('zensho-mainte/images/{maintenance_id}/{file_name}', 'ImageController@getImage')->middleware('auth');
+
+/* local file get */
 Route::get('maintenance/quotationfile/{file_name}', 'FileViewController@getQuotationFile')->middleware('auth');//quotation pdf, report pdf, photo image view
 Route::get('maintenance/reportfile/{file_name}', 'FileViewController@getReportFile')->middleware('auth');
 Route::get('maintenance/photofile/{file_name}', 'FileViewController@getPhotoFile')->middleware('auth');
 
-// Route::get('zensho-mainte/quotationfiles/{maintenance_id}/{file_name}', 'FileViewController@getQuotationFile')->middleware('auth');//quotation pdf, report pdf, photo image view
-// Route::get('zensho-mainte/reportsfiles/{maintenance_id}/{file_name}', 'FileViewController@getReportFile')->middleware('auth');
-// Route::get('zensho-mainte/photofiles/{maintenance_id}/{file_name}', 'FileViewController@getPhotoFile')->middleware('auth');
+/* s3 file get */
+Route::get('zensho-mainte/quotationfile/{maintenance_id}/{file_name}', 'FileViewController@getQuotationFile')->middleware('auth');//quotation pdf, report pdf, photo image view
+Route::get('zensho-mainte/reportsfile/{maintenance_id}/{file_name}', 'FileViewController@getReportFile')->middleware('auth');
+Route::get('zensho-mainte/photofile/{maintenance_id}/{file_name}', 'FileViewController@getPhotoFile')->middleware('auth');
 
 
 Route::get('maintenance/add/confirm', function(Request $request) {

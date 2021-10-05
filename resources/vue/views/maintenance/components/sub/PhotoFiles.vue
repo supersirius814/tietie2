@@ -64,14 +64,18 @@ export default {
   },
   methods: {
     photoFileView(file_path, file_name) {
-      var split_path = file_path.split('/');
-      var fileName = split_path[split_path.length - 1];
-      var actionUrl =  './maintenance/photofile/' + fileName;
+      /* local public file */
 
-      // var actionUrl = './zensho-mainte/photofiles/' + this.detail.maintenance_id + '/' + file_name;
-      // this.phototitleData = file_name;
+      // var split_path = file_path.split('/');
+      // var fileName = split_path[split_path.length - 1];
+      // var actionUrl =  './maintenance/photofile/' + fileName;
+      // this.phototitleData = fileName;
 
-      this.phototitleData = fileName;
+      /* s3 file get */
+      var actionUrl = './zensho-mainte/photofile/' + this.detail.maintenance_id + '/' + file_name;
+      this.phototitleData = file_name;
+
+      
       this.photoviewVisible = true;
       this.photoSrc = actionUrl;
     },

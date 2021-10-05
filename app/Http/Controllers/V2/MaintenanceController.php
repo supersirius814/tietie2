@@ -259,16 +259,23 @@ class MaintenanceController extends Controller
             $file_name = $request->file('file')->getClientOriginalName();
             $file_data =  $request->file('file');
 
-                // if (!Storage::disk('s3')->exists('/zensho-mainte/photofiles/'.$maintenance_id)) {
-                //     Storage::disk('s3')->makeDirectory('/zensho-mainte/photofiles/'.$maintenance_id);
-                // }
+            /* s3 file upload  */
+            if (!Storage::disk('s3')->exists('/zensho-mainte/photofiles/'.$maintenance_id)) {
+                Storage::disk('s3')->makeDirectory('/zensho-mainte/photofiles/'.$maintenance_id);
+            }
 
-                // Storage::disk('s3')->put("zensho-mainte/photofiles/$maintenance_id/$file_name",file_get_contents($file_data), 'public');              
+            Storage::disk('s3')->put("zensho-mainte/photofiles/$maintenance_id/$file_name",file_get_contents($file_data), 'public');              
             
             //store your file into database
             $reportFile = new Photo_file();
-            $reportFile->file_path = $file;
+
+            /* local file upload */
+            // $reportFile->file_path = $file;
+            // $reportFile->file_name = $request->file('file')->getClientOriginalName();
+
+            /* s3 file upload */
             $reportFile->file_name = $request->file('file')->getClientOriginalName();
+
             $reportFile->maintenance_id = $maintenance_id;
             $reportFile->save();
 
