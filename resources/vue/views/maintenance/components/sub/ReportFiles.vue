@@ -5,7 +5,7 @@
         <span>
           <a
             href="#"
-            @click.prevent="reportFileView(item.file_name)"
+            @click.prevent="reportFileView(item.file_name, item.file_path)"
           >
             <i class="el-icon-picture" style="display:block; font-size:60px;margin:auto;margin-bottom:10px;" />
             {{ item.file_name }}
@@ -62,9 +62,14 @@ export default {
   },
   methods: {
 
-    reportFileView(file_name) {
-      var actionUrl = './zensho-mainte/reportfiles/' + this.detail.maintenance_id + '/' + file_name;
-      this.reporttitleData = file_name;
+    reportFileView(file_name, file_path) {
+      var fileName = split_path[split_path.length - 1];
+      var actionUrl =  './maintenance/reportfile/' + fileName;
+
+      // var actionUrl = './zensho-mainte/reportfiles/' + this.detail.maintenance_id + '/' + file_name;
+      // this.reporttitleData = file_name;
+
+      this.reporttitleData = fileName;
       this.reportpdfviewVisible = true;
       this.reportpdfSrc = actionUrl;
     },
