@@ -585,30 +585,52 @@ class MaintenanceController extends Controller
         ])->find($maintenance_id);
 
 
-        $cc1 = Shop::select('block_id')->where('shop_id', $maintenance['shop_id'])->get();
-        $cc_name = Block::select('block_name')->where('block_id', $cc1[0]['block_id'])->get();
-        $cc3 = Block_manager::select('user_id')->where('block_id', $cc1[0]['block_id'])->get();
-        $cc_user = User::select('name', 'email')->where('user_id', $cc3[0]['user_id'])->get();
-        $maintenance['mail_data3'] = $cc_user;
-        $maintenance['mail_data33'] = $cc_name;
+        // $cc1 = Shop::select('block_id')->where('shop_id', $maintenance['shop_id'])->get();
+        // $cc_name = Block::select('block_name')->where('block_id', $cc1[0]['block_id'])->get();
+        // $cc3 = Block_manager::select('user_id')->where('block_id', $cc1[0]['block_id'])->get();
+        // $cc_user = User::select('name', 'email')->where('user_id', $cc3[0]['user_id'])->get();
+        // $maintenance['mail_data3'] = $cc_user;
+        // $maintenance['mail_data33'] = $cc_name;
+
+        $block_ids = Shop::select('block_id')->where('shop_id', $maintenance['shop_id'])->get();
+        $block_names = Block::select('block_name')->where('block_id', $block_ids[0]['block_id'])->get();
+        $blockUser_ids = Block_manager::select('user_id')->where('block_id', $block_ids[0]['block_id'])->get();
+        $blockUsersNEs = User::select('name', 'email')->where('user_id', $blockUser_ids[0]['user_id'])->get();
+        $maintenance['blockUsersNEs'] = $blockUsersNEs;
+        $maintenance['block_names'] = $block_names;
 
 
-        $bb1 = Block::select('district_id')->where('block_id', $cc1[0]['block_id'])->get();
-        $bb_name = District::select('district_name')->where('district_id', $bb1[0]['district_id'])->get();
-        $bb2 = District_manager::select('user_id')->where('district_id', $bb1[0]['district_id'])->get();
-        $bb_user = User::select('name', 'email')->where('user_id', $bb2[0]['user_id'])->get();
+        $district_ids = Block::select('district_id')->where('block_id', $block_ids[0]['block_id'])->get();
+        $district_names = District::select('district_name')->where('district_id', $district_ids[0]['district_id'])->get();
+        $districtUser_ids = District_manager::select('user_id')->where('district_id', $district_ids[0]['district_id'])->get();
+        $districtUserNEs = User::select('name', 'email')->where('user_id', $districtUser_ids[0]['user_id'])->get();
+        $maintenance['districtUserNEs'] = $districtUserNEs;
+        $maintenance['district_names'] = $district_names;
+
+        // $bb1 = Block::select('district_id')->where('block_id', $cc1[0]['block_id'])->get();
+        // $bb_name = District::select('district_name')->where('district_id', $bb1[0]['district_id'])->get();
+        // $bb2 = District_manager::select('user_id')->where('district_id', $bb1[0]['district_id'])->get();
+        // $bb_user = User::select('name', 'email')->where('user_id', $bb2[0]['user_id'])->get();
 
 
-        $maintenance['mail_data2'] = $bb_user;
-        $maintenance['mail_data22'] = $bb_name;
+        // $maintenance['mail_data2'] = $bb_user;
+        // $maintenance['mail_data22'] = $bb_name;
 
-        $aa1 = District::select('department_id')->where('district_id', $bb1[0]['district_id'])->get();
-        $aa_name = Department::select('department_name')->where('department_id', $aa1[0]['department_id'])->get();
-        $aa2 = General_manager::select('user_id')->where('department_id', $aa1[0]['department_id'])->get();
-        $aa_user = User::select('name', 'email')->where('user_id', $aa2[0]['user_id'])->get();
+        $department_ids = District::select('department_id')->where('district_id', $district_ids[0]['district_id'])->get();
+        $department_names = Department::select('department_name')->where('department_id', $department_ids[0]['department_id'])->get();
+        $generalManagerUserids = General_manager::select('user_id')->where('department_id', $department_ids[0]['department_id'])->get();
+        $departmentUserNEs = User::select('name', 'email')->where('user_id', $generalManagerUserids[0]['user_id'])->get();
 
-        $maintenance['mail_data1'] = $aa_user;
-        $maintenance['mail_data11'] = $aa_name;
+        $maintenance['departmentUserNEs'] = $departmentUserNEs;
+        $maintenance['department_names'] = $department_names;
+
+        // $aa1 = District::select('department_id')->where('district_id', $district_ids[0]['district_id'])->get();
+        // $aa_name = Department::select('department_name')->where('department_id', $aa1[0]['department_id'])->get();
+        // $aa2 = General_manager::select('user_id')->where('department_id', $aa1[0]['department_id'])->get();
+        // $aa_user = User::select('name', 'email')->where('user_id', $aa2[0]['user_id'])->get();
+
+        // $maintenance['mail_data1'] = $aa_user;
+        // $maintenance['mail_data11'] = $aa_name;
 
 
         $quotationcus = Customer_information::select('customer_code', 'customer_name', 'customer_id', 'TEL', 'FAX')

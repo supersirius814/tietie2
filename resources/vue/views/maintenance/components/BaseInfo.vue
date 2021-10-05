@@ -204,9 +204,9 @@ export default {
 
       tableData: [
         { title: '地域会社', name: '-', manager: '-', to: false, cc: false },
-        { title: '営業部', name: this.detail.mail_data11[0]['department_name'], manager: this.detail.mail_data1[0]['name'], email: this.detail.mail_data1[0]['email'], to: false, cc: false },
-        { title: 'ディストリクト', name: this.detail.mail_data22[0]['district_name'], manager: this.detail.mail_data2[0]['name'], email: this.detail.mail_data2[0]['email'], to: false, cc: false },
-        { title: 'ブロック', name: this.detail.mail_data33[0]['block_name'], manager: this.detail.mail_data3[0]['name'], email: this.detail.mail_data3[0]['email'], to: false, cc: false },
+        { title: '営業部', name: this.detail.department_names[0]['department_name'], manager: this.detail.departmentUserNEs[0]['name'], email: this.detail.departmentUserNEs[0]['email'], to: false, cc: false },
+        { title: 'ディストリクト', name: this.detail.district_names[0]['district_name'], manager: this.detail.districtUserNEs[0]['name'], email: this.detail.districtUserNEs[0]['email'], to: false, cc: false },
+        { title: 'ブロック', name: this.detail.block_names[0]['block_name'], manager: this.detail.blockUsersNEs[0]['name'], email: this.detail.blockUsersNEs[0]['email'], to: false, cc: false },
         // { title: 'エリア', name: '安城', manager: '細川', to: false, cc: false },
       ],
     };

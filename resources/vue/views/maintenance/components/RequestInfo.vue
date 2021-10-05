@@ -3,10 +3,7 @@
     <div slot="header">
       <span>依頼情報</span>
 
-      <el-button
-        type="primary"
-        size="small"
-        @click="editVisible = true"
+      <el-button type="primary" size="small" @click="editVisible = true"
         >編集</el-button
       >
     </div>
@@ -99,53 +96,52 @@
           <tbody>
             <tr>
               <th>依頼区分*</th>
-                <td style="display: flex">               
-                    <el-button
-                    v-if="detail.order_type.order_type_id < 4"
-                    style="
-                      width: 70%;
-                      background-color: transparant;
-                      border: 0;
-                      pointer-events: none;"
-                    @click="setting = false"
-                    >{{ detail.order_type.type }}</el-button>
-                    <el-button
-                    v-if="detail.order_type.order_type_id < 4"
-                    style="
-                      width: 30%;
-                      background-color: transparant;
-                      border: 0;
-                      display: none;
-                      pointer-events: none;"
-                    @click="setting = false"
-                    ><span v-if="detail.order_reason[0].reason">({{ detail.order_reason[0].reason }})</span></el-button>
+              <td style="display: flex">
+                <el-button
+                  v-if="detail.order_type.order_type_id < 4"
+                  style="
+                    width: 70%;
+                    background-color: transparant;
+                    border: 0;
+                    pointer-events: none;
+                  "
+                  @click="setting = false"
+                  >{{ order_text }}</el-button
+                >
 
-                   <el-button
-                    v-if="detail.order_type.order_type_id > 3 "
-                    style="
-                      width: 70%;
-                      background-color: transparant;
-                      border: 0;
-                      pointer-events: none;"
-                    @click="setting = false"
-                    >{{ detail.order_type.type }}</el-button>
-                    <el-button
-                    v-if="detail.order_type.order_type_id > 3"
-                    style="
-                      width: 30%;
-                      background-color: transparant;
-                      border: 0;
-                      pointer-events: none;
-                      color: blue;"
-                    @click="setting = true"
-                    >💬</el-button>
-                
-                  <!-- ({{
+                <el-button
+                  v-if="detail.order_type.order_type_id > 3"
+                  style="
+                    width: 70%;
+                    background-color: transparant;
+                    border: 0;
+                    pointer-events: none;
+                  "
+                  @click="setting = false"
+                  >{{ detail.order_type.type }}</el-button
+                >
+                <el-tooltip
+                v-if="detail.order_type.order_type_id > 3"
+                  class="item"
+                  effect="dark"
+                  :content="otherText()"
+                  placement="top"
+                  style="
+                    width: 30%;
+                    background-color: transparant;
+                    border: 0;
+                    color: blue;
+                  "
+                >
+                  <el-button>💬</el-button>
+                </el-tooltip>
+
+                <!-- ({{
                       detail.order_reason[0].reason
                     }}) -->
 
-                  <!-- {{ detail.order_type.type }} -->
-                  <!-- <el-button
+                <!-- {{ detail.order_type.type }} -->
+                <!-- <el-button
                     v-if="detail.order_type.order_type_id > 3"
                     @click="otherinfo = true"
                     style="
@@ -156,7 +152,7 @@
                     "
                     ></el-button
                   > -->
-                </td>
+              </td>
               <!-- <td style="display: flex">
                    {{ detail.order_type.type }}
                    <el-button v-if="detail.order_type.order_type_id > 3" style="width: 30%; background-color: transparant; border: 0; color:blue;">&#128489;</el-button>
@@ -487,9 +483,14 @@
       <span>{{ detail.order_type_other_text }}</span>
     </el-dialog>
 
-    <el-dialog title="" :visible.sync="baseInfoVisible" width="700px" top="0px" custom-class="slide-dialog">
+    <el-dialog
+      title=""
+      :visible.sync="baseInfoVisible"
+      width="700px"
+      top="0px"
+      custom-class="slide-dialog"
+    >
       <base-info :detail="detail" />
-
     </el-dialog>
 
     <el-dialog
@@ -505,7 +506,6 @@
         <el-button @click="editVisible = false">閉じる</el-button>
       </span>
     </el-dialog>
-
   </el-card>
 </template>
 
@@ -536,9 +536,10 @@ export default {
     return {
       dataa: null,
       show: true,
+      order_text: '',
       // customerInformation: this.detail.customerInformation,
       firstimage: '',
-      customer_name:'',
+      customer_name: '',
       secondimage: '',
       thirdimage: '',
       createMailVisible: false,
@@ -548,15 +549,25 @@ export default {
       otherinfo: false,
       visibleflag: true,
       fileList: [
-        './zensho-mainte/images/' + this.detail.maintenance_id + '/' + this.detail.maintenance_images[0].file_name,
-        './zensho-mainte/images/' + this.detail.maintenance_id + '/' + this.detail.maintenance_images[1].file_name,
-        './zensho-mainte/images/' + this.detail.maintenance_id + '/' + this.detail.maintenance_images[2].file_name,
+        './zensho-mainte/images/' +
+          this.detail.maintenance_id +
+          '/' +
+          this.detail.maintenance_images[0].file_name,
+        './zensho-mainte/images/' +
+          this.detail.maintenance_id +
+          '/' +
+          this.detail.maintenance_images[1].file_name,
+        './zensho-mainte/images/' +
+          this.detail.maintenance_id +
+          '/' +
+          this.detail.maintenance_images[2].file_name,
       ],
-      // fileList: [
-      //   'https://picsum.photos/id/0/300/200',
-      //   'https://picsum.photos/id/1/300/200',
-      //   'https://picsum.photos/id/2/300/200',
-      // ],
+      order_content: [
+        '修理をしてほしい',
+        '部品を送ってほしい',
+        '調査してほしい',
+        '調査してほしい',
+      ],
 
       tableData: [
         { title: '特記①', value: '20’10/13〜10/25改装 浄化槽店舗' },
@@ -572,6 +583,8 @@ export default {
     dialogs.forEach((el) => {
       el.closest('.el-dialog__wrapper').classList.add('slide-dialog-wrapper');
     });
+
+    this.orderText();
   },
   created() {
     // this.getImageone();
@@ -579,6 +592,46 @@ export default {
     // this.getImagethree();
   },
   methods: {
+    otherText() {
+
+      var text = "";
+
+      if(this.detail.order_type_id > 3 && this.detail.order_type.type != ''){
+        text = this.detail.order_type_other_text;
+      }
+      return text;
+    },
+    orderText() {
+      if (
+        this.detail.order_type.order_type_id < 4 &&
+        this.detail.order_type.type != ''
+      ) {
+        var type = this.detail.order_type.type,
+          flag = 0;
+        var reasons = this.detail.order_reasons;
+        if (reasons.length > 0) {
+          reasons.forEach((el) => {
+            if (flag > 0) {
+              type += ',' + el.reason;
+            } else {
+              type += '(' + el.reason;
+              flag++;
+            }
+          });
+          type += ')';
+        }
+        this.order_text = type;
+      } else if (
+        this.detail.order_type_id > 3 &&
+        this.detail.order_type.type != ''
+      ) {
+        var type = this.detail.order_type.type;
+        this.order_text = type;
+      } else {
+        return;
+      }
+    },
+
     async save() {
       this.editVisible = false;
       await this.$refs.editForm.save();
@@ -587,7 +640,10 @@ export default {
     getsrc(firstimage) {
       // return;
       const fsrc =
-        './zensho-mainte/images/' + this.detail.maintenance_id + '/' + firstimage;
+        './zensho-mainte/images/' +
+        this.detail.maintenance_id +
+        '/' +
+        firstimage;
       return fsrc;
     },
     getImageone() {
@@ -597,9 +653,9 @@ export default {
       // alert(this.detail.maintenance_images[0].file_name)
       // alert(this.detail.maintenance_id);
 
-      resource.getImage(this.detail.maintenance_id, file_data).then((res) => {
-
-      });
+      resource
+        .getImage(this.detail.maintenance_id, file_data)
+        .then((res) => {});
     },
   },
 };
