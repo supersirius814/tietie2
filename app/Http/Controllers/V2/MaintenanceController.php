@@ -4,6 +4,7 @@ namespace App\Http\Controllers\V2;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\File;
 use Storage;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +32,7 @@ use App\Shop;
 use App\User;
 use App\Sub_category;
 use DB;
+use Log;
 use Validator;
 
 class MaintenanceController extends Controller
@@ -266,8 +268,11 @@ class MaintenanceController extends Controller
           
 
             // Storage::disk('local')->put("zensho-mainte/photofiles/$maintenance_id/$file_name",file_get_contents($file_data), 'public');   
-            
-            Storage::disk('s3')->putFileAs('/zensho-mainte/images/'.$maintenance_id,file_get_contents($file_data), $file_name, 'private');
+            Log::debug('添付ファイルの一時ファイルが存在するか？');
+            Log::debug(public_path('img/tmp/').$file_name);
+            Log::debug(file_exists(public_path('img/tmp/') .$file_name));            
+
+            Storage::disk('s3')->putFileAs('/zensho-mainte/images/'.$maintenance_id,new File(public_path('img/tmp/').$file_name), $file_name, 'private');
             
             //store your file into database
             $reportFile = new Photo_file();
