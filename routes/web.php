@@ -76,9 +76,9 @@ Route::get('maintenance', function(Request $request) {
 Route::get('maintenance/error', 'MaintenanceController@error')->middleware('auth');
 
 Route::get('zensho-mainte/images/{maintenance_id}/{file_name}', 'ImageController@getImage')->middleware('auth');
-Route::get('maintenance/quotationfile/{file_name}', 'FileViewController@getQuotationFile')->middleware('auth');//quotation pdf, report pdf, photo image view
-Route::get('maintenance/reportfile/{file_name}', 'FileViewController@getReportFile')->middleware('auth');
-Route::get('maintenance/photofile/{file_name}', 'FileViewController@getPhotoFile')->middleware('auth');
+Route::get('zensho-mainte/quotationfiles/{file_name}', 'FileViewController@getQuotationFile')->middleware('auth');//quotation pdf, report pdf, photo image view
+Route::get('zensho-mainte/reportsfiles/{file_name}', 'FileViewController@getReportFile')->middleware('auth');
+Route::get('zensho-mainte/photofiles/{file_name}', 'FileViewController@getPhotoFile')->middleware('auth');
 
 
 Route::get('maintenance/add/confirm', function(Request $request) {

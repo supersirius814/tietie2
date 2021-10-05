@@ -72,7 +72,7 @@ export default {
   methods: {
 
     quotationFileView(file_name) {
-      var actionUrl = './zensho-mainte/quotations/' + this.detail.maintenance_id + '/' + fileName;
+      var actionUrl = './zensho-mainte/quotationfiles/' + this.detail.maintenance_id + '/' + fileName;
 
       this.quotationtitleData = file_name;
       this.quotationpdfviewVisible = true;

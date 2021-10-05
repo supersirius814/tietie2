@@ -63,7 +63,7 @@ export default {
   methods: {
 
     reportFileView(file_name) {
-      var actionUrl = './zensho-mainte/reports/' + this.detail.maintenance_id + '/' + fileName;
+      var actionUrl = './zensho-mainte/reportfiles/' + this.detail.maintenance_id + '/' + fileName;
       this.reporttitleData = file_name;
       this.reportpdfviewVisible = true;
       this.reportpdfSrc = actionUrl;
