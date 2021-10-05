@@ -226,8 +226,15 @@ export default {
     save() {
       this.$refs.uploadReport.submit();
       this.$refs.uploadPhoto.submit();
-      this.getUploadFiles();
-      
+      console.log("========================");
+      console.log(this.detail.uploading_files);
+      console.log("========================");
+      resource.getUploadFiles(this.detail.maintenance_id).then((files) => {
+        console.log("========================");
+        console.log(this.detail.uploading_files);
+        console.log("========================");
+      });
+
       const insertData = {
         progress_id: this.progressId,
         comment: this.comment,
