@@ -221,13 +221,13 @@ export default {
     formatterProgress(row, column) {
       return this.progress[row.progress_id] ?? '';
     },
-    // getBreakDate(row, column) {
-    //   for (let i = 0; i < this.detail.maintenance_progress.length; i++) {
-    //     var aa = this.detail.maintenance_progress[i].created_at.split(' ');
-    //     var dd = aa[0] + '<br>' + aa[1];
-    //     this.detail.maintenance_progress[i].created_at = dd;
-    //   }
-    // },
+    getBreakDate(row, column) {
+      for (let i = 0; i < this.detail.maintenance_progress.length; i++) {
+        var aa = this.detail.maintenance_progress[i].created_at.split(' ');
+        var dd = aa[0] + '<br>' + aa[1];
+        this.detail.maintenance_progress[i].created_at = dd;
+      }
+    },
   },
 };
 </script>
