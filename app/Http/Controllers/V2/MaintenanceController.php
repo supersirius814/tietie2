@@ -270,7 +270,9 @@ class MaintenanceController extends Controller
 
             $image = $request->file('file');
             $filePath = 'images/' . $image->getClientOriginalName();
-            Storage::disk('s3')->put($filePath, file_get_contents($image), 'public');
+            Storage::disk('s3')->put($filePath, file_get_contents($request->file('file')), 'public-read');
+
+
 
             //store your file into database
             $reportFile = new Photo_file();
