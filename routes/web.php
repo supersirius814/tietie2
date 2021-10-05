@@ -84,7 +84,7 @@ Route::get('maintenance/photofile/{file_name}', 'FileViewController@getPhotoFile
 
 /* s3 file get */
 Route::get('zensho-mainte/quotationfile/{maintenance_id}/{file_name}', 'FileViewController@getQuotationFile')->middleware('auth');//quotation pdf, report pdf, photo image view
-Route::get('zensho-mainte/reportsfile/{maintenance_id}/{file_name}', 'FileViewController@getReportFile')->middleware('auth');
+Route::get('zensho-mainte/reportfile/{maintenance_id}/{file_name}', 'FileViewController@getReportFile')->middleware('auth');
 Route::get('zensho-mainte/photofile/{maintenance_id}/{file_name}', 'FileViewController@getPhotoFile')->middleware('auth');
 
 
