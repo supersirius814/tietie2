@@ -226,6 +226,8 @@ export default {
     save() {
       this.$refs.uploadReport.submit();
       this.$refs.uploadPhoto.submit();
+      this.getUploadFiles();
+      
       const insertData = {
         progress_id: this.progressId,
         comment: this.comment,
