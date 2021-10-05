@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     photoFileView(file_path, file_name) {
-      var actionUrl = './zensho-mainte/photofiles/' + this.detail.maintenance_id + '/' + fileName;
+      var actionUrl = './zensho-mainte/photofiles/' + this.detail.maintenance_id + '/' + file_ame;
       this.phototitleData = file_name;
       this.photoviewVisible = true;
       this.photoSrc = actionUrl;
