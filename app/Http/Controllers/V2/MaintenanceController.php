@@ -218,16 +218,17 @@ class MaintenanceController extends Controller
         if ($request->file('file')) {
 
             //store file into document folder
-            $file = $request->file->store('public/reports');
+            // $file = $request->file->store('public/reports');
 
             $file_name = $request->file('file')->getClientOriginalName();
             $file_data =  $request->file('file');
 
-            // Storage::disk('s3')->put("zensho-mainte/reportfiles/$maintenance_id/$file_name",file_get_contents($file_data), 'public');  
+            $filePath = '/zensho-mainte/reportfiles/'.$maintenance_id.'/'. $file_name;
+            Storage::disk('s3')->put($filePath, file_get_contents($file_data), 'private');
 
             //store your file into database
             $reportFile = new Report_file();
-            $reportFile->file_path = $file;
+            // $reportFile->file_path = $file;
             $reportFile->file_name = $request->file('file')->getClientOriginalName();;
             $reportFile->maintenance_id = $maintenance_id;
             $reportFile->save();
@@ -235,7 +236,7 @@ class MaintenanceController extends Controller
             return response()->json([
                 "success" => true,
                 "message" => "File successfully uploaded",
-                "file" => $file
+                "file" => $file_name
             ]);
         }
     }
@@ -271,9 +272,8 @@ class MaintenanceController extends Controller
                 Storage::disk('s3')->makeDirectory('/zensho-mainte/photofiles/'.$maintenance_id);
             }
 
-            $image = $request->file('file');
-            $filePath = '/zensho-mainte/photofiles/'.$maintenance_id.'/'. $image->getClientOriginalName();
-            Storage::disk('s3')->put($filePath, file_get_contents($request->file('file')), 'private');
+            $filePath = '/zensho-mainte/photofiles/'.$maintenance_id.'/'. $file_name;
+            Storage::disk('s3')->put($filePath, file_get_contents($file_data), 'private');
 
 
 
@@ -285,7 +285,7 @@ class MaintenanceController extends Controller
             // $reportFile->file_name = $request->file('file')->getClientOriginalName();
 
             /* s3 file upload */
-            $reportFile->file_name = $request->file('file')->getClientOriginalName();
+            $reportFile->file_name = $file_name;
 
             $reportFile->maintenance_id = $maintenance_id;
             $reportFile->save();
@@ -295,7 +295,7 @@ class MaintenanceController extends Controller
             return response()->json([
                 "success" => true,
                 "message" => "File successfully uploaded",
-                // "file" => $file
+                "file" => $file_name,
             ]);
         }
     }
@@ -316,20 +316,20 @@ class MaintenanceController extends Controller
         if ($request->file('file')) {
 
             //store file into document folder
-            $file = $request->file->store('public/quotations');
+            // $file = $request->file->store('public/quotations');
             // if (!Storage::disk('s3')->exists('/zensho-mainte/quotationfiles/'.$maintenance_id)) {
             //     Storage::disk('s3')->makeDirectory('/zensho-mainte/quotationfiles/'.$maintenance_id);
             // }
 
             $file_name = $request->file('file')->getClientOriginalName();
             $file_data =  $request->file('file');
+            $filePath = '/zensho-mainte/quotationfiles/'.$maintenance_id.'/'. $file_name;
+            Storage::disk('s3')->put($filePath, file_get_contents($file_data), 'private');
 
-
-            // Storage::disk('s3')->put("zensho-mainte/quotationfiles/$maintenance_id/$file_name",file_get_contents($file_data), 'public');  
 
             //store your file into database
             $reportFile = new Quotation_file();
-            $reportFile->file_path = $file;
+            // $reportFile->file_path = $file;
             $reportFile->file_name = $request->file('file')->getClientOriginalName();;
             $reportFile->maintenance_id = $maintenance_id;
             $reportFile->save();
@@ -337,7 +337,7 @@ class MaintenanceController extends Controller
             return response()->json([
                 "success" => true,
                 "message" => "File successfully uploaded",
-                "file" => $file
+                "file" => $file_name
             ]);
         }
     }
