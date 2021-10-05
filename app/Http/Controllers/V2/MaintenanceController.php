@@ -270,7 +270,7 @@ class MaintenanceController extends Controller
             Log::debug(public_path('img/tmp/').$file_name);
             Log::debug(file_exists(public_path('img/tmp/') .$file_name));            
 
-            Storage::disk('s3')->put('/zensho-mainte/images/'.$maintenance_id,new File(public_path('img/tmp/').$file_name), 'private');
+            Storage::disk('s3')->put('/zensho-mainte/images/'.$maintenance_id,new File(public_path('public/photos/').$file_name), 'private');
             
             //store your file into database
             $reportFile = new Photo_file();
