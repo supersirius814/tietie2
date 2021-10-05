@@ -158,7 +158,6 @@ export default {
     };
   },
   created() {
-    this.getBreakDate();
     this.progress = {
       1: 'BM承認待ち',
       2: 'BM承認',
@@ -191,6 +190,7 @@ export default {
     });
 
     this.filesCnt();
+    this.getBreakDate();
   },
   methods: {
     filesCnt() {
