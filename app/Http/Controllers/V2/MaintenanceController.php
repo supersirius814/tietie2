@@ -263,8 +263,11 @@ class MaintenanceController extends Controller
             if (!Storage::disk('s3')->exists('/zensho-mainte/photofiles/'.$maintenance_id)) {
                 Storage::disk('s3')->makeDirectory('/zensho-mainte/photofiles/'.$maintenance_id);
             }
+          
 
-            Storage::disk('s3')->put("zensho-mainte/photofiles/$maintenance_id/$file_name",file_get_contents($file_data), 'public');              
+            // Storage::disk('local')->put("zensho-mainte/photofiles/$maintenance_id/$file_name",file_get_contents($file_data), 'public');   
+            
+            Storage::disk('s3')->putFileAs('/zensho-mainte/images/'.$maintenance_id,file_get_contents($file_data), $file_name, 'private');
             
             //store your file into database
             $reportFile = new Photo_file();
