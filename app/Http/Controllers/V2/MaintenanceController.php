@@ -225,7 +225,7 @@ class MaintenanceController extends Controller
 
             //store your file into database
             $reportFile = new Report_file();
-            // $reportFile->file_path = $file;
+            $reportFile->file_path = $file;
             $reportFile->file_name = $request->file('file')->getClientOriginalName();;
             $reportFile->maintenance_id = $maintenance_id;
             $reportFile->save();
@@ -267,7 +267,7 @@ class MaintenanceController extends Controller
             
             //store your file into database
             $reportFile = new Photo_file();
-            // $reportFile->file_path = $file;
+            $reportFile->file_path = $file;
             $reportFile->file_name = $request->file('file')->getClientOriginalName();
             $reportFile->maintenance_id = $maintenance_id;
             $reportFile->save();
@@ -311,7 +311,7 @@ class MaintenanceController extends Controller
 
             //store your file into database
             $reportFile = new Quotation_file();
-            // $reportFile->file_path = $file;
+            $reportFile->file_path = $file;
             $reportFile->file_name = $request->file('file')->getClientOriginalName();;
             $reportFile->maintenance_id = $maintenance_id;
             $reportFile->save();
