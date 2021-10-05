@@ -345,13 +345,7 @@ class MaintenanceController extends Controller
         }
     }
 
-    public function getPhotoFiles(Request $request, $maintenance_id)
-    {
-        $files = Uploading_files::where('maintenance_id', $maintenance_id)
-        ->where('kind', 'photo')
-        ->get();
-        return response($files);
-    }
+
 
     public function customCodeSearch(Request $request, $custom_code)
     {
@@ -503,21 +497,6 @@ class MaintenanceController extends Controller
         return response($files);
     }
 
-    public function getReportFiles(Request $request, $maintenance_id)
-    {
-        $files = Uploading_files::where('maintenance_id', $maintenance_id)
-        ->where('kind', 'report')
-        ->get();
-        return response($files);
-    }
-
-    public function getQuotationFiles(Request $request, $maintenance_id)
-    {
-        $files = Uploading_files::where('maintenance_id', $maintenance_id)
-        ->where('kind', 'quotation')
-        ->get();
-        return response($files);
-    }
 
     public function saveNotes(Request $request, $shop_id)
     {

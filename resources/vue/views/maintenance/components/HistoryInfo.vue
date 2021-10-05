@@ -23,13 +23,13 @@
       </el-col>
       <el-col :span="12">
         <el-button type="info" size="mini" @click="quotationFilesVisible = true"
-          >見積書({{ q_cnt }})</el-button
+          >見積書({{ this.$route.params['q_cnt'] }})</el-button
         >
         <el-button type="info" size="mini" @click="photoFilesVisible = true"
-          >写真({{ p_cnt }})</el-button
+          >写真({{ this.$route.params['p_cnt'] }})</el-button
         >
         <el-button type="info" size="mini" @click="reportFilesVisible = true"
-          >報告書({{ r_cnt }})</el-button
+          >報告書({{ this.$route.params['r_cnt'] }})</el-button
         >
       </el-col>
     </el-row>
@@ -203,9 +203,10 @@ export default {
         if (el.kind == 'report') report_cnt++;
       });
 
-      this.q_cnt = quotation_cnt;
-      this.p_cnt = photo_cnt;
-      this.r_cnt = report_cnt;
+      this.$route.params['q_cnt'] = quotation_cnt;
+      this.$route.params['p_cnt'] = photo_cnt;
+      this.$route.params['r_cnt'] = report_cnt;
+
     },
 
     editVisibleChange() {

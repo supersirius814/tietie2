@@ -34,13 +34,13 @@
       >
       <!-- <el-button style="float: right; margin-left:10px;" type="primary" size="small" @click="createQuotation = true">見積登録</el-button> -->
       <el-button type="info" size="mini" @click="quotationFilesVisible = true"
-        >見積書({{ q_cnt }})</el-button
+        >見積書({{ this.$route.params['q_cnt'] }})</el-button
       >
       <el-button type="info" size="mini" @click="photoFilesVisible = true"
-        >写真({{ p_cnt }})</el-button
+        >写真({{ this.$route.params['p_cnt'] }})</el-button
       >
       <el-button type="info" size="mini" @click="reportFilesVisible = true"
-        >報告書({{ r_cnt }})</el-button
+        >報告書({{ this.$route.params['r_cnt'] }})</el-button
       >
     </div>
 
@@ -165,7 +165,6 @@ export default {
       el.closest('.el-dialog__wrapper').classList.add('slide-dialog-wrapper');
     });
 
-    this.filesCnt();
   },
   methods: {
     formatterProgress(row, column) {
@@ -177,20 +176,6 @@ export default {
       return '¥' + row.amount;
     },
 
-    filesCnt() {
-      var quotation_cnt = 0,
-        photo_cnt = 0,
-        report_cnt = 0;
-      this.detail.uploading_files.forEach((el) => {
-        if (el.kind == 'quotation') quotation_cnt++;
-        if (el.kind == 'photo') photo_cnt++;
-        if (el.kind == 'report') report_cnt++;
-      });
-
-      this.q_cnt = quotation_cnt;
-      this.p_cnt = photo_cnt;
-      this.r_cnt = report_cnt;
-    },
   },
 };
 </script>

@@ -77,27 +77,6 @@ class MaintenanceResource extends Resource {
         });
     }
 
-    getPhotoFiles(id) {
-        return request({
-            url: this.baseUrl + this.uri + '/' + id + '/photo_files',
-            method: 'get',
-        });
-    }
-
-    getReportFiles(id) {
-        return request({
-            url: this.baseUrl + this.uri + '/' + id + '/report_files',
-            method: 'get',
-        });
-    }
-
-    getQuotationFiles(id) {
-        return request({
-            url: this.baseUrl + this.uri + '/' + id + '/quotation_files',
-            method: 'get',
-        });
-    }
-
     saveNotes(id, updateData) {
         return request({
             url: this.baseUrl + this.uri + '/' + id + '/saveNotes',

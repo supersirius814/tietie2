@@ -53,7 +53,7 @@
             <tr>
               <th>写真</th>
               <td style="border:none;padding:0 5px;">
-                <el-upload ref="uploadPhoto" :action="'/api/v2/maintenance/upload/photo/' + detail.maintenance_id" :auto-upload="false" :multiple="false" :on-success="getPhotoFiles()">
+                <el-upload ref="uploadPhoto" :action="'/api/v2/maintenance/upload/photo/' + detail.maintenance_id" :auto-upload="false" :multiple="false" :on-success="getUploadFiles()">
                   <el-button slot="trigger" size="small" type="info">ファイル選択</el-button>
                 </el-upload>
               </td>
@@ -69,7 +69,7 @@
             <tr>
               <th>報告書</th>
               <td style="border:none;padding:0 5px;">
-                <el-upload ref="uploadReport" :action="'/api/v2/maintenance/upload/report/' + detail.maintenance_id" :auto-upload="false" :multiple="false" :on-success="getReportFiles()">
+                <el-upload ref="uploadReport" :action="'/api/v2/maintenance/upload/report/' + detail.maintenance_id" :auto-upload="false" :multiple="false" :on-success="getUploadFiles()">
                   <el-button slot="trigger" size="small" type="info">ファイル選択</el-button>
                 </el-upload>
               </td>
@@ -249,17 +249,30 @@ export default {
       });
     },
 
-    getPhotoFiles() {
-      resource.getPhotoFiles(this.detail.maintenance_id).then(files => {
-        this.detail.photo_files = files;
+    filesCnt() {
+      var quotation_cnt = 0,
+        photo_cnt = 0,
+        report_cnt = 0;
+      this.detail.uploading_files.forEach((el) => {
+        if (el.kind == 'quotation') quotation_cnt++;
+        if (el.kind == 'photo') photo_cnt++;
+        if (el.kind == 'report') report_cnt++;
+      });
+
+      this.$route.params['q_cnt'] = quotation_cnt;
+      this.$route.params['p_cnt'] = photo_cnt;
+      this.$route.params['r_cnt'] = report_cnt;
+
+    },
+
+    getUploadFiles() {
+      resource.getUploadFiles(this.detail.maintenance_id).then((files) => {
+        this.detail.uploading_files = files;
+
+        this.filesCnt();
       });
     },
 
-    getReportFiles() {
-      resource.getReportFiles(this.detail.maintenance_id).then(files => {
-        this.detail.report_files = files;
-      });
-    },
   },
 };
 </script>

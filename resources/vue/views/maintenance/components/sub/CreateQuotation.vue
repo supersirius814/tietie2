@@ -274,7 +274,7 @@ export default {
     });
   },
   mounted() {
-    this.filesCnt();
+    
   },
   methods: {
     filesCnt() {
@@ -287,9 +287,9 @@ export default {
         if (el.kind == 'report') report_cnt++;
       });
 
-      this.q_cnt = quotation_cnt;
-      this.p_cnt = photo_cnt;
-      this.r_cnt = report_cnt;
+      this.$route.params['q_cnt'] = quotation_cnt;
+      this.$route.params['p_cnt'] = photo_cnt;
+      this.$route.params['r_cnt'] = report_cnt;
     },
 
     formatterCurrency(row, column) {
@@ -298,6 +298,7 @@ export default {
     },
 
     save() {
+
       this.$refs.uploadReport.submit();
       this.$refs.uploadPhoto.submit();
       this.$refs.uploadQuotation.submit();
@@ -305,9 +306,9 @@ export default {
         date: DateTime.fromISO(this.date).toFormat('yyyy-MM-dd hh:mm'),
         comment: this.comment,
         amount: this.amount,
-        quotation_files_cnt: this.q_cnt,
-        report_files_cnt: this.r_cnt,
-        photo_files_cnt: this.p_cnt,
+        quotation_files_cnt: this.$route.params['q_cnt'],
+        report_files_cnt: this.$route.params['r_cnt'],
+        photo_files_cnt: this.$route.params['p_cnt'],
         editor: this.userName,
       };
       resource
@@ -331,6 +332,8 @@ export default {
     getUploadFiles() {
       resource.getUploadFiles(this.detail.maintenance_id).then((files) => {
         this.detail.uploading_files = files;
+
+        this.filesCnt();
       });
     },
 
