@@ -266,11 +266,9 @@ class MaintenanceController extends Controller
           
 
             // Storage::disk('local')->put("zensho-mainte/photofiles/$maintenance_id/$file_name",file_get_contents($file_data), 'public');   
-            Log::debug('添付ファイルの一時ファイルが存在するか？');
-            Log::debug(public_path('img/tmp/').$file_name);
-            Log::debug(file_exists(public_path('img/tmp/') .$file_name));            
+         
 
-            Storage::disk('s3')->put('/zensho-mainte/images/'.$maintenance_id,new File(public_path('public/photos/').$file_name), 'private');
+            Storage::disk('s3')->put('/zensho-mainte/images/'.$maintenance_id,new File(public_path('/storage/app/public/photos/').$file_name), 'private');
             
             //store your file into database
             $reportFile = new Photo_file();
