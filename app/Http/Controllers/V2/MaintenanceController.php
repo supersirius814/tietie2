@@ -256,7 +256,7 @@ class MaintenanceController extends Controller
         if ($request->file('file')) {
 
             //store file into document folder
-            $file = $request->file->store('public/photos');
+            // $file = $request->file->store('public/photos');
 
             $file_name = $request->file('file')->getClientOriginalName();
             $file_data =  $request->file('file');
@@ -268,7 +268,7 @@ class MaintenanceController extends Controller
             // Storage::disk('local')->put("zensho-mainte/photofiles/$maintenance_id/$file_name",file_get_contents($file_data), 'public');   
          
 
-            Storage::disk('s3')->put('/zensho-mainte/images/'.$maintenance_id,new File(public_path('../storage/app/public/photos/').$file_name), 'private');
+            Storage::disk('s3')->put('/zensho-mainte/images/'.$maintenance_id,new File(public_path('/var/www/html/nsg.zensho-maintenance/storage/app/public/photos/').$file_name), 'private');
             
             //store your file into database
             $reportFile = new Photo_file();
