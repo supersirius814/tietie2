@@ -267,9 +267,12 @@ class MaintenanceController extends Controller
 
             // Storage::disk('local')->put("zensho-mainte/photofiles/$maintenance_id/$file_name",file_get_contents($file_data), 'public');   
 
+            if (!Storage::disk('s3')->exists('/zensho-mainte/photofiles/'.$maintenance_id)) {
+                Storage::disk('s3')->makeDirectory('/zensho-mainte/photofiles/'.$maintenance_id);
+            }
 
             $image = $request->file('file');
-            $filePath = 'images/' . $image->getClientOriginalName();
+            $filePath = '/zensho-mainte/photofiles/'.$maintenance_id.'/'. $image->getClientOriginalName();
             Storage::disk('s3')->put($filePath, file_get_contents($request->file('file')), 'private');
 
 
@@ -292,7 +295,7 @@ class MaintenanceController extends Controller
             return response()->json([
                 "success" => true,
                 "message" => "File successfully uploaded",
-                "file" => $file
+                // "file" => $file
             ]);
         }
     }
