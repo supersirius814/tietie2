@@ -71,7 +71,7 @@ export default {
   },
   methods: {
 
-    quotationFileView(file_path, file_name) {
+    quotationFileView(file_name, fiel_path) {
       var split_path = file_path.split('/');
       var fileName = split_path[split_path.length - 1];
       var actionUrl =  './maintenance/quotationfile/' + fileName;
