@@ -229,7 +229,7 @@ export default {
       const insertData = {
         progress_id: this.progressId,
         comment: this.comment,
-        faxed_to_client: this.faxedToClient,
+        faxed_to_client: this.faxedToClient,                                                                                                    
         faxed_to_shop: this.faxedToShop,
       };
       resource.createProgress(this.detail.maintenance_id, insertData).then(res => {
