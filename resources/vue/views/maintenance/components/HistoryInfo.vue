@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card" @get-detail="getBreakDate()">
+  <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>経過情報</span>
       <el-button
