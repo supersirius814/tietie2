@@ -118,7 +118,7 @@
     </el-row>
     <div style="text-align: right; padding-bottom: 15px;">
       <el-button type="primary" size="small" @click="save()">登録</el-button>
-      <el-button type="default" size="small">閉じる</el-button>
+      <el-button type="default" size="small"  @click="handleClose()">閉じる</el-button>
     </div>    
     <el-table
       :data="detail.accounting_info"
@@ -231,6 +231,10 @@ export default {
     });
   },
   methods: {
+    handleClose(){
+      document.querySelector("#app > div > div.main-container > section > div > div.el-dialog__wrapper.slide-dialog-wrapper > div > div.el-dialog__body > div > div:nth-child(2) > div.el-dialog__wrapper.slide-dialog-wrapper").classList.add('close-css');
+    },
+
     formatterProgress(row, column) {
       return this.progress[row.progress_id] ?? '';
     },
