@@ -267,7 +267,7 @@ export default {
       if(this.detail.shop.shop_name) {
         subject += '店舗名: ' + this.detail.shop_name + ' ';
       }
-      if(this.detail.sub_category.sub_category_id) {
+      if(this.detail.sub_category.length > 0) {
         subject += '中分類: ' + this.detail.sub_category.sub_category_name + ' ';
       }
       var mailhref = "mailto:" + emails + subject;
