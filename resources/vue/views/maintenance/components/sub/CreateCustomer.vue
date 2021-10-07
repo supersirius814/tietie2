@@ -396,19 +396,19 @@ export default {
       this.customergroup_code = '';
       this.customergroup = '';
 
-      resource
-        .customCodeSearch(this.custom[this.selectedRow].customer_code)
-        .then((res) => {
-          if (res == 0) {
-            this.id = 0;
-          } else this.id = res[res.length - 1].id;
+      // resource
+      //   .customCodeSearch(this.custom[this.selectedRow].customer_code)
+      //   .then((res) => {
+      //     if (res == 0) {
+      //       this.id = 0;
+      //     } else this.id = res[res.length - 1].id;
 
           resource
             .update_customerid(this.detail.maintenance_id, updatedata)
             .then((res) => {
               console.log('custom_code select success');
             });
-        });
+        // });
     },
     rowSelect(idx) {
       console.dir(idx);

@@ -151,12 +151,16 @@ class MaintenanceController extends Controller
         $row->entered_by = $request->user()->user_id;
         $row->save();
 
+        $maintenance_progress = Maintenance_progress::with('entered_by')->where('maintenance_id', $maintenance_id)->orderBy('updated_at', 'desc')->get();
+
         $maintenance = Maintenance::find($maintenance_id);
         $maintenance->progress_id = $request->input('progress_id');
+        if($request->input('progress_id') == 21) {
+            $maintenance->completed_date = $maintenance_progress[0]['updated_at'];
+        }
         $maintenance->save();
 
         // $maintenance_progress = Maintenance_progress::with('entered_by')->where('maintenance_id', $maintenance_id)->orderBy('updated_at', 'desc')->get();
-        $maintenance_progress = Maintenance_progress::with('entered_by')->where('maintenance_id', $maintenance_id)->orderBy('updated_at', 'desc')->get();
 
         return response($maintenance_progress);
     }
@@ -347,19 +351,19 @@ class MaintenanceController extends Controller
 
 
 
-    public function customCodeSearch(Request $request, $custom_code)
-    {
-        $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
-            ->distinct()
-            ->where('customer_code', $custom_code)
-            ->get();
-        if (Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
-            ->distinct()
-            ->where('customer_code', $custom_code)->exists()
-        ) {
-            return response($result);
-        } else return response(0);
-    }
+    // public function customCodeSearch(Request $request, $custom_code)
+    // {
+    //     $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
+    //         ->distinct()
+    //         ->where('customer_code', $custom_code)
+    //         ->get();
+    //     if (Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
+    //         ->distinct()
+    //         ->where('customer_code', $custom_code)->exists()
+    //     ) {
+    //         return response($result);
+    //     } else return response(0);
+    // }
 
     public function ultimateCustomSearch($maintenance_id, Request $request)
     {

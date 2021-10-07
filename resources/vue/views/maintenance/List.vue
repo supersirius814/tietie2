@@ -39,7 +39,8 @@
             <el-option label="店完了" :value="20" />
             <el-option label="取完了" :value="21" />
           </el-select>
-          <el-select v-model="query.business_category_id" placeholder="業態" clearable style="width: 100px" class="filter-item" @change="getShops" v-on:change="handleFilter()">
+          <el-select v-model="query.business_category_id" placeholder="業態"  filterable
+   clearable style="width: 100px" class="filter-item" @change="getShops" v-on:change="handleFilter()">
             <el-option label="全業態" :value="0" />
             <el-option label="ZHD" :value="1" />
             <el-option label="SK" :value="2" />
@@ -160,8 +161,8 @@
 
       <el-table-column align="center" label="完了日">
         <template slot-scope="scope">
-          <span>{{ scope.row.updated_at }}</span>
-          <!-- <span>{{ scope.row.completed_date }}</span> -->
+          <!-- <span>{{ scope.row.updated_at }}</span> -->
+          <span>{{ scope.row.completed_date }}</span>
         </template>
       </el-table-column>
 

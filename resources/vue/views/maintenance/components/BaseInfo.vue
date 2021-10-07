@@ -260,12 +260,12 @@ export default {
         emails = emails_ge; 
       }
 
-      subject = '?subject='
+      subject = '&subject='
       if(this.detail.shop.shop_id != '') {
         subject += '店舗CD: ' + this.detail.shop_id + ' '; 
       }
       if(this.detail.shop.shop_name) {
-        subject += '店舗名: ' + this.detail.shop_id + ' ';
+        subject += '店舗名: ' + this.detail.shop_name + ' ';
       }
       if(this.detail.sub_category.sub_category_name) {
         subject += '中分類: ' + this.detail.sub_category.sub_category_name + ' ';
