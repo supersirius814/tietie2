@@ -156,7 +156,7 @@
     </el-row>
     <div style="text-align: right">
       <el-button type="primary" size="small" @click="save()">登録</el-button>
-      <el-button type="default" size="small">閉じる</el-button>
+      <el-button type="default" size="small" @click="handleClose()">閉じる</el-button>
     </div>
     <el-table
       :data="detail.quotation_info"
@@ -230,6 +230,11 @@
     </el-table> -->
   </div>
 </template>
+<style>
+.close-css {
+  display: none;
+}
+</style>
 <style lang="scss" scoped>
 </style>
     <script src="https://unpkg.com/vue"></script>
@@ -277,6 +282,17 @@ export default {
     
   },
   methods: {
+    handleClose(){
+      var div_create = document.querySelector("#app > div > div.main-container > section > div > div.el-dialog__wrapper.slide-dialog-wrapper > div > div.el-dialog__body > div > div:nth-child(1) > div.el-dialog__wrapper.slide-dialog-wrapper");
+      if(div_create) {
+        div_create.classList.add('close-css');
+      }
+      // document.querySelector('body').classList.remove('el-popup-parent--hidden');
+      // var div_modal = document.querySelector('body > div:nth-child(6)');
+      // if(div_modal) {
+      //   div_modal.classList.remove('v-modal');
+      // }  
+    },
     filesCnt() {
       var quotation_cnt = 0,
         photo_cnt = 0,

@@ -219,9 +219,15 @@ export default {
 
   methods: {
     handleClose(){
-      document.querySelector('#app > div > div.main-container > section > div > div.el-row > div:nth-child(2) > div > div.el-card__body > div:nth-child(6)').classList.add('close-css');
-      document.querySelector('body').classList.remove('el-popup-parent--hidden');
-      document.querySelector('body > div.v-modal').classList.remove('v-modal');     
+      var div_edit = document.querySelector('#app > div > div.main-container > section > div > div.el-row > div:nth-child(2) > div > div.el-card__body > div:nth-child(6)');
+      if(div_edit) {
+        div_edit.classList.add('close-css');
+      }
+      // document.querySelector('body').classList.remove('el-popup-parent--hidden');
+      var div_modal = document.querySelector('body > div:nth-child(6)');
+      if(div_modal) {
+        div_modal.classList.remove('v-modal');
+      }   
     },
     save() {
       this.$refs.uploadReport.submit();

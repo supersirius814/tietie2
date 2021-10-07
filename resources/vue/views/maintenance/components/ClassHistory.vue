@@ -82,6 +82,9 @@ export default {
       this.loading = true;
       const { data, meta } = await resource.classHistory(this.query);
       this.list = data;
+      if (!Array.isArray(data)) {
+        return;
+      }
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });

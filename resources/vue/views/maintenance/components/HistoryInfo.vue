@@ -206,7 +206,6 @@ export default {
       this.$route.params['q_cnt'] = quotation_cnt;
       this.$route.params['p_cnt'] = photo_cnt;
       this.$route.params['r_cnt'] = report_cnt;
-
     },
 
     editVisibleChange() {
@@ -216,7 +215,10 @@ export default {
           '#app > div > div.main-container > section > div > div.el-row > div:nth-child(2) > div > div.el-card__body > div:nth-child(6)'
         )
         .classList.remove('close-css');
-        document.querySelector('body > div:nth-child(6)').classList.add('v-modal');
+      var div_modal = document.querySelector('body > div:nth-child(6)');
+      if (div_modal) {
+        div_modal.classList.add('v-modal');
+      }
     },
 
     formatterProgress(row, column) {

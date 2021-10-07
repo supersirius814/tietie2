@@ -29,7 +29,7 @@
         style="float: right; margin-left: 10px"
         type="primary"
         size="small"
-        @click="editVisible = true"
+        @click="editVisibleChange()"
         >見積登録</el-button
       >
       <!-- <el-button style="float: right; margin-left:10px;" type="primary" size="small" @click="createQuotation = true">見積登録</el-button> -->
@@ -167,6 +167,13 @@ export default {
 
   },
   methods: {
+    editVisibleChange() {
+      this.editVisible = true;
+      var div_create = document.querySelector("#app > div > div.main-container > section > div > div.el-dialog__wrapper.slide-dialog-wrapper > div > div.el-dialog__body > div > div:nth-child(1) > div.el-dialog__wrapper.slide-dialog-wrapper");
+      if(div_create) {
+        div_create.classList.remove('close-css');
+      }
+    },
     formatterProgress(row, column) {
       return this.progress[row.progress_id] ?? '';
     },
