@@ -101,7 +101,7 @@
                   v-if="detail.order_type.order_type_id < 4"
                   >{{ order_text }}</span>
 
-                <span style="padding-right: 15px"
+                <span style="padding-right: 10px"
                   v-if="detail.order_type.order_type_id > 3"
                   >{{ detail.order_type.type }}</span>
                 <el-tooltip
@@ -111,7 +111,6 @@
                   :content="otherText()"
                   placement="top"
                   style="
-                    width: 30%;
                     background-color: transparant;
                     border: 0;
                     color: blue;
