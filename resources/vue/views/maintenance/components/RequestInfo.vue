@@ -96,7 +96,7 @@
           <tbody>
             <tr>
               <th>依頼区分*</th>
-              <td style="display: flex">
+              <td>
                 <span
                   v-if="detail.order_type.order_type_id < 4"
                   >{{ order_text }}</span>
