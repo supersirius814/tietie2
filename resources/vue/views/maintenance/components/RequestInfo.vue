@@ -602,7 +602,7 @@ export default {
     getsrc(firstimage) {
       // return;
       const fsrc =
-        './zensho-mainte/images/' +
+        './maintenance/image/' +
         this.detail.maintenance_id +
         '/' +
         firstimage;
