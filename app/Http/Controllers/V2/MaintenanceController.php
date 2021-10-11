@@ -589,13 +589,6 @@ class MaintenanceController extends Controller
         ])->find($maintenance_id);
 
 
-        // $cc1 = Shop::select('block_id')->where('shop_id', $maintenance['shop_id'])->get();
-        // $cc_name = Block::select('block_name')->where('block_id', $cc1[0]['block_id'])->get();
-        // $cc3 = Block_manager::select('user_id')->where('block_id', $cc1[0]['block_id'])->get();
-        // $cc_user = User::select('name', 'email')->where('user_id', $cc3[0]['user_id'])->get();
-        // $maintenance['mail_data3'] = $cc_user;
-        // $maintenance['mail_data33'] = $cc_name;
-
         $block_ids = Shop::select('block_id')->where('shop_id', $maintenance['shop_id'])->get();
         $block_names = Block::select('block_name')->where('block_id', $block_ids[0]['block_id'])->get();
         $blockUser_ids = Block_manager::select('user_id')->where('block_id', $block_ids[0]['block_id'])->get();
@@ -611,15 +604,6 @@ class MaintenanceController extends Controller
         $maintenance['districtUserNEs'] = $districtUserNEs;
         $maintenance['district_names'] = $district_names;
 
-        // $bb1 = Block::select('district_id')->where('block_id', $cc1[0]['block_id'])->get();
-        // $bb_name = District::select('district_name')->where('district_id', $bb1[0]['district_id'])->get();
-        // $bb2 = District_manager::select('user_id')->where('district_id', $bb1[0]['district_id'])->get();
-        // $bb_user = User::select('name', 'email')->where('user_id', $bb2[0]['user_id'])->get();
-
-
-        // $maintenance['mail_data2'] = $bb_user;
-        // $maintenance['mail_data22'] = $bb_name;
-
         $department_ids = District::select('department_id')->where('district_id', $district_ids[0]['district_id'])->get();
         $department_names = Department::select('department_name')->where('department_id', $department_ids[0]['department_id'])->get();
         $generalManagerUserids = General_manager::select('user_id')->where('department_id', $department_ids[0]['department_id'])->get();
@@ -627,14 +611,6 @@ class MaintenanceController extends Controller
 
         $maintenance['departmentUserNEs'] = $departmentUserNEs;
         $maintenance['department_names'] = $department_names;
-
-        // $aa1 = District::select('department_id')->where('district_id', $district_ids[0]['district_id'])->get();
-        // $aa_name = Department::select('department_name')->where('department_id', $aa1[0]['department_id'])->get();
-        // $aa2 = General_manager::select('user_id')->where('department_id', $aa1[0]['department_id'])->get();
-        // $aa_user = User::select('name', 'email')->where('user_id', $aa2[0]['user_id'])->get();
-
-        // $maintenance['mail_data1'] = $aa_user;
-        // $maintenance['mail_data11'] = $aa_name;
 
 
         $quotationcus = Customer_information::select('customer_code', 'customer_name', 'customer_id', 'TEL', 'FAX')
@@ -654,81 +630,6 @@ class MaintenanceController extends Controller
         }
 
         $maintenance['customerInformation'] = $quotationcus;
-
-        // $customgroup_list = Customer_information::select('customergroup',  'customergroup_code')
-        //     ->distinct()
-        //     ->whereNotNull('customergroup_code')
-        //     ->get();
-
-        // if ($customgroup_list->isEmpty()) {
-        //     $customgroup_list[0] = array(
-        //         'customergroup' => '',
-        //         'customergroup_code' => '',
-        //     );
-        // }
-
-        // $customgroup_list1 = Customer_information::select('customer_code')
-        //     ->distinct()
-        //     ->whereNotNull('customergroup_code')
-        //     ->get();
-
-        // if ($customgroup_list1->isEmpty()) {
-        //     $customgroup_list1[0] = array(
-        //         'customergroup' => '',
-        //         'customergroup_code' => '',
-        //     );
-        // }
-
-        // $customgroup_list2 = Customer_information::select('customer_name')
-        //     ->distinct()
-        //     ->whereNotNull('customer_name')
-        //     ->get();
-
-        // if ($customgroup_list2->isEmpty()) {
-        //     $customgroup_list2[0] = array(
-        //         'customer_name' => '',
-        //     );
-        // }
-
-        // $customgroup_list3 = Customer_information::select('customer_alias')
-        //     ->distinct()
-        //     ->whereNotNull('customer_alias')
-        //     ->get();
-
-        // if ($customgroup_list3->isEmpty()) {
-        //     $customgroup_list3[0] = array(
-        //         'customer_alias' => '',
-        //     );
-        // }
-
-        // $customgroup_list4 = Customer_information::select('TEL')
-        //     ->distinct()
-        //     ->whereNotNull('TEL')
-        //     ->get();
-
-        // if ($customgroup_list4->isEmpty()) {
-        //     $customgroup_list4[0] = array(
-        //         'TEL' => '',
-        //     );
-        // }
-
-        // $customgroup_list5 = Customer_information::select('FAX')
-        //     ->distinct()
-        //     ->whereNotNull('FAX')
-        //     ->get();
-
-        // if ($customgroup_list5->isEmpty()) {
-        //     $customgroup_list5[0] = array(
-        //         'FAX' => '',
-        //     );
-        // }
-
-        // $maintenance['customgroup_list'] = $customgroup_list;
-        // $maintenance['customgroup_list1'] = $customgroup_list1;
-        // $maintenance['customgroup_list2'] = $customgroup_list2;
-        // $maintenance['customgroup_list3'] = $customgroup_list3;
-        // $maintenance['customgroup_list4'] = $customgroup_list4;
-        // $maintenance['customgroup_list5'] = $customgroup_list5;
 
         $order_reason = Order_reason::select('order_reason_id', 'reason')
             ->distinct()
