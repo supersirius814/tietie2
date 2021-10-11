@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UploadingFileSeed extends Migration
+class CreateUploadingFilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class UploadingFileSeed extends Migration
     public function up()
     {
         //
-        Schema::create('uploding_files', function (Blueprint $table) {
+        Schema::create('uploading_files', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 			$table->bigIncrements('id');
 			$table->unsignedBigInteger('maintenance_id');
