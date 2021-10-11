@@ -511,15 +511,15 @@ export default {
       otherinfo: false,
       visibleflag: true,
       fileList: [
-        './zensho-mainte/images/' +
+        './maintenance/image/' +
           this.detail.maintenance_id +
           '/' +
           this.detail.maintenance_images[0].file_name,
-        './zensho-mainte/images/' +
+        './maintenance/image/' +
           this.detail.maintenance_id +
           '/' +
           this.detail.maintenance_images[1].file_name,
-        './zensho-mainte/images/' +
+        './maintenance/image/' +
           this.detail.maintenance_id +
           '/' +
           this.detail.maintenance_images[2].file_name,

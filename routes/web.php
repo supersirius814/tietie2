@@ -37,7 +37,7 @@ Route::post('login', 'Auth\LoginController@authenticate');
 
 Route::get('home', 'HomeController@index')->name('home');
 
-Route::get('maintenance', function(Request $request) {
+Route::get('	', function(Request $request) {
 
 	$business_category_id = Auth::user()->business_category_id;
 	$role                 = Role::find( Auth::user()->role_id )->role_name;
@@ -75,7 +75,8 @@ Route::get('maintenance', function(Request $request) {
 
 Route::get('maintenance/error', 'MaintenanceController@error')->middleware('auth');
 
-Route::get('zensho-mainte/images/{maintenance_id}/{file_name}', 'ImageController@getImage')->middleware('auth');
+Route::get('maintenance/image/{maintenance_id}/{file_name}', 'ImageController@getImage')->middleware('auth');
+// Route::get('zensho-mainte/images/{maintenance_id}/{file_name}', 'ImageController@getImage')->middleware('auth');
 
 /* local file get */
 Route::get('maintenance/quotationfile/{file_name}', 'FileViewController@getQuotationFile')->middleware('auth');//quotation pdf, report pdf, photo image view
