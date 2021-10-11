@@ -11,7 +11,7 @@
  Target Server Version : 50568
  File Encoding         : 65001
 
- Date: 11/10/2021 14:26:28
+ Date: 11/10/2021 17:19:21
 */
 
 SET NAMES utf8mb4;
@@ -4038,6 +4038,12 @@ INSERT INTO `maintenance_images` VALUES (411, 104, 'M000000104_HS_999999_2021100
 INSERT INTO `maintenance_images` VALUES (412, 105, 'M000000105_HS_999999_20211005_1.jpg', '2021-10-05 21:24:03', '2021-10-05 21:24:03');
 INSERT INTO `maintenance_images` VALUES (413, 105, 'M000000105_HS_999999_20211005_2.jpg', '2021-10-05 21:24:04', '2021-10-05 21:24:04');
 INSERT INTO `maintenance_images` VALUES (414, 105, 'M000000105_HS_999999_20211005_3.jpg', '2021-10-05 21:24:04', '2021-10-05 21:24:04');
+INSERT INTO `maintenance_images` VALUES (415, 106, 'M000000106_HS_999999_20211005_1.jpg', '2021-10-05 21:27:26', '2021-10-05 21:27:26');
+INSERT INTO `maintenance_images` VALUES (416, 106, 'M000000106_HS_999999_20211005_2.jpg', '2021-10-05 21:27:27', '2021-10-05 21:27:27');
+INSERT INTO `maintenance_images` VALUES (417, 106, 'M000000106_HS_999999_20211005_3.jpg', '2021-10-05 21:27:27', '2021-10-05 21:27:27');
+INSERT INTO `maintenance_images` VALUES (418, 107, 'M000000107_HS_999999_20211005_1.jpg', '2021-10-05 21:30:21', '2021-10-05 21:30:21');
+INSERT INTO `maintenance_images` VALUES (419, 107, 'M000000107_HS_999999_20211005_2.jpg', '2021-10-05 21:30:21', '2021-10-05 21:30:21');
+INSERT INTO `maintenance_images` VALUES (420, 107, 'M000000107_HS_999999_20211005_3.jpg', '2021-10-05 21:30:22', '2021-10-05 21:30:22');
 
 -- ----------------------------
 -- Table structure for maintenance_matters
@@ -5337,10 +5343,10 @@ CREATE TABLE `temp_districts`  (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for uploding_files
+-- Table structure for uploading_files
 -- ----------------------------
-DROP TABLE IF EXISTS `uploding_files`;
-CREATE TABLE `uploding_files`  (
+DROP TABLE IF EXISTS `uploading_files`;
+CREATE TABLE `uploading_files`  (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `maintenance_id` bigint(20) UNSIGNED NOT NULL,
   `kind` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
@@ -5350,19 +5356,19 @@ CREATE TABLE `uploding_files`  (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `report_files_maintenance_id_foreign`(`maintenance_id`) USING BTREE,
-  CONSTRAINT `uploding_files_ibfk_1` FOREIGN KEY (`maintenance_id`) REFERENCES `maintenances` (`maintenance_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `uploading_files_ibfk_1` FOREIGN KEY (`maintenance_id`) REFERENCES `maintenances` (`maintenance_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Records of uploding_files
+-- Records of uploading_files
 -- ----------------------------
-INSERT INTO `uploding_files` VALUES (10, 103, 'report', '1.pdf', NULL, '2021-10-05 18:07:11', '2021-10-05 18:07:11');
-INSERT INTO `uploding_files` VALUES (11, 103, 'photo', 'img11.jpg', NULL, '2021-10-05 18:07:14', '2021-10-05 18:07:14');
-INSERT INTO `uploding_files` VALUES (12, 107, 'report', '1.pdf', NULL, '2021-10-06 02:36:22', '2021-10-06 02:36:22');
-INSERT INTO `uploding_files` VALUES (13, 107, 'photo', 'img8.jpg', NULL, '2021-10-06 02:36:24', '2021-10-06 02:36:24');
-INSERT INTO `uploding_files` VALUES (14, 107, 'photo', 'img9.jpg', NULL, '2021-10-06 02:41:14', '2021-10-06 02:41:14');
-INSERT INTO `uploding_files` VALUES (15, 107, 'report', '1point2.pdf', NULL, '2021-10-06 03:27:41', '2021-10-06 03:27:41');
-INSERT INTO `uploding_files` VALUES (16, 107, 'photo', 'img11.jpg', NULL, '2021-10-06 03:50:23', '2021-10-06 03:50:23');
+INSERT INTO `uploading_files` VALUES (10, 103, 'report', '1.pdf', NULL, '2021-10-05 18:07:11', '2021-10-05 18:07:11');
+INSERT INTO `uploading_files` VALUES (11, 103, 'photo', 'img11.jpg', NULL, '2021-10-05 18:07:14', '2021-10-05 18:07:14');
+INSERT INTO `uploading_files` VALUES (12, 107, 'report', '1.pdf', NULL, '2021-10-06 02:36:22', '2021-10-06 02:36:22');
+INSERT INTO `uploading_files` VALUES (13, 107, 'photo', 'img8.jpg', NULL, '2021-10-06 02:36:24', '2021-10-06 02:36:24');
+INSERT INTO `uploading_files` VALUES (14, 107, 'photo', 'img9.jpg', NULL, '2021-10-06 02:41:14', '2021-10-06 02:41:14');
+INSERT INTO `uploading_files` VALUES (15, 107, 'report', '1point2.pdf', NULL, '2021-10-06 03:27:41', '2021-10-06 03:27:41');
+INSERT INTO `uploading_files` VALUES (16, 107, 'photo', 'img11.jpg', NULL, '2021-10-06 03:50:23', '2021-10-06 03:50:23');
 
 -- ----------------------------
 -- Table structure for users

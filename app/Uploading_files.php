@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Uploading_files extends Model
 {
 	protected $primaryKey = 'id';
-	protected $table = 'uploding_files';
+	protected $table = 'uploading_files';
 	
 	public function maintenance()
 	{
