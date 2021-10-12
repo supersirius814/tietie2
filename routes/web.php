@@ -37,7 +37,7 @@ Route::post('login', 'Auth\LoginController@authenticate');
 
 Route::get('home', 'HomeController@index')->name('home');
 
-Route::get('	', function(Request $request) {
+Route::get('maintenance', function(Request $request) {
 
 	$business_category_id = Auth::user()->business_category_id;
 	$role                 = Role::find( Auth::user()->role_id )->role_name;
@@ -406,6 +406,11 @@ Route::get('master_mainte/{value}/restore', 'MasterdataController@restore')->mid
 
 Route::get('master_mainte_export_csv', 'MasterExportCsvController@index')->middleware('auth');
 Route::get('master_mainte_export_csv/{value}', 'MasterExportCsvController@exportCsv')->middleware('auth');
+
+
+// Route::group(['prefix' => 'vue', 'middleware' => 'auth'], function () {
+//     return view('admin');
+// });
 
 Route::get('vue', function() {
 	return view('admin');

@@ -20,6 +20,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth');
 
+
 Route::post('v1', 'VersionController@index');
 
 Route::post('v1/progress', 'ProgressController@index'); // ステータス一覧取得
