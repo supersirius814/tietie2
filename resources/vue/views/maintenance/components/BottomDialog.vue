@@ -1,5 +1,5 @@
 <template>
-  <div style="padding-bottom:10px;margin-top:-58px">
+  <div style="padding-bottom:10px;margin-top:-58px" id="bottomDialog">
   
     <el-button type="primary" size="small" style="position:absolute;left:200px;top:10px;" @click="toggle()" v-text="btnText" />
     <class-history v-if="view1" :sub-category-id="subCategoryId" />
@@ -7,6 +7,14 @@
   </div>
 </template>
 
+
+<style>
+  @media screen and (max-width: 520px) {
+    #bottomDialog {
+      margin-top: 0px;
+    }
+  }
+</style>
 <script>
 import StoreHistory from './StoreHistory.vue';
 import ClassHistory from './ClassHistory.vue';

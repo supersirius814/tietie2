@@ -631,6 +631,13 @@ class MaintenanceController extends Controller
 
         $maintenance['customerInformation'] = $quotationcus;
 
+        $customgroup_list = Customer_information::select('customergroup',  'customergroup_code')
+            ->distinct()
+            ->whereNotNull('customergroup_code')
+            ->get();
+
+        $maintenance['customgroup_list'] = $customgroup_list;
+            
         $order_reason = Order_reason::select('order_reason_id', 'reason')
             ->distinct()
             ->where('order_reason_id', $maintenance['order_reason_id'])

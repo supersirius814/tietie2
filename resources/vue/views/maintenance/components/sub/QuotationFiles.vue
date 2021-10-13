@@ -29,7 +29,7 @@
 
     <el-dialog
       :visible.sync="quotationpdfviewVisible"
-      width="45%"
+      :width="viewDialogWidth"
       :modal="false"
     >
       <span slot="title" ><i class="el-icon-info"></i> {{ quotationtitleData }} </span>
@@ -66,10 +66,23 @@ export default {
       quotationpdfviewVisible: false,
       quotationpdfSrc: '',
       quotationtitleData: '',
+      viewDialogWidth: '45%',
     };
     
   },
+
+  mounted() {
+    if(this.isMobile()) {
+      this.viewDialogWidth = '100%';
+    }    
+  },
+
   methods: {
+    isMobile() {
+      var check = true;
+      if(document.querySelector("body").clientWidth > 737) check = false;
+      return check;
+    },
 
     quotationFileView(file_name, fiel_path) {
       // var split_path = file_path.split('/');

@@ -47,7 +47,7 @@
     <el-dialog
       title="【会計情報】"
       :visible.sync="createAccounting"
-      width="43%"
+      :width="editdialogWidth"
       custom-class="slide-dialog"
       top="0px"
       :modal="false"
@@ -88,6 +88,7 @@ export default {
   data() {
     return {
       createAccounting: false,
+      editdialogWidth: '43%',
       tableData: [
         { v1: '2020/05/15', v2: '', v3: '', v4: '', v5: '', v6: '' },
         { v1: '2020/05/15', v2: '', v3: '', v4: '', v5: '', v6: '' },
@@ -97,19 +98,34 @@ export default {
     };
   },
 
+  mounted() {
+    if(this.isMobile()) {
+      this.editdialogWidth = '100%';
+    }
+  },
+
   methods: {
+    isMobile() {
+      var check = true;
+      if(document.querySelector("body").clientWidth > 737) check = false;
+      return check;
+    },
+
     createAccountingChange(){
       this.createAccounting = true;
       document.querySelector("#app > div > div.main-container > section > div > div.el-dialog__wrapper.slide-dialog-wrapper > div > div.el-dialog__body > div > div:nth-child(2) > div.el-dialog__wrapper.slide-dialog-wrapper").classList.remove('close-css');
     },
+
     formatterCurrency(row, column) {
       if (row.unincluding_price == null) return;
       return '¥' + row.unincluding_price;
     },
+
     formatterCurrency1(row, column) {
       if (row.accounting_amount == null) return;
       return '¥' + row.accounting_amount;
     },
+
     formatterCurrency2(row, column) {
       if (row.including_price == null) return;
       return '¥' + row.including_price;

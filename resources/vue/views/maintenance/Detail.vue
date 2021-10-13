@@ -15,7 +15,7 @@
       </el-col>
     </el-row>
 
-    <el-dialog title="" :visible.sync="qaVisible" width="900px" custom-class="slide-dialog" top="0px">
+    <el-dialog title="" :visible.sync="qaVisible" :width="qaDialogWidth" custom-class="slide-dialog" top="0px">
       <qa-dialog v-if="detail" :detail="detail" />
     </el-dialog>
 
@@ -37,6 +37,7 @@ export default {
   components: { RequestInfo, HistoryInfo, QaDialog, BottomDialog },
   data() {
     return {
+      qaDialogWidth: '900px',
       qaVisible: false,
       bottomVisible: false,
       detail: null,
@@ -46,7 +47,20 @@ export default {
   created() {
     this.getDetail();
   },
+
+  mounted() {
+    if(this.isMobile()) {
+      this.qaDialogWidth = '100%';
+    }
+  },
+
   methods: {
+    isMobile() {
+      var check = true;
+      if(document.querySelector("body").clientWidth > 737) check = false;
+      return check;
+    },
+
     async getDetail() {
       const id = this.$route.params && this.$route.params.id;
       this.detail = await resource.get(id);
@@ -90,5 +104,54 @@ export default {
     transform: translate3d(0, 100%, 0);
     opacity: 0;
   }
+}
+
+
+@media screen and (max-width: 520px) {
+
+  #app > div > div.main-container > section > div > div:nth-child(1) {
+    left: 195px!important;
+    font-size: 7px!important;
+    top: 13px!important;
+  }
+
+  #app > div > div.main-container > section > div > div:nth-child(1) button {
+    font-size: 7px!important;
+  }  
+
+  #breadcrumb-container {
+    font-size: 10px;
+  }
+
+  #app > div > div.main-container > section > div > div.el-row > div:nth-child(1) {
+    width: 100%;
+  }
+
+  #app > div > div.main-container > section > div > div.el-row > div:nth-child(2) {
+    width: 100%;
+    padding-top: 15px;
+  }
+
+  .detail-table th {
+      width: 66px;
+      font-size: 8px;
+  }
+
+  #app > div > div.main-container > section > div > div.el-row > div:nth-child(1) > div > div.el-card__body > div:nth-child(4) > div.el-col.el-col-10 > table:nth-child(2) > tbody > tr > td > span {
+    padding: 0px;
+  }
+
+  #app > div > div.main-container > section > div > div.el-row > div:nth-child(1) > div > div.el-card__body > div:nth-child(4) > div.el-col.el-col-10 > table:nth-child(2) > tbody > tr > td > button {
+    padding: 5px;
+  }
+
+  #app > div > div.main-container > section > div > div.el-row > div:nth-child(2) > div > div.el-card__body > div.el-row > div:nth-child(2) button{
+    font-size: 7px!important;
+  }
+
+  #app > div > div.main-container > section > div > div.el-row > div:nth-child(2) > div > div.el-card__body > div.el-row > div:nth-child(2) {
+    display: flex;
+  }
+  
 }
 </style>

@@ -48,7 +48,7 @@
       title="【見積書ファイルリスト】"
       :visible.sync="quotationFilesVisible"
       :modal="false"
-      width="700px"
+      :width="filedialogWidth"
     >
       <quotation-files :detail="detail" />
       <span slot="footer" class="dialog-footer">
@@ -59,7 +59,7 @@
       :modal="false"
       title="【写真リスト】"
       :visible.sync="photoFilesVisible"
-      width="700px"
+      :width="filedialogWidth"
     >
       <photo-files :detail="detail" />
       <span slot="footer" class="dialog-footer">
@@ -70,7 +70,7 @@
     <el-dialog
       title="【報告書ファイルリスト】"
       :visible.sync="reportFilesVisible"
-      width="700px"
+      :width="filedialogWidth"
       :modal="false"
     >
       <report-files :detail="detail" />
@@ -82,7 +82,7 @@
     <el-dialog
       title="見積情報 登録"
       :visible.sync="editVisible"
-      width="43%"
+      :width="editdialogWidth"
       custom-class="slide-dialog"
       top="0px"
       :modal="false"
@@ -131,6 +131,8 @@ export default {
       q_cnt: 0,
       r_cnt: 0,
       p_cnt: 0,
+      filedialogWidth: '700px',
+      editdialogWidth: '43%',
     };
   },
   created() {
@@ -165,8 +167,19 @@ export default {
       el.closest('.el-dialog__wrapper').classList.add('slide-dialog-wrapper');
     });
 
+    if(this.isMobile()) {
+      this.filedialogWidth = '100%';
+      this.editdialogWidth = '100%';
+    }
+
   },
   methods: {
+    isMobile() {
+      var check = true;
+      if(document.querySelector("body").clientWidth > 737) check = false;
+      return check;
+    },
+
     editVisibleChange() {
       this.editVisible = true;
       var div_create = document.querySelector("#app > div > div.main-container > section > div > div.el-dialog__wrapper.slide-dialog-wrapper > div > div.el-dialog__body > div > div:nth-child(1) > div.el-dialog__wrapper.slide-dialog-wrapper");

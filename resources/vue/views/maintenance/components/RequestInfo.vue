@@ -414,7 +414,7 @@
     <el-dialog
       title="【取引先メール作成】"
       :visible.sync="createMailVisible"
-      width="45%"
+      :width="mailDialogWidth"
     >
       <create-client-mail />
       <span slot="footer" class="dialog-footer">
@@ -431,24 +431,14 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="【依頼内容】" :visible.sync="setting" width="45%">
-      <create-setting :detail="detail" />
-      <span slot="footer" class="dialog-footer">
-        <!-- <span>宛先とCC宛先、それぞれ選択してください。</span> -->
-        <!-- <a target="_blank" href="mailto:name@email.com?cc=name1@email.com;name2@mail.com">Link text</a> -->
-        <!-- <el-button type="primary" @click="selectreason()">選択</el-button> -->
-        <!-- <el-button @click="setting = false">閉じる</el-button> -->
-      </span>
-    </el-dialog>
-
-    <el-dialog title="【依頼内容】" :visible.sync="otherinfo" width="45%">
+    <el-dialog title="【依頼内容】" :visible.sync="otherinfo" :width="otherdialogWidth">
       <span>{{ detail.order_type_other_text }}</span>
     </el-dialog>
 
     <el-dialog
       title=""
       :visible.sync="baseInfoVisible"
-      width="700px"
+      :width="baseinfoWidth"
       top="0px"
       custom-class="slide-dialog"
     >
@@ -458,7 +448,7 @@
     <el-dialog
       title="依頼情報 編集"
       :visible.sync="editVisible"
-      width="60%"
+      :width="editdialogWidth"
       custom-class="slide-dialog"
       top="0px"
     >
@@ -496,9 +486,13 @@ export default {
   },
   data() {
     return {
+      baseinfoWidth: '700px',
+      editdialogWidth: '60%',
       dataa: null,
       show: true,
       order_text: '',
+      otherdialogWidth: '45%',
+      mailDialogWidth: '45%',
       // customerInformation: this.detail.customerInformation,
       firstimage: '',
       customer_name: '',
@@ -547,6 +541,13 @@ export default {
     });
 
     this.orderText();
+
+    if(this.isMobile()) {
+      this.otherdialogWidth = '100%';
+      this.baseinfoWidth = '100%';
+      this.editdialogWidth = '100%';
+      this.mailDialogWidth = '100%';
+    }
   },
   created() {
     // this.getImageone();
@@ -554,6 +555,13 @@ export default {
     // this.getImagethree();
   },
   methods: {
+
+    isMobile() {
+      var check = true;
+      if(document.querySelector("body").clientWidth > 737) check = false;
+      return check;
+    },
+
     otherText() {
 
       var text = "";

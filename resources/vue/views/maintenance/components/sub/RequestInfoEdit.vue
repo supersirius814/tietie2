@@ -196,7 +196,7 @@
     <el-dialog
       title="【取引先検索】"
       :visible.sync="createCustomerVisible"
-      width="43%"
+      :width="createdialogWidth"
       custom-class="slide-dialog"
       top="0px"
       :modal="false"
@@ -229,6 +229,7 @@ export default {
   },
   data() {
     return {
+      createdialogWidth: '43%',
       row_id:'',
       custom: null,
       custom_data: [],
@@ -259,7 +260,19 @@ export default {
     this.getList();
     // this.$route.params.set('name', 'john');
   },
+
+  mounted() {
+    if(this.isMobile()) {
+      this.createdialogWidth = '100%';
+    }
+  },
   methods: {
+    isMobile() {
+      var check = true;
+      if(document.querySelector("body").clientWidth > 737) check = false;
+      return check;
+    },
+
     createCustomerVisibleSetting() {
       this.$route.params['custom_tableData'] = '';
       this.$route.params['selectedRow'] = 0;      

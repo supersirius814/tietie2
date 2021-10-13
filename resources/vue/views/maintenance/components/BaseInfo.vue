@@ -125,7 +125,7 @@
     <el-dialog
       title="【特記情報 編集】"
       :visible.sync="createNotesVisible"
-      width="43%"
+      :width="notesDialogWidth"
       custom-class="slide-dialog"
       top="0px"
       :modal="false"
@@ -200,6 +200,8 @@ export default {
       userName: '', 
       createNotesVisible: false,
       visibleflag: true,
+
+      notesDialogWidth: '43%',
  
 
       tableData: [
@@ -211,12 +213,26 @@ export default {
       ],
     };
   },  
+
   created(){
     this.$store.dispatch('user/getInfo').then(user => {
       this.userName = user.name;
     });
   },
+
+  mounted() {
+    if(this.isMobile()) {
+      this.notesDialogWidth = '100%';
+    }    
+  },
+
   methods: {
+    isMobile() {
+      var check = true;
+      if(document.querySelector("body").clientWidth > 737) check = false;
+      return check;
+    },
+
     createNotesShow() {
       this.createNotesVisible = true;
       document.querySelector('#app > div > div.main-container > section > div > div.el-row > div:nth-child(1) > div > div.el-card__body > div:nth-child(10) > div > div.el-dialog__body > div > div.el-dialog__wrapper').classList.remove('close-css');
