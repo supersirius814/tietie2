@@ -9,8 +9,9 @@
       >
         <span v-if="item.kind == 'quotation'">
           <a
-            href="#"
+                        href="#"
             @click.prevent="quotationFileView(item.file_name, item.file_path)"
+            
           >
             <i
               class="el-icon-picture"
@@ -33,9 +34,19 @@
       :modal="false"
     >
       <span slot="title" ><i class="el-icon-info"></i> {{ quotationtitleData }} </span>
-        <template v-if="quotationpdfSrc">
-          <pdf :src="quotationpdfSrc"></pdf>
-        </template>
+        <!-- <template v-if="quotationpdfSrc">
+          <VuePdfApp pdf="http://localhost:2000/zensho-mainte/quotationfile/101/dfdf" />
+        </template> -->
+          <!-- <embed
+            v-if="quotationpdfSrc"
+                  type="video/webm"
+                  :src="quotationpdfSrc"
+                  width="100%"
+                  style="max-height: 50rem; min-height: 30rem"
+            /> -->
+            <template  v-if="quotationpdfSrc">
+              <iframe style = "width: 100%; max-height: 50rem; min-height: 40rem" :src="quotationpdfSrc"></iframe>
+            </template>
       <span slot="footer" class="dialog-footer">
         <el-button @click="quotationpdfviewVisible = false">閉じる</el-button>
       </span>
@@ -45,13 +56,14 @@
 </template>
 
 <script>
-import MaintenanceResource from '@/api/maintenance';
+import MaintenanceResource from '@/api/maintenance'
+import VuePdfApp from "vue-pdf-app"
 import pdf from 'vue-pdf'
 
 const resource = new MaintenanceResource();
 export default {
   components: {
-    pdf
+    pdf, VuePdfApp,
   },
   props: {
     detail: {

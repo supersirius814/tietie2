@@ -8,7 +8,13 @@
           <span>{{ scope.row.is_emergency == 1 ? '緊急' : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" class-name="history-td" prop="maintenance_code" label="メンテナンスNo" />
+      <el-table-column align="center" class-name="history-td"  label="メンテナンスNo" >
+        <template slot-scope="scope">
+          <router-link :to="'/maintenance/detail/'+scope.row.maintenance_id" class="link-type" target= '_blank'>
+            <span v-html="scope.row.maintenance_code"></span>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column align="center" class-name="history-td" label="ステータス">
         <template slot-scope="scope">
           <span>{{ scope.row.progress.status }}</span>

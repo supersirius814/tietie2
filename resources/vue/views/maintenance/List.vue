@@ -210,7 +210,7 @@ import MaintenanceResource from '@/api/maintenance';
 import ShopResource from '@/api/shop';
 import waves from '@/directive/waves'; // Waves directive
 
-import ElSelectAll from 'el-select-all'
+import ElSelectAll from './selectAll.vue';
 
 const resource = new MaintenanceResource();
 const shopResource = new ShopResource();
@@ -235,31 +235,42 @@ export default {
         shop_id: null,
       },
       shops: [],
+       citys:[],
       mdoptionsList: [
-        { label: 'BM承認待ち', value: 1 },
-        { label: 'BM承認', value: 2  },
-        { label: 'BM差戻し', value: 3  },
-        { label: 'BM却下', value: 4  },
-        { label: 'BM保留', value: 5  },
-        { label: '本部受付前', value: 6  },
-        { label: '本部差戻し', value: 7  },
-        { label: '本部見送り', value: 8  },
-        { label: '依頼確定', value: 9  },
-        { label: '依頼済', value: 10  },
-        { label: '見積待ち', value: 11  },
-        { label: '見積精査中', value: 12  },
-        { label: '入荷待ち', value: 13  },
-        { label: 'DM承認待ち', value: 14  },
-        { label: '稟議中', value: 15  },
-        { label: '見積発注済み', value: 16  },
-        { label: '日程調整中', value: 17  },
-        { label: '訪問待ち', value: 18  },
-        { label: '報告待ち', value: 19  },
-        { label: '店完了', value: 20  },
-        { label: '取完了', value: 21  },
-        { label: '問合せ中', value: 22  },
+        { label: 'BM承認待ち', value: 1, },
+        { label: 'BM承認', value: 2,  },
+        { label: 'BM差戻し', value: 3,  },
+        { label: 'BM却下', value: 4,  },
+        { label: 'BM保留', value: 5,  },
+        { label: '本部受付前', value: 6,  },
+        { label: '本部差戻し', value: 7,  },
+        { label: '本部見送り', value: 8,  },
+        { label: '依頼確定', value: 9,  },
+        { label: '依頼済', value: 10,  },
+        { label: '見積待ち', value: 11,  },
+        { label: '見積精査中', value: 12,  },
+        { label: '入荷待ち', value: 13,  },
+        { label: 'DM承認待ち', value: 14,  },
+        { label: '稟議中', value: 15,  },
+        { label: '見積発注済み', value: 16,  },
+        { label: '日程調整中', value: 17,  },
+        { label: '訪問待ち', value: 18,  },
+        { label: '報告待ち', value: 19,  },
+        { label: '店完了', value: 20,  },
+        { label: '取完了', value: 21,  },
+        { label: '問合せ中', value: 22,  },
       ],
     };
+  },
+  watch:{
+      citys:function(val,oldval){
+          //获取val和oldval里all的索引,如果没有则返回-1
+          let newindex = val.indexOf('all'),oldindex = oldval.indexOf('all'); 
+          if(newindex!=-1 && oldindex==-1 && val.length>1) //如果新的选择里有勾选了选择所有选择所有 则 只直线勾选所有整个选项
+              this.query.progress_id=['all']; else if(newindex!=-1 && oldindex!=-1 && val.length>1) //如果操作前有勾选了选择所有且当前也选中了勾选所有且勾选数量大于
+              //remove checkout
+              this.query.progress_id.splice(val.indexOf('all'),1)                    
+      }
   },
   computed: {
     
@@ -276,7 +287,16 @@ export default {
 
   },
   methods: {
-    
+    pp(a) {
+      if( this.query.progress_id === 'All') {
+          this.cities.forEach(loc => {
+              if(loc.value !== 'All' ) {
+                  this.cities.push(loc.value)
+              }
+          })
+      }
+    },
+
    tableRowClassName({row, rowIndex}) {
     //  console.log(row.order_type_id);
        if(row.is_emergency > 0) {
@@ -307,7 +327,9 @@ export default {
       this.total = meta.total;
       this.loading = false;
     },
-    handleFilter() {
+    handleFilter(val,oldval) {
+
+      
       this.query.page = 1;
       this.getList();
       

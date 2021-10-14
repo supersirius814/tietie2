@@ -58,9 +58,31 @@ export default {
       this.$store.dispatch('app/toggleSideBar');
     },
     async logout() {
-      // await this.$store.dispatch('user/logout');
-      // this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+      await this.$store.dispatch('user/logout');
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     },
+
+    // logout(e) {
+    //   console.log("ss");
+    //   window.location.href = "/";
+    //   e.preventDefault();
+    //   this.$axios.post("/api/logout");
+    //   //     .post("/api/logout")
+    //   // this.$axios.get("/sanctum/csrf-cookie").then((response) => {
+    //   //   this.$axios
+    //   //     .post("/api/logout")
+    //   //     .then((response) => {
+    //   //       if (response.data.success) {
+    //   //         window.location.href = "/";
+    //   //       } else {
+    //   //         console.log(response);
+    //   //       }
+    //   //     })
+    //   //     .catch(function (error) {
+    //   //       console.error(error);
+    //   //     });
+    //   // });
+    // },
   },
 };
 </script>

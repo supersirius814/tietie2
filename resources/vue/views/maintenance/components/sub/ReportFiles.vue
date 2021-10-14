@@ -20,9 +20,9 @@
       :modal="false"
     >
       <span slot="title" ><i class="el-icon-info"></i> {{ reporttitleData }} </span>
-            <template  v-if="reportpdfSrc">
-              <pdf :src="reportpdfSrc" />
-            </template>
+            <!-- <template  v-if="reportpdfSrc">
+              <VuePdfApp :src="reportpdfSrc" />
+            </template> -->
           <!-- <embed
             v-if="reportpdfSrc"
                   type="video/webm"
@@ -30,6 +30,9 @@
                   width="100%"
                   style="max-height: 50rem; min-height: 30rem"
             /> -->
+            <template  v-if="reportpdfSrc">
+              <iframe id="pdf-iframe" :src="reportpdfSrc"></iframe>
+            </template>
       <span slot="footer" class="dialog-footer">
         <el-button @click="reportpdfviewVisible = false">閉じる</el-button>
       </span>
@@ -39,10 +42,11 @@
 
 <script>
 import pdf from 'vue-pdf'
+import VuePdfApp from "vue-pdf-app"
 
 export default {
   components: {
-    pdf
+    pdf, VuePdfApp,
   },
   props: {
     detail: {

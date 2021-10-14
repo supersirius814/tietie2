@@ -100,6 +100,13 @@ class MaintenanceResource extends Resource {
         });
     }
 
+    middle_bigconnect(id) {
+        return request({
+            url: this.baseUrl + this.uri + '/' + id + '/middle_bigconnect',
+            method: 'get',
+        });
+    }
+
     depart_name(id) {
         return request({
             url: this.baseUrl + this.uri + '/' + id + '/depart_name',

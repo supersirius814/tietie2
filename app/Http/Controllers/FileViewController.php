@@ -50,7 +50,11 @@ class FileViewController extends Controller
 	//quotation pdf file get
 	public function getQuotationFile($maintenance_id, $file_name)
 	{
-		// $file = Storage::disk('s3')->get("zensho-mainte/quotationfiles/$maintenance_id/$file_name");  
+		$file_url = 'public/reports/f3c8d2a70c3e15f989699b85bb367aef.pdf';
+		$file = Storage::get($file_url);
+		header('Content-type: application/pdf');
+		echo $file;
+		// $file = Storage::disk('local')->get("zensho-mainte/quotationfiles/$maintenance_id/$file_name");  
 		// header('Content-type: application/pdf');
 		// echo $file;
 	}
@@ -58,6 +62,10 @@ class FileViewController extends Controller
 	//report pdf file get
 	public function getReportFile($maintenance_id, $file_name)
 	{
+		$file_url = 'public/reports/f3c8d2a70c3e15f989699b85bb367aef.pdf';
+		$file = Storage::get($file_url);
+		header('Content-type: application/pdf');
+		echo $file;
 		// $file = Storage::disk('s3')->get("zensho-mainte/reportfiles/$maintenance_id/$file_name"); 
 		// header('Content-type: application/pdf');
 		// echo $file;

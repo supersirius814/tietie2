@@ -35,176 +35,170 @@ import Layout from '@/layout';
   }
 **/
 
-export const constantRoutes = [
-  {
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '/redirect/:path*',
-        component: () => import('@/views/redirect/index'),
-      },
-    ],
-  },
-  {
-    path: '/404',
-    redirect: { name: 'Page404' },
-    component: () => import('@/views/error-page/404'),
-    hidden: true,
-  },
-  {
-    path: '/401',
-    component: () => import('@/views/error-page/401'),
-    hidden: true,
-  },
-  {
-    path: '',
-    component: Layout,
-    redirect: 'maintenance',
-    children: [
-      {
-        path: 'maintenance',
-        component: () => import('@/views/maintenance/List'),
-        name: 'maintenance',
-        meta: { title: 'メンテナンス', icon: 'documentation', noCache: true },
-      },
-      {
-        path: 'maintenance/detail/:id(\\d+)',
-        component: () => import('@/views/maintenance/Detail'),
-        name: 'MaintenanceDetail',
-        meta: { title: 'メンテナンス情報　詳細', noCache: true },
+export const constantRoutes = [{
+        path: '/redirect',
+        component: Layout,
         hidden: true,
-      },
-    ],
-  },
-  {
-    path: '/user',
-    component: Layout,
-    redirect: '/maintenance/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'user',
-        meta: { title: 'ユーザー', icon: 'user', noCache: true },
-      },
-    ],
-  },
-  {
-    path: '/shop',
-    component: Layout,
-    redirect: '/maintenance/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'shop',
-        meta: { title: '店舗', icon: 'shopping', noCache: true },
-      },
-    ],
-  },
-  {
-    path: '/block',
-    component: Layout,
-    redirect: '/block/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'block',
-        meta: { title: 'ブロック', icon: 'tree', noCache: true },
-      },
-    ],
-  },
-  {
-    path: '/district',
-    component: Layout,
-    redirect: '/district/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'district',
-        meta: { title: 'ディストリクト', icon: 'location', noCache: true },
-      },
-    ],
-  },
-  {
-    path: '/client',
-    component: Layout,
-    redirect: '/client/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'client',
-        meta: { title: 'お取引先様', icon: 'peoples', noCache: true },
-      },
-    ],
-  },
-  {
-    path: '/csv',
-    component: Layout,
-    redirect: '/csv/import',
-    meta: { title: 'CSV', icon: 'excel' },
-    children: [
-      {
-        path: 'import',
-        component: () => import('@/views/documentation/index'),
-        name: 'import',
-        meta: { title: 'インポート', icon: 'upload', noCache: true },
-      },
-      {
-        path: 'export',
-        component: () => import('@/views/documentation/index'),
-        name: 'export',
-        meta: { title: 'エクスポート', icon: 'download', noCache: true },
-      },
-    ],
-  },
+        children: [{
+            path: '/redirect/:path*',
+            component: () =>
+                import ('@/views/redirect/index'),
+        }, ],
+    },
+    // {
+    //     path: '/404',
+    //     redirect: { name: 'Page404' },
+    //     component: () =>
+    //         import ('@/views/error-page/404'),
+    //     hidden: true,
+    // },
+    {
+        path: '/401',
+        component: () =>
+            import ('@/views/error-page/401'),
+        hidden: true,
+    },
+    {
+        path: '',
+        component: Layout,
+        redirect: 'maintenance',
+        children: [{
+                path: 'maintenance',
+                component: () =>
+                    import ('@/views/maintenance/List'),
+                name: 'maintenance',
+                meta: { title: 'メンテナンス', icon: 'documentation', noCache: true },
+            },
+            {
+                path: 'maintenance/detail/:id(\\d+)',
+                component: () =>
+                    import ('@/views/maintenance/Detail'),
+                name: 'MaintenanceDetail',
+                meta: { title: 'メンテナンス情報　詳細', noCache: true },
+                hidden: true,
+            },
+        ],
+    },
+    {
+        path: '/user',
+        component: Layout,
+        redirect: '/maintenance/index',
+        children: [{
+            path: 'index',
+            component: () =>
+                import ('@/views/documentation/index'),
+            name: 'user',
+            meta: { title: 'ユーザー', icon: 'user', noCache: true },
+        }, ],
+    },
+    {
+        path: '/shop',
+        component: Layout,
+        redirect: '/maintenance/index',
+        children: [{
+            path: 'index',
+            component: () =>
+                import ('@/views/documentation/index'),
+            name: 'shop',
+            meta: { title: '店舗', icon: 'shopping', noCache: true },
+        }, ],
+    },
+    {
+        path: '/block',
+        component: Layout,
+        redirect: '/block/index',
+        children: [{
+            path: 'index',
+            component: () =>
+                import ('@/views/documentation/index'),
+            name: 'block',
+            meta: { title: 'ブロック', icon: 'tree', noCache: true },
+        }, ],
+    },
+    {
+        path: '/district',
+        component: Layout,
+        redirect: '/district/index',
+        children: [{
+            path: 'index',
+            component: () =>
+                import ('@/views/documentation/index'),
+            name: 'district',
+            meta: { title: 'ディストリクト', icon: 'location', noCache: true },
+        }, ],
+    },
+    {
+        path: '/client',
+        component: Layout,
+        redirect: '/client/index',
+        children: [{
+            path: 'index',
+            component: () =>
+                import ('@/views/documentation/index'),
+            name: 'client',
+            meta: { title: 'お取引先様', icon: 'peoples', noCache: true },
+        }, ],
+    },
+    {
+        path: '/csv',
+        component: Layout,
+        redirect: '/csv/import',
+        meta: { title: 'CSV', icon: 'excel' },
+        children: [{
+                path: 'import',
+                component: () =>
+                    import ('@/views/documentation/index'),
+                name: 'import',
+                meta: { title: 'インポート', icon: 'upload', noCache: true },
+            },
+            {
+                path: 'export',
+                component: () =>
+                    import ('@/views/documentation/index'),
+                name: 'export',
+                meta: { title: 'エクスポート', icon: 'download', noCache: true },
+            },
+        ],
+    },
 ];
 
-export const asyncRoutes = [
-  {
-    path: '/element-ui',
-    component: Layout,
-    redirect: '/element-ui/icons',
-    children: [
-      {
-        path: 'icons',
-        component: () => import('@/views/icons/index'),
-        name: 'Icons',
-        meta: { title: 'icons', icon: 'el-icon-info', noCache: true },
-      },
-    ],
-  },
-  {
-    path: '/external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://github.com/tuandm/laravue',
-        meta: { title: 'externalLink', icon: 'link' },
-      },
-    ],
-  },
-  { path: '*', redirect: '/404', hidden: true },
+export const asyncRoutes = [{
+        path: '/element-ui',
+        component: Layout,
+        redirect: '/element-ui/icons',
+        children: [{
+            path: 'icons',
+            component: () =>
+                import ('@/views/icons/index'),
+            name: 'Icons',
+            meta: { title: 'icons', icon: 'el-icon-info', noCache: true },
+        }, ],
+    },
+    {
+        path: '/external-link',
+        component: Layout,
+        children: [{
+            path: 'https://github.com/tuandm/laravue',
+            meta: { title: 'externalLink', icon: 'link' },
+        }, ],
+    },
+    { path: '*', redirect: '/404', hidden: true },
 ];
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  base: process.env.MIX_LARAVUE_PATH,
-  routes: constantRoutes,
+    // mode: 'history', // require service support
+    fallback: false,
+    scrollBehavior: () => ({ y: 0 }),
+    base: process.env.MIX_LARAVUE_PATH,
+    routes: constantRoutes,
 });
 
 const router = createRouter();
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter();
-  router.matcher = newRouter.matcher; // reset router
+    const newRouter = createRouter();
+    router.matcher = newRouter.matcher; // reset router
 }
 
 export default router;

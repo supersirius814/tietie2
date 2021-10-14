@@ -268,25 +268,35 @@ export default {
           }   
         }       
       });
-      if(emails_ge == "") {
-        emails = emails_cc;
-      } else if((emails_cc != "")){
+      if((emails_cc != "")){
         emails = emails_ge + "?" + emails_cc;
       } else if(emails_ge != ""){
         emails = emails_ge; 
       }
 
-      subject = '&subject='
+      subject = 'subject='
       if(this.detail.shop.shop_id != '') {
         subject += '店舗CD: ' + this.detail.shop_id + ' '; 
       }
       if(this.detail.shop.shop_name) {
-        subject += '店舗名: ' + this.detail.shop_name + ' ';
+        subject += '店舗名: ' + this.detail.shop.shop_name + ' ';
       }
       if(this.detail.sub_category) {
         subject += '中分類: ' + this.detail.sub_category.sub_category_name + ' ';
       }
-      var mailhref = "mailto:" + emails + subject;
+      //shop_name and sub category name undefined remain
+      var mailhref = "mailto:";
+
+      if(emails_ge == "" && emails_cc == "") {
+        mailhref += "?" + subject;
+      } else {
+        if(emails_cc == "") {
+          mailhref += emails + "?" + subject;
+        } else {
+          mailhref += emails + "&" + subject;
+        }
+      }
+
       // console.log(mailhref);
       window.location.href = mailhref;
     },

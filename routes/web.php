@@ -415,3 +415,10 @@ Route::get('master_mainte_export_csv/{value}', 'MasterExportCsvController@export
 Route::get('vue', function() {
 	return view('admin');
 })->middleware('auth');
+
+
+Route::post('auth/logout', '\App\Http\Controllers\Auth\LoginController@logout');
+
+// Route::get('/{slug?}', function () {
+//     return view('admin');
+// })->where('slug', '[\/\w\.-]*')->middleware('auth');
