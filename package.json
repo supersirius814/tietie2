@@ -77,6 +77,7 @@
         "vue-month-picker": "^1.5.0",
         "vue-numeric": "^2.4.3",
         "vue-pdf": "^4.3.0",
+        "vue-pdf-app": "^2.1.0",
         "vue-router": "^3.4.3",
         "vue-splitpane": "^1.0.4",
         "vuedraggable": "^2.24.0",
