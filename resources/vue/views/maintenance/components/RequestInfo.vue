@@ -200,6 +200,8 @@
               添付ファイル
             </p>
             <div
+            v-for="(item, index) in detail.maintenance_images"
+              :key="index"
               style="
                 text-align: center;
                 padding: 5px;
@@ -208,7 +210,59 @@
                 overflow-y: auto;
               "
             >
-              <el-image
+            <span v-for="(item, index) in detail.maintenance_images"
+              :key="index"      >
+              <el-image v-if="index == 0"
+                style="
+                  width: 100px;
+                  height: 100px;
+                  display: block;
+                  padding: 10px;
+                "
+                :src="getsrc(detail.maintenance_images[0].file_name)"
+                :preview-src-list="fileList"
+              />
+              <a href="#" style="margin-bottom: 10px; display: block" v-if="index == 0"
+                >全体写真</a
+              >
+              <el-image v-if="index == 0"
+                style="
+                  width: 100px;
+                  height: 100px;
+                  display: block;
+                  padding: 10px;
+                "
+                :src="getsrc(detail.maintenance_images[1].file_name)"
+                :preview-src-list="fileList"
+              />
+              <a href="#" style="margin-bottom: 10px; display: block" v-if="index == 0"
+                >細部写真</a
+              >
+              <el-image v-if="index == 0"
+                style="
+                  width: 100px;
+                  height: 100px;
+                  display: block;
+                  padding: 10px;
+                "
+                :src="getsrc(detail.maintenance_images[2].file_name)"
+                :preview-src-list="fileList"
+              />
+              <a href="#" style="margin-bottom: 10px; display: block" v-if="index == 0"
+                >型番写真</a
+              >
+              <el-image v-if="index > 2"
+                style="
+                  width: 100px;
+                  height: 100px;
+                  display: block;
+                  padding: 10px;
+                "
+                :src="getsrc(detail.maintenance_images[index].file_name)"
+                :preview-src-list="fileList"
+              />              
+            </span>
+              <!-- <el-image
                 style="
                   width: 100px;
                   height: 100px;
@@ -246,7 +300,7 @@
               />
               <a href="#" style="margin-bottom: 10px; display: block"
                 >型番写真</a
-              >
+              > -->
             </div>
           </td>
         </tr>

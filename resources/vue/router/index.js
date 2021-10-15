@@ -45,13 +45,13 @@ export const constantRoutes = [{
                 import ('@/views/redirect/index'),
         }, ],
     },
-    // {
-    //     path: '/404',
-    //     redirect: { name: 'Page404' },
-    //     component: () =>
-    //         import ('@/views/error-page/404'),
-    //     hidden: true,
-    // },
+    {
+        path: '/404',
+        redirect: { name: 'Page404' },
+        component: () =>
+            import ('@/views/error-page/404'),
+        hidden: true,
+    },
     {
         path: '/401',
         component: () =>
@@ -174,15 +174,15 @@ export const asyncRoutes = [{
             meta: { title: 'icons', icon: 'el-icon-info', noCache: true },
         }, ],
     },
-    {
-        path: '/external-link',
-        component: Layout,
-        children: [{
-            path: 'https://github.com/tuandm/laravue',
-            meta: { title: 'externalLink', icon: 'link' },
-        }, ],
-    },
-    { path: '*', redirect: '/404', hidden: true },
+    // {
+    //     path: '/external-link',
+    //     component: Layout,
+    //     children: [{
+    //         path: 'https://github.com/tuandm/laravue',
+    //         meta: { title: 'externalLink', icon: 'link' },
+    //     }, ],
+    // },
+    // { path: '*', redirect: '/404', hidden: true },
 ];
 
 const createRouter = () => new Router({

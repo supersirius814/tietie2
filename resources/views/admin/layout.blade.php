@@ -789,7 +789,7 @@
             <ol class="breadcrumb float-sm-right">
               <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
               <li class="breadcrumb-item active">Dashboard v1</li> -->
-              <li class="breadcrumb-item active"><a href="{{ url('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a><form id="logout-form" action="{{ url('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form></li>
+              <li class="breadcrumb-item active"><a href="{{ url('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ csrf_field() }}Logout</a><form id="logout-form" action="{{ url('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form></li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->

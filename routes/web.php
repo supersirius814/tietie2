@@ -412,12 +412,43 @@ Route::get('master_mainte_export_csv/{value}', 'MasterExportCsvController@export
 //     return view('admin');
 // });
 
-Route::get('vue', function() {
-	return view('admin');
+// Route::get('vue', function() {
+// 	return view('admin');
+// })->middleware('auth');
+
+Route::get('vue', function(Request $request) {
+
+	$business_category_id = Auth::user()->business_category_id;
+	$role                 = Role::find( Auth::user()->role_id )->role_name;
+
+	if ( '管理者' === $role ) {
+		return view('admin');
+	}
+
+	if ( 'BM' === $role ) {
+		$block_id = Block_manager::where('user_id', Auth::user()->user_id)->first()->block_id;
+		return view('maintenance.index_bm', [
+			'business_category' => Business_category::find($business_category_id),
+            'block_name'        => Block::where('block_id', $block_id)->first()->block_name,
+			'shops'             => Shop::where('block_id', $block_id)->get(),
+			'role'              => $role,
+			'all_progress'      => Progress::all(),
+		]);
+	}
+
+	$shop_id = Auth::user()->shop_id;
+	return view('maintenance.index', [
+		'business_category' => Business_category::find($business_category_id),
+		'shop'              => Shop::find($shop_id),
+		'role'              => $role,
+//			'approved_count' => Maintenance::where('shop_id', $shop_id)->where('is_approved', 1)->count(),
+//			'unapproved_count' => Maintenance::where('shop_id', $shop_id)->where('is_approved', 0)->where('is_sendbacked', 0)->count(),
+//			'sendbacked_count' => Maintenance::where('shop_id', $shop_id)->where('is_sendbacked', 1)->count(),
+	]);
+	// return view('admin');
 })->middleware('auth');
 
-
-Route::post('auth/logout', '\App\Http\Controllers\Auth\LoginController@logout');
+// Route::post('auth/logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 // Route::get('/{slug?}', function () {
 //     return view('admin');

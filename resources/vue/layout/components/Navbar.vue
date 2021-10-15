@@ -4,7 +4,7 @@
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
-    <div class="right-menu">
+    <!-- <div class="right-menu">
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <i class="el-icon-caret-bottom" />
@@ -30,7 +30,7 @@
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -59,30 +59,9 @@ export default {
     },
     async logout() {
       await this.$store.dispatch('user/logout');
+     
       this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     },
-
-    // logout(e) {
-    //   console.log("ss");
-    //   window.location.href = "/";
-    //   e.preventDefault();
-    //   this.$axios.post("/api/logout");
-    //   //     .post("/api/logout")
-    //   // this.$axios.get("/sanctum/csrf-cookie").then((response) => {
-    //   //   this.$axios
-    //   //     .post("/api/logout")
-    //   //     .then((response) => {
-    //   //       if (response.data.success) {
-    //   //         window.location.href = "/";
-    //   //       } else {
-    //   //         console.log(response);
-    //   //       }
-    //   //     })
-    //   //     .catch(function (error) {
-    //   //       console.error(error);
-    //   //     });
-    //   // });
-    // },
   },
 };
 </script>
