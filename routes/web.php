@@ -447,9 +447,15 @@ Route::get('vue', function(Request $request) {
 	]);
 	// return view('admin');
 })->middleware('auth');
-
+// Route::get('/{any}', function () {
+//     return view('admin');
+// })->where('any', '.*');
 // Route::post('auth/logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 // Route::get('/{slug?}', function () {
 //     return view('admin');
 // })->where('slug', '[\/\w\.-]*')->middleware('auth');
+
+// Route::get('/{vue?}', function () {
+//     return view('admin');
+// })->where('vue', '[\/\w\.-]*');

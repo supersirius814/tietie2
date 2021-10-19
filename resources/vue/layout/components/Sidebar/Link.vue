@@ -1,7 +1,7 @@
 
 <template>
   <!-- eslint-disable vue/require-component-is-->
-  <component v-bind="linkProps(to)">
+  <component v-bind="linkProps(to)" @click="change">
     <slot />
   </component>
 </template>
@@ -17,15 +17,17 @@ export default {
     },
   },
   methods: {
-    isExternalLink(routePath) {
+    isExternalLink(routePath) { 
       return isExternal(routePath);
     },
     linkProps(url) {
+
       if (this.isExternalLink(url)) {
+
         return {
           is: 'a',
-          href: url,
-          target: '_blank',
+          // href: '../logout',
+          // target: '_blank',
           rel: 'noopener',
         };
       }
@@ -33,6 +35,9 @@ export default {
         is: 'router-link',
         to: url,
       };
+    },
+    change() {
+      document.getElementById('logout-form').submit();
     },
   },
 };

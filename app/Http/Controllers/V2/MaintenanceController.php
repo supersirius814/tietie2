@@ -131,7 +131,8 @@ class MaintenanceController extends Controller
         $page = $request->input('page', 1);
         $offset = $limit * ($page - 1);
 
-        $qb = Maintenance::with(['shop.business_category', 'orderType', 'progress', 'user'])->whereNotNull('shop_id')->where('shop_id', $request->input('shop_id'));
+        $qb = Maintenance::with(['shop.business_category', 'orderType', 'progress', 'user'])
+        ->whereNotNull('shop_id')->where('shop_id', $request->input('shop_id'));
 
         $total = $qb->count();
 
@@ -141,6 +142,19 @@ class MaintenanceController extends Controller
         return response(['data' => $maintenances, 'meta' => ['total' => $total]]);
     }
 
+
+    public function customsList(Request $request) {
+        $customerNC = Customer_information::select('customer_name', 'customer_code')
+                        ->groupBy('customer_code')
+                        ->get();
+        
+        foreach ($customerNC as $key => $value) {
+            $result[$value['customer_code']] = $value['customer_name'];
+        }
+        return response($result);
+    }
+
+    
     public function createProgress(Request $request, $maintenance_id)
     {
         $row = new Maintenance_progress();
@@ -175,7 +189,8 @@ class MaintenanceController extends Controller
         $row->comment = $request->input('comment');
         $row->amount = $request->input('amount');
         $row->photo_files_cnt = $request->input('photo_files_cnt');
-        $row->report_files_cnt = $request->input('report_files_cnt');
+        $row->kind = $request->input("kind");
+        // $row->report_files_cnt = $request->input('report_files_cnt');
         $row->quotation_files_cnt = $request->input('quotation_files_cnt');
         $row->editor = $request->input('editor');
         // $row->entered_by = $request->user()->user_id;
@@ -412,10 +427,17 @@ class MaintenanceController extends Controller
 
     public function big_middleconnect(Request $request, $category_id)
     {
-        $result = Sub_category::select('sub_category_id', 'category_id', 'sub_category_name')
+        if($category_id == 0) {
+            $result = Sub_category::select('sub_category_id', 'category_id', 'sub_category_name')
+            ->distinct()
+            ->get();
+        } else {
+            $result = Sub_category::select('sub_category_id', 'category_id', 'sub_category_name')
             ->distinct()
             ->where('category_id', $category_id)
             ->get();
+        }
+
 
         if ($result->isEmpty()) {
             $result[0] = array(
@@ -428,11 +450,16 @@ class MaintenanceController extends Controller
         return response($result);
     }
 
-    public function middle_bigconnect(Request $request, $category_id)
+    public function middle_bigconnect(Request $request, $sub_category_id)
     {
+        $category_ids = Sub_category::select('category_id')
+                        ->distinct()
+                        ->where('sub_category_id', $sub_category_id)
+                        ->get();
+        // var_export($category_ids[0]['category_id']);
         $result = Category::select('category_id', 'category_name')
             ->distinct()
-            ->where('category_id', $category_id)
+            ->where('category_id', $category_ids[0]['category_id'])
             ->get();
 
         if ($result->isEmpty()) {
@@ -444,6 +471,15 @@ class MaintenanceController extends Controller
         return response($result);
     }
 
+
+    public  function deleteQuotationId(Request $request, $quotation_info_id)
+    {
+        Quotation_info::where('quotation_info_id', $quotation_info_id)->delete();
+
+        $result = Quotation_info::where('maintenance_id', $request->input('maintenance_id'))->get();
+
+        return response($result);
+    }
     
 
     public function depart_name(Request $request, $customergroup_code)

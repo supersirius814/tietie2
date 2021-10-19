@@ -82,6 +82,8 @@ Route::group(['namespace' => 'V2'], function () {
 
     Route::any('v2/maintenance/class_history', 'MaintenanceController@classHistory'); // メンテナンス一覧
     Route::any('v2/maintenance/shop_history', 'MaintenanceController@shopHistory'); // メンテナンス一覧
+    Route::get('v2/maintenance/customsList', 'MaintenanceController@customsList'); // メンテナンス一覧
+    
 
     Route::post('v2/maintenance/{mantenance_id}/progress/create', 'MaintenanceController@createProgress');
 
@@ -96,6 +98,8 @@ Route::group(['namespace' => 'V2'], function () {
 
     Route::get('v2/maintenance/{mantenance_id}/big_middleconnect', 'MaintenanceController@big_middleconnect');
     Route::get('v2/maintenance/{mantenance_id}/middle_bigconnect', 'MaintenanceController@middle_bigconnect');
+    Route::post('v2/maintenance/{mantenance_id}/deleteQuotationId', 'MaintenanceController@deleteQuotationId');
+    
     
     Route::get('v2/maintenance/{mantenance_id}/depart_name', 'MaintenanceController@depart_name');
     

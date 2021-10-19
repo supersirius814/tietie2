@@ -1,7 +1,6 @@
 <template>
 
   <div>
-    <!-- {{ detail.shop }} -->
     <h3>基本情報</h3>
 
     <el-row :gutter="0">
@@ -37,7 +36,7 @@
             </tr>
             <tr>
               <th>店舗担当</th>
-              <td>{{ userName }}</td>
+              <td>{{ detail.user.name }}</td>
             </tr>
           </tbody>
         </table>
@@ -139,6 +138,7 @@
   </div>
 </template>
 <style>
+
 @keyframes dialog-fade-in {
   0% {
     transform: translate3d(0, 100%, 0);
@@ -151,23 +151,16 @@
 }
 @keyframes dialog-fade-out {
   0% {
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 100%, 0);
     opacity: 1;
   }
   100% {
-    transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, 0, 0);
     opacity: 0;
   }
 }
 </style>
-<style>
-.notetransition-enter-active, .notetransition-leave-active {
-  transition: opacity .5s;
-}
-.notetransition-enter, .notetransition-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-</style>
+
 <script>
 import MaintenanceResource from '@/api/maintenance';
 

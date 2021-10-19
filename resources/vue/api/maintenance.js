@@ -22,6 +22,13 @@ class MaintenanceResource extends Resource {
         });
     }
 
+    customsList() {
+        return request({
+            url: this.baseUrl + this.uri + '/customsList',
+            method: 'get'
+        });
+    }
+
     createProgress(id, insertData) {
         return request({
             url: this.baseUrl + this.uri + '/' + id + '/progress/create',
@@ -104,6 +111,14 @@ class MaintenanceResource extends Resource {
         return request({
             url: this.baseUrl + this.uri + '/' + id + '/middle_bigconnect',
             method: 'get',
+        });
+    }
+
+    deleteQuotationId(id, data) {
+        return request({
+            url: this.baseUrl + this.uri + '/' + id + '/deleteQuotationId',
+            method: 'post',
+            data: data,
         });
     }
 

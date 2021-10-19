@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
+
 /**
  * Layzloading will create many files and slow on compiling, so best not to use lazyloading on devlopment.
  * The syntax is lazyloading, but we convert to proper require() with babel-plugin-syntax-dynamic-import
@@ -59,11 +60,11 @@ export const constantRoutes = [{
         hidden: true,
     },
     {
-        path: '',
+        path: '/',
         component: Layout,
-        redirect: 'maintenance',
+        redirect: '/maintenance',
         children: [{
-                path: 'maintenance',
+                path: '/maintenance',
                 component: () =>
                     import ('@/views/maintenance/List'),
                 name: 'maintenance',
@@ -174,6 +175,14 @@ export const asyncRoutes = [{
             meta: { title: 'icons', icon: 'el-icon-info', noCache: true },
         }, ],
     },
+    {
+        path: '/external-link',
+        component: Layout,
+        children: [{
+            path: 'https://github.com/tuandm/laravue',
+            meta: { title: 'ログアウト', icon: 'left-arrow' },
+        }, ],
+    },
     // {
     //     path: '/external-link',
     //     component: Layout,
@@ -182,15 +191,22 @@ export const asyncRoutes = [{
     //         meta: { title: 'externalLink', icon: 'link' },
     //     }, ],
     // },
-    // { path: '*', redirect: '/404', hidden: true },
+    { path: '*', redirect: '/404', hidden: true },
 ];
 
 const createRouter = () => new Router({
+    // mode: 'history',
     // mode: 'history', // require service support
-    fallback: false,
+    // fallback: false,
     scrollBehavior: () => ({ y: 0 }),
     base: process.env.MIX_LARAVUE_PATH,
     routes: constantRoutes,
+    // routes: [
+    //     { path: "/", component: Layout }
+    //     // ... other routes ...
+    //     // and finally the default route, when none of the above matches:
+    //     // { path: "*", component: Layout }
+    // ]
 });
 
 const router = createRouter();

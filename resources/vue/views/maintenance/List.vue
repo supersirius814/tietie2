@@ -137,11 +137,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="申請者">
+      <!-- <el-table-column align="center" label="申請者">
         <template slot-scope="scope">
           <span>{{ scope.row.user.name }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column align="center" label="依頼区分">
         <template slot-scope="scope">

@@ -126,9 +126,37 @@
 
 
 <style>
+ .slide-dialog {
+   transition-delay: 2s!important;
+ }
   @media screen and (max-width: 520px) {
 
   }
+
+
+</style>
+
+<style>
+@keyframes dialog-ffade-in {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+@keyframes dialog-ffade-out {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(100%, 0, 0);
+    opacity: 0;
+  }
+}
 </style>
 <script>
 // console.log("detail.maintenance_progress")
@@ -207,6 +235,7 @@ export default {
 
   },
   methods: {
+
     isMobile() {
       var check = true;
       if(document.querySelector("body").clientWidth > 737) check = false;
@@ -235,7 +264,7 @@ export default {
           '#app > div > div.main-container > section > div > div.el-row > div:nth-child(2) > div > div.el-card__body > div:nth-child(6)'
         )
         .classList.remove('close-css');
-      var div_modal = document.querySelector('body > div:nth-child(6)');
+      var div_modal = document.querySelector("body > div:nth-child(8)");
       if (div_modal) {
         div_modal.classList.add('v-modal');
       }

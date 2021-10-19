@@ -15,7 +15,7 @@
             <tr>
               <th>大分類*</th>
               <td class="select-td">
-                <el-select v-model="big_ca" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+                <el-select v-model="big_ca" size="small" placeholder="" clearable style="width: 100%" class="filter-item" v-on:change="big_middleconnect()">
                   <el-option v-for="item in categories" :key="item.category_id" :label="item.category_name" :value="item.category_id" />
                 </el-select>
               </td>
@@ -193,6 +193,7 @@
         </tr>
       </tbody>
     </table>
+   <transition name="ffade">
     <el-dialog
       title="【取引先検索】"
       :visible.sync="createCustomerVisible"
@@ -206,7 +207,8 @@
         <!-- <el-button type="primary" @click="createAccounting = false">登録</el-button> -->
         <!-- <el-button @click="createCustomerVisible = false">閉じる</el-button> -->
       </span> 
-    </el-dialog>    
+    </el-dialog>
+   </transition>  
   </div>
 </template>
 
@@ -277,23 +279,28 @@ export default {
       this.$route.params['custom_tableData'] = '';
       this.$route.params['selectedRow'] = 0;      
       this.createCustomerVisible = true;
-      document.querySelector('#app > div > div.main-container > section > div > div.el-row > div:nth-child(1) > div > div.el-card__body > div:nth-child(11) > div > div.el-dialog__body > div > div.el-dialog__wrapper').classList.remove('close-css');
+      
+      document.querySelector("#app > div > div.main-container > section > div > div.el-row > div:nth-child(1) > div > div.el-card__body > div:nth-child(10) > div > div.el-dialog__body > div > div.el-dialog__wrapper").classList.remove('close-css');      
     },
 
     big_middleconnect () {
       // console.log(this.data_re.category_id);
-            if(!this.big_ca) {
-              this.mid_ca = '';
-              return;
-            }
-            // alert(this.data.category_id);
-            // alert("ddd");
-            maintenanceResource.big_middleconnect(this.big_ca).then(res =>{
-                this.subCategories = res;
-                this.mid_ca = '';
-                // console.log(res.category_id);
-                // this.data_re.sub_category_id = res[0].sub_category_id;
-            }); 
+      var big_caVariable;
+      if(!this.big_ca) {
+        this.mid_ca = '';
+        big_caVariable = 0;
+        // return;
+      } else {
+        big_caVariable = this.big_ca;
+      }
+      // alert(this.data.category_id);
+      // alert("ddd");
+      maintenanceResource.big_middleconnect(big_caVariable).then(res =>{
+          this.subCategories = res;
+          this.mid_ca = '';
+          // console.log(res.category_id);
+          // this.data_re.sub_category_id = res[0].sub_category_id;
+      }); 
     },
 
     middle_bigconnect () {
@@ -302,8 +309,8 @@ export default {
         return;
       }
       maintenanceResource.middle_bigconnect(this.mid_ca).then(res =>{
-          this.categories = res;
-          this.big_ca = res[0].category_name;
+          // this.categories = res;
+          this.big_ca = res[0].category_id;
       }); 
     },
 
@@ -329,5 +336,31 @@ export default {
 };
 </script>
 
+<style>
+.ffade-enter-active, .ffade-leave-active {
+  transition: opacity 0.5s ease;
+}
+@keyframes dialog-ffade-in {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 4s;
+  }
+}
+@keyframes dialog-ffade-out {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 4s;
+  }
+  100% {
+    transform: translate3d(100%, 0, 0);
+    opacity: 0;
+  }
+}
+</style>
 <style lang="scss" scoped>
+
 </style>

@@ -47,6 +47,26 @@
         <table class="detail-table">
           <tbody>
             <tr>
+              <th>種類</th>
+              <td class="input-td">
+                <el-select v-model="kind" placeholder="種類"  filterable
+                  clearable  class="filter-item">
+                    <el-option label="事前見積" :value="1" />
+                    <el-option label="修正見積" :value="2" />
+                    <el-option label="提案見積" :value="3" />
+                    <el-option label="事後見積" :value="4" />
+                </el-select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </el-col>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col :span="10">
+        <table class="detail-table">
+          <tbody>
+            <tr>
               <th>金額</th>
               <td class="input-td">
                 <currency-input
@@ -61,6 +81,9 @@
         </table>
       </el-col>
     </el-row>
+
+
+    
     <el-row :gutter="20">
       <el-col :span="15">
         <table class="detail-table">
@@ -128,7 +151,7 @@
         </table>
       </el-col>
     </el-row>
-    <el-row :gutter="20">
+    <!-- <el-row :gutter="20">
       <el-col :span="15">
         <table class="detail-table">
           <tbody>
@@ -153,7 +176,7 @@
           </tbody>
         </table>
       </el-col>
-    </el-row>
+    </el-row> -->
     <div style="text-align: right">
       <el-button type="primary" size="small" @click="save()">登録</el-button>
       <el-button type="default" size="small" @click="handleClose()">閉じる</el-button>
@@ -165,6 +188,7 @@
       style="width: 100%; margin-top: 2%"
     >
       <el-table-column align="center" prop="date" label="日時" />
+      <el-table-column align="center" prop="kind" :formatter="formatterKind" label="種類" />
       <el-table-column
         align="center"
         prop="amount"
@@ -178,13 +202,21 @@
         label="見積書"
       />
       <el-table-column align="center" prop="photo_files_cnt" label="写真" />
-      <el-table-column align="center" prop="report_files_cnt" label="報告書" />
+      <!-- <el-table-column align="center" prop="report_files_cnt" label="報告書" /> -->
       <el-table-column
         align="center"
         prop="editor"
         label="入力者"
         width="100"
       />
+      <el-table-column align="center" label="削除">
+        <template slot-scope="scope">
+          <!-- <router-link :to="'/maintenance/deleteQuotationId/'+scope.row.quotation_info_id" class="link-type"> -->
+            <el-button size="small" type="primary" @click="deleteQuotationId(scope.row.quotation_info_id)" style="    background-color: transparent;
+    border: 0px;"><i class="material-icons" style="font-size:48px;color:red">&#xe92b;</i></el-button>
+          <!-- </router-link> -->
+        </template>
+      </el-table-column>
     </el-table>
     <!-- <el-table
       :data="detail.quotation_info"
@@ -264,6 +296,8 @@ export default {
   },
   data() {
     return {
+      kind: '',
+      quotationKind: [],
       userName: '',
       comment: '',
       date: '',
@@ -277,11 +311,27 @@ export default {
     this.$store.dispatch('user/getInfo').then((user) => {
       this.userName = user.name;
     });
+    this.quotationKind = {
+      1: '事前見積',
+      2: '修正見積',
+      3: '提案見積',
+      4: '事後見積',
+    };    
   },
   mounted() {
     
   },
   methods: {
+    deleteQuotationId(id){
+      var data = {
+        maintenance_id: this.detail.maintenance_id,
+      }
+      // alert(id);
+      resource.deleteQuotationId(id, data).then((res) => {
+        this.detail.quotation_info = res;
+        this.$emit('create');
+      });
+    },
     handleClose(){
       var div_create = document.querySelector("#app > div > div.main-container > section > div > div.el-dialog__wrapper.slide-dialog-wrapper > div > div.el-dialog__body > div > div:nth-child(1) > div.el-dialog__wrapper.slide-dialog-wrapper");
       if(div_create) {
@@ -295,17 +345,16 @@ export default {
     },
     filesCnt() {
       var quotation_cnt = 0,
-        photo_cnt = 0,
-        report_cnt = 0;
+        photo_cnt = 0;
       this.detail.uploading_files.forEach((el) => {
         if (el.kind == 'quotation') quotation_cnt++;
         if (el.kind == 'photo') photo_cnt++;
-        if (el.kind == 'report') report_cnt++;
+        // if (el.kind == 'report') report_cnt++;
       });
 
       this.$route.params['q_cnt'] = quotation_cnt;
       this.$route.params['p_cnt'] = photo_cnt;
-      this.$route.params['r_cnt'] = report_cnt;
+      // this.$route.params['r_cnt'] = report_cnt;
     },
 
     formatterCurrency(row, column) {
@@ -313,17 +362,22 @@ export default {
       return '¥' + row.amount;
     },
 
+    formatterKind(row, column){
+      if(row.kind == '') return;
+      return this.quotationKind[row.kind];
+    },
     save() {
 
-      this.$refs.uploadReport.submit();
+      // this.$refs.uploadReport.submit();
       this.$refs.uploadPhoto.submit();
       this.$refs.uploadQuotation.submit();
       const insertData = {
         date: DateTime.fromISO(this.date).toFormat('yyyy-MM-dd hh:mm'),
         comment: this.comment,
         amount: this.amount,
+        kind: this.kind,
         quotation_files_cnt: this.$route.params['q_cnt'],
-        report_files_cnt: this.$route.params['r_cnt'],
+        // report_files_cnt: this.$route.params['r_cnt'],
         photo_files_cnt: this.$route.params['p_cnt'],
         editor: this.userName,
       };
@@ -339,6 +393,9 @@ export default {
           // };
 
           this.comment = '';
+          this.kind = '';
+          this.amount = '';
+          
           this.faxedToClient = false;
           this.faxedToShop = false;
           this.$emit('create');

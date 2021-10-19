@@ -354,7 +354,7 @@ export default {
     close_createComponent() {
       this.custom = '';
       this.selectedRow = '';
-      document.querySelector('#app > div > div.main-container > section > div > div.el-row > div:nth-child(1) > div > div.el-card__body > div:nth-child(11) > div > div.el-dialog__body > div > div.el-dialog__wrapper').classList.add('close-css');
+      document.querySelector("#app > div > div.main-container > section > div > div.el-row > div:nth-child(1) > div > div.el-card__body > div:nth-child(10) > div > div.el-dialog__body > div > div.el-dialog__wrapper").classList.add('close-css');
     },
     depart_name() {
       if (!this.customergroup_code) {
@@ -443,4 +443,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.ffade-enter-active, .ffade-leave-active {
+  transition: opacity 0.5s ease;
+}
 </style>
