@@ -193,21 +193,27 @@
         </tr>
       </tbody>
     </table>
-   <transition name="ffade">
-    <el-dialog
-      title="【取引先検索】"
-      :visible.sync="createCustomerVisible"
-      :width="createdialogWidth"
-      custom-class="slide-dialog"
-      top="0px"
-      :modal="false"
-    >
-      <create-customer :detail="detail" :selectedRow="custom"/>
-      <span slot="footer" class="dialog-footer">
-        <!-- <el-button type="primary" @click="createAccounting = false">登録</el-button> -->
-        <!-- <el-button @click="createCustomerVisible = false">閉じる</el-button> -->
-      </span> 
-    </el-dialog>
+
+      <button v-on:click="show = !show" id="createcustomerVisible" style="display: none">
+        ToggleCreateCustomer
+      </button>
+   <!-- <transition name="ffade"> -->
+    <transition name="slide">
+
+      <template v-if="show">
+        <el-dialog
+          title="【取引先検索】"
+          :visible.sync="show"
+          :width="createdialogWidth"
+          custom-class="slide-dialog"
+          top="0px"
+          :modal="false"
+        >
+          <create-customer :detail="detail" :selectedRow="custom"/>
+
+          <span slot="footer" class="dialog-footer"></span> 
+        </el-dialog>
+      </template>
    </transition>  
   </div>
 </template>
@@ -231,13 +237,15 @@ export default {
   },
   data() {
     return {
-      createdialogWidth: '43%',
+      createdialogWidth: '45%',
+      show: false,
+      show1: true,
       row_id:'',
       custom: null,
       custom_data: [],
       data_re: null,
-      big_ca: '',
-      mid_ca: '',
+      big_ca: this.detail.category_id,
+      mid_ca: this.detail.sub_category_id,
       createCustomerVisible: false,
       categories: [],
       subCategories: [],
@@ -280,7 +288,7 @@ export default {
       this.$route.params['selectedRow'] = 0;      
       this.createCustomerVisible = true;
       
-      document.querySelector("#app > div > div.main-container > section > div > div.el-row > div:nth-child(1) > div > div.el-card__body > div:nth-child(10) > div > div.el-dialog__body > div > div.el-dialog__wrapper").classList.remove('close-css');      
+      document.getElementById('createcustomerVisible').click();    
     },
 
     big_middleconnect () {
@@ -337,29 +345,22 @@ export default {
 </script>
 
 <style>
-.ffade-enter-active, .ffade-leave-active {
-  transition: opacity 0.5s ease;
-}
-@keyframes dialog-ffade-in {
-  0% {
-    transform: translate3d(-100%, 0, 0);
-    opacity: 0;
+  .slide-enter-active {
+    transition: 0.5s;
   }
-  100% {
-    transform: translate3d(0, 0, 0);
-    opacity: 4s;
+
+  .slide-leave-active {
+    transition: 0.8s;
   }
-}
-@keyframes dialog-ffade-out {
-  0% {
-    transform: translate3d(0, 0, 0);
-    opacity: 4s;
+
+  .slide-enter {
+    transform: translate(100%, 0);
   }
-  100% {
-    transform: translate3d(100%, 0, 0);
-    opacity: 0;
+
+  .slide-leave-to {
+    transform: translate( 100%, 0);
   }
-}
+
 </style>
 <style lang="scss" scoped>
 

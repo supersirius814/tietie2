@@ -127,7 +127,6 @@
     <div style="text-align:right; padding-bottom: 15px;">
       <el-button type="primary" size="small" @click="save()">登録</el-button>
       <el-button type="default" size="small"  @click="handleClose()"  ref="Dialog" >閉じる</el-button>
-      <button @click="$emit('close')">Close</button>
     </div>
       <table  class="detail-table">
         <tr>
@@ -232,20 +231,9 @@ export default {
 
   methods: {
     handleClose(){
-      var div_edit = document.querySelector('#app > div > div.main-container > section > div > div.el-row > div:nth-child(2) > div > div.el-card__body > div:nth-child(6)');
-      if(div_edit) {
-        div_edit.classList.add('close-css');
-      }
-      // document.querySelector('body').classList.remove('el-popup-parent--hidden');
-      
-      var div_modal = document.querySelector("body > div:nth-child(8)");
-      if (div_modal) {
-        div_modal.classList.remove('v-modal');
-      }  
+      document.querySelector("#app > div > div.main-container > section > div > div.el-row > div:nth-child(2) > div > div.el-card__body > div.el-dialog__wrapper.slide-dialog-wrapper").click();
     },
-  //     handleClose() {
-  //  this.$emit('cancel', 'NO');
-  // },
+
     save() {
       this.$refs.uploadReport.submit();
       this.$refs.uploadPhoto.submit();

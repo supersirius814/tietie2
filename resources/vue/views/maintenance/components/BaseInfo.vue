@@ -108,57 +108,56 @@
       <tbody>
         <tr>
           <th>特記①</th>
-          <td>{{ detail.shop.note1 }}</td>
+          <td style="white-space: pre-wrap;">{{ detail.shop.note1 }}</td>
         </tr>
         <tr>
           <th>特記②</th>
-          <td>{{ detail.shop.note2 }}</td>
+          <td style="white-space: pre-wrap;">{{ detail.shop.note2 }}</td>
         </tr>
       </tbody>
     </table>
     <div style="text-align:right;margin-top:10px;">
       <el-button type="primary" size="small" @click="createNotesShow()">特記編集</el-button>
     </div>
-    <!-- <transition name="notetransition">
-      <template v-if="createNotesVisible"> -->
-    <el-dialog
-      title="【特記情報 編集】"
-      :visible.sync="createNotesVisible"
-      :width="notesDialogWidth"
-      custom-class="slide-dialog"
-      top="0px"
-      :modal="false"
-    >
 
-        <CreateNotes :detail="detail"/>
+    <button v-on:click="show = !show" id="createnotesVisible" style="display: none">
+      ToggleCreateNotes
+    </button>
 
-    </el-dialog>
-      <!-- </template>
-    </transition> -->
+    <transition name="slideNotes">
+      <template v-if="show">
+        <el-dialog
+          title="【特記情報 編集】"
+          :visible.sync="show"
+          :width="notesDialogWidth"
+          custom-class="slide-dialog"
+          top="0px"
+          :modal="false"
+        >
+
+          <CreateNotes :detail="detail"/>
+
+        </el-dialog>
+      </template>
+    </transition>
   </div>
 </template>
 <style>
+  .slideNotes-enter-active {
+    transition: 0.5s;
+  }
 
-@keyframes dialog-fade-in {
-  0% {
-    transform: translate3d(0, 100%, 0);
-    opacity: 0;
+  .slideNotes-leave-active {
+    transition: 0.8s;
   }
-  100% {
-    transform: translate3d(0, 0, 0);
-    opacity: 1;
+
+  .slideNotes-enter {
+    transform: translate(100%, 0);
   }
-}
-@keyframes dialog-fade-out {
-  0% {
-    transform: translate3d(0, 100%, 0);
-    opacity: 1;
+
+  .slideNotes-leave-to {
+    transform: translate( 100%, 0);
   }
-  100% {
-    transform: translate3d(0, 0, 0);
-    opacity: 0;
-  }
-}
 </style>
 
 <script>
@@ -193,12 +192,13 @@ export default {
       userName: '', 
       createNotesVisible: false,
       visibleflag: true,
+      show: false,
 
-      notesDialogWidth: '43%',
+      notesDialogWidth: '40%',
  
 
       tableData: [
-        { title: '地域会社', name: '-', manager: '-', to: false, cc: false },
+        // { title: '地域会社', name: '-', manager: '-', to: false, cc: false },
         { title: '営業部', name: this.detail.department_names[0]['department_name'], manager: this.detail.departmentUserNEs[0]['name'], email: this.detail.departmentUserNEs[0]['email'], to: false, cc: false },
         { title: 'ディストリクト', name: this.detail.district_names[0]['district_name'], manager: this.detail.districtUserNEs[0]['name'], email: this.detail.districtUserNEs[0]['email'], to: false, cc: false },
         { title: 'ブロック', name: this.detail.block_names[0]['block_name'], manager: this.detail.blockUsersNEs[0]['name'], email: this.detail.blockUsersNEs[0]['email'], to: false, cc: false },
@@ -227,9 +227,9 @@ export default {
     },
 
     createNotesShow() {
-      this.createNotesVisible = true;
-      document.querySelector('#app > div > div.main-container > section > div > div.el-row > div:nth-child(1) > div > div.el-card__body > div:nth-child(10) > div > div.el-dialog__body > div > div.el-dialog__wrapper').classList.remove('close-css');
+      document.getElementById('createnotesVisible').click();
     },
+
     getsend() {
       var emails_ge = "", emails_cc = "", emails = "", subject="";
       var flag = 0, flag_re = 0, first_check = 0;
@@ -296,26 +296,3 @@ export default {
   },
 };
 </script>
-
-<style>
-@keyframes dialog-fade-in {
-  0% {
-    transform: translate3d(0, 100%, 0);
-    opacity: 0;
-  }
-  100% {
-    transform: translate3d(0, 0, 0);
-    opacity: 1;
-  }
-}
-@keyframes dialog-fade-out {
-  0% {
-    transform: translate3d(0, 0, 0);
-    opacity: 1;
-  } 
-  100% {
-    transform: translate3d(0, -100%, 0);
-    opacity: 0;
-  }
-}
-</style>

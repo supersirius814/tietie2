@@ -37,7 +37,11 @@ export default {
       };
     },
     change() {
-      document.getElementById('logout-form').submit();
+      if(confirm('ログアウトしますか？')) {
+        document.getElementById('logout-form').submit();
+      } else {
+        return;
+      }
     },
   },
 };

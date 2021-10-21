@@ -113,7 +113,6 @@ export default {
 
     createAccountingChange(){
       this.createAccounting = true;
-      document.querySelector("#app > div > div.main-container > section > div > div.el-dialog__wrapper.slide-dialog-wrapper > div > div.el-dialog__body > div > div:nth-child(2) > div.el-dialog__wrapper.slide-dialog-wrapper").classList.remove('close-css');
     },
 
     formatterCurrency(row, column) {

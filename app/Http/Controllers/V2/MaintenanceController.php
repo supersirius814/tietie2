@@ -57,6 +57,8 @@ class MaintenanceController extends Controller
         $business_category_id = $request->input('business_category_id', 0);
         $shop_id = $request->input('shop_id', 0);
         $progress_ids = $request->input('progress_id');
+        
+
 
         $flag = 0;
         $res = '';
@@ -82,6 +84,12 @@ class MaintenanceController extends Controller
         $offset = $limit * ($page - 1);
 
         $qb = Maintenance::with(['shop.business_category', 'orderType', 'progress', 'user'])->whereNotNull('shop_id');
+
+        $keyword = $request->input('keyword');
+
+        if ($keyword) {
+            $qb->where('order', 'like', '%' . $keyword . '%');
+        }
 
         if ($shop_id != 0) {
             $qb->where('shop_id', $shop_id);

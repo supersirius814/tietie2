@@ -154,6 +154,12 @@
           <span>{{ scope.row.equipment }}</span>
         </template>
       </el-table-column>
+<!-- 
+      <el-table-column align="center" label="Order">
+        <template slot-scope="scope">
+          <span style="white-space: pre-wrap;">{{ scope.row.order }}</span>
+        </template>
+      </el-table-column> -->
 
       <el-table-column align="center" label="経過ステータス">
         <template slot-scope="scope">

@@ -509,7 +509,7 @@
       <request-info-edit ref="editForm" :detail="detail" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="save()">登録</el-button>
-        <el-button @click="editVisible = false">閉じる</el-button>
+        <el-button @click="closeRequestEdit">閉じる</el-button>
       </span>
     </el-dialog>
   </el-card>
@@ -602,6 +602,8 @@ export default {
       this.editdialogWidth = '100%';
       this.mailDialogWidth = '100%';
     }
+
+    // this.imagesListCal();
   },
   created() {
     // this.getImageone();
@@ -609,11 +611,21 @@ export default {
     // this.getImagethree();
   },
   methods: {
+    closeRequestEdit() {
+      this.editVisible = false;
+      document.querySelector("#app > div > div.main-container > section > div > div.el-row > div:nth-child(1) > div > div.el-card__body > div:nth-child(10)").click();
+    },
 
     isMobile() {
       var check = true;
       if(document.querySelector("body").clientWidth > 737) check = false;
       return check;
+    },
+
+    imagesListCal() {
+      for(var i = 0; i < this.detail.maintenance_images.length; i ++) {
+        this.fileList.push('./maintenance/image/' + this.detail.maintenance_id + '/' + this.detail.maintenance_images[i].file_name);   
+      }
     },
 
     otherText() {
@@ -625,6 +637,7 @@ export default {
       }
       return text;
     },
+
     orderText() {
       if (
         this.detail.order_type.order_type_id < 4 &&

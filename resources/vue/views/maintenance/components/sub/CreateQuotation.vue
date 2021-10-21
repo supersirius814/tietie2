@@ -323,25 +323,21 @@ export default {
   },
   methods: {
     deleteQuotationId(id){
-      var data = {
-        maintenance_id: this.detail.maintenance_id,
+      if(confirm('削除していいですか？')) {
+        var data = {
+          maintenance_id: this.detail.maintenance_id,
+        }
+        // alert(id);
+        resource.deleteQuotationId(id, data).then((res) => {
+          this.detail.quotation_info = res;
+          this.$emit('create');
+        });
+      } else{
+        return;
       }
-      // alert(id);
-      resource.deleteQuotationId(id, data).then((res) => {
-        this.detail.quotation_info = res;
-        this.$emit('create');
-      });
     },
     handleClose(){
-      var div_create = document.querySelector("#app > div > div.main-container > section > div > div.el-dialog__wrapper.slide-dialog-wrapper > div > div.el-dialog__body > div > div:nth-child(1) > div.el-dialog__wrapper.slide-dialog-wrapper");
-      if(div_create) {
-        div_create.classList.add('close-css');
-      }
-      // document.querySelector('body').classList.remove('el-popup-parent--hidden');
-      // var div_modal = document.querySelector('body > div:nth-child(6)');
-      // if(div_modal) {
-      //   div_modal.classList.remove('v-modal');
-      // }  
+      document.querySelector("#app > div > div.main-container > section > div > div.el-dialog__wrapper.slide-dialog-wrapper > div > div.el-dialog__body > div > div:nth-child(1) > div.el-dialog__wrapper.slide-dialog-wrapper").click();
     },
     filesCnt() {
       var quotation_cnt = 0,
