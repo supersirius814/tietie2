@@ -148,14 +148,14 @@ export const constantRoutes = [{
         children: [{
                 path: 'import',
                 component: () =>
-                    import ('@/views/documentation/index'),
+                    import ('@/views/csv/import'),
                 name: 'import',
                 meta: { title: 'インポート', icon: 'upload', noCache: true },
             },
             {
                 path: 'export',
                 component: () =>
-                    import ('@/views/documentation/index'),
+                    import ('@/views/csv/export'),
                 name: 'export',
                 meta: { title: 'エクスポート', icon: 'download', noCache: true },
             },

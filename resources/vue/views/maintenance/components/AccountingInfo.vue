@@ -13,21 +13,18 @@
         align="center"
         prop="unincluding_price"
         label="請求金額（税抜）"
-        :formatter="formatterCurrency"
       />
       <el-table-column
         align="center"
         prop="accounting_amount"
         label="消費税"
-        :formatter="formatterCurrency1"
       />
       <el-table-column
         align="center"
         prop="including_price"
         label="請求金額（税込）"
-        :formatter="formatterCurrency2"
       />
-      <el-table-column align="center" prop="employee" label="科目" />
+      <el-table-column align="center" prop="accounting_subjects_id" label="科目" :formatter="formatterSubject"/>
       <el-table-column
         align="center"
         prop="editor"
@@ -63,6 +60,9 @@
 
 <script>
 import CreateAccounting from './sub/CreateAccounting.vue';
+import MaintenanceResource from '@/api/maintenance';
+
+const resource = new MaintenanceResource();
 
 export default {
   components: { CreateAccounting },
@@ -87,7 +87,14 @@ export default {
   },
   data() {
     return {
+        item: '',
+        subjects: [],   
       createAccounting: false,
+      subjectsList: {
+        1: '科目１',
+        2: '科目2',
+        3: '科目3',
+      },
       editdialogWidth: '43%',
       tableData: [
         { v1: '2020/05/15', v2: '', v3: '', v4: '', v5: '', v6: '' },
@@ -98,13 +105,21 @@ export default {
     };
   },
 
+  created(){
+    // this.getAccountingSubjects();
+  },
+
   mounted() {
     if(this.isMobile()) {
       this.editdialogWidth = '100%';
     }
+    
   },
 
   methods: {
+    formatterSubject(row, column){
+      return this.subjectsList[row.accounting_subjects_id]
+    },
     isMobile() {
       var check = true;
       if(document.querySelector("body").clientWidth > 737) check = false;
@@ -113,22 +128,23 @@ export default {
 
     createAccountingChange(){
       this.createAccounting = true;
+      // this.$route.params['accounting_info_id'] = 0;
     },
 
-    formatterCurrency(row, column) {
-      if (row.unincluding_price == null) return;
-      return '¥' + row.unincluding_price;
-    },
+    // formatterCurrency(row, column) {
+    //   if (row.unincluding_price == null) return;
+    //   return '¥' + row.unincluding_price;
+    // },
 
-    formatterCurrency1(row, column) {
-      if (row.accounting_amount == null) return;
-      return '¥' + row.accounting_amount;
-    },
+    // formatterCurrency1(row, column) {
+    //   if (row.accounting_amount == null) return;
+    //   return '¥' + row.accounting_amount;
+    // },
 
-    formatterCurrency2(row, column) {
-      if (row.including_price == null) return;
-      return '¥' + row.including_price;
-    },
+    // formatterCurrency2(row, column) {
+    //   if (row.including_price == null) return;
+    //   return '¥' + row.including_price;
+    // },
   },
 };
 </script>

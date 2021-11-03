@@ -83,17 +83,28 @@ Route::group(['namespace' => 'V2'], function () {
     Route::any('v2/maintenance/class_history', 'MaintenanceController@classHistory'); // メンテナンス一覧
     Route::any('v2/maintenance/shop_history', 'MaintenanceController@shopHistory'); // メンテナンス一覧
     Route::get('v2/maintenance/customsList', 'MaintenanceController@customsList'); // メンテナンス一覧
+
+    Route::get('v2/maintenance/eventcheckCountfunc', 'MaintenanceController@eventcheckCountfunc'); // メンテナンス一覧
+    
     
 
     Route::post('v2/maintenance/{mantenance_id}/progress/create', 'MaintenanceController@createProgress');
 
     Route::post('v2/maintenance/{mantenance_id}/quotation/create', 'MaintenanceController@createQuotation');//tie9.5 add
     Route::post('v2/maintenance/{mantenance_id}/accounting/create', 'MaintenanceController@createAccounting');
+    Route::post('v2/maintenance/{mantenance_id}/accounting/update', 'MaintenanceController@editAccountingId');
+    Route::post('v2/maintenance/{mantenance_id}/deleteAccountingId', 'MaintenanceController@deleteAccountingId');
     Route::post('v2/maintenance/{mantenance_id}/selectreason', 'MaintenanceController@selectreason');
+    Route::post('v2/maintenance/{mantenance_id}/getAccountingSubjects', 'MaintenanceController@getAccountingSubjects');
+
+    Route::post('v2/maintenance/csv/export', 'CsvController@export');
+    Route::get('v2/maintenance/csv/export', 'CsvController@export');
+
     
 
     Route::post('v2/maintenance/upload/report/{mantenance_id}', 'MaintenanceController@uploadReport');
     Route::post('v2/maintenance/upload/photo/{mantenance_id}', 'MaintenanceController@uploadPhoto');
+    Route::post('v2/maintenance/uploadQuotation/photo/{mantenance_id}', 'MaintenanceController@uploadQuotationPhoto');
     Route::post('v2/maintenance/upload/quotation/{mantenance_id}', 'MaintenanceController@uploadQuotation');
 
     Route::get('v2/maintenance/{mantenance_id}/big_middleconnect', 'MaintenanceController@big_middleconnect');

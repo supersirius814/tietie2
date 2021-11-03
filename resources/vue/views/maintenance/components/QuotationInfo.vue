@@ -37,11 +37,11 @@
         >見積書({{ this.$route.params['q_cnt'] }})</el-button
       >
       <el-button type="info" size="mini" @click="photoFilesVisible = true"
-        >写真({{ this.$route.params['p_cnt'] }})</el-button
+        >写真({{ this.$route.params['qp_cnt'] }})</el-button
       >
-      <el-button type="info" size="mini" @click="reportFilesVisible = true"
+      <!-- <el-button type="info" size="mini" @click="reportFilesVisible = true"
         >報告書({{ this.$route.params['r_cnt'] }})</el-button
-      >
+      > -->
     </div>
 
     <el-dialog
@@ -57,17 +57,17 @@
     </el-dialog>
     <el-dialog
       :modal="false"
-      title="【写真リスト】"
+      title="【見積書写真リスト】"
       :visible.sync="photoFilesVisible"
       :width="filedialogWidth"
     >
-      <photo-files :detail="detail" />
+      <qphoto-files :detail="detail" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="photoFilesVisible = false">閉じる</el-button>
       </span>
     </el-dialog>
 
-    <el-dialog
+    <!-- <el-dialog
       title="【報告書ファイルリスト】"
       :visible.sync="reportFilesVisible"
       :width="filedialogWidth"
@@ -77,7 +77,7 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="reportFilesVisible = false">閉じる</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
 
     <el-dialog
       title="見積情報 登録"
@@ -95,6 +95,7 @@
 <script>
 import QuotationFiles from './sub/QuotationFiles.vue';
 import PhotoFiles from './sub/PhotoFiles.vue';
+import QphotoFiles from './sub/QphotoFiles.vue';
 import ReportFiles from './sub/ReportFiles.vue';
 import ProgressEdit from './sub/ProgressEdit.vue';
 
@@ -106,6 +107,7 @@ import Resource from '@/api/resource';
 export default {
   components: {
     QuotationFiles,
+    QphotoFiles,
     PhotoFiles,
     ProgressEdit,
     ReportFiles,

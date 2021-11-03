@@ -17,6 +17,7 @@ use App\Maintenance_matter;
 use App\Maintenance_progress;
 use App\Quotation_info;
 use App\Accounting_info;
+use App\Accounting_subjects;
 use App\Photo_file;
 use App\Report_file;
 use App\Quotation_file;
@@ -58,8 +59,6 @@ class MaintenanceController extends Controller
         $shop_id = $request->input('shop_id', 0);
         $progress_ids = $request->input('progress_id');
         
-
-
         $flag = 0;
         $res = '';
         if (is_array($progress_ids)) {
@@ -73,11 +72,9 @@ class MaintenanceController extends Controller
                 }
             }
 
-            // return response($res); die;
         }
 
         $progress_id = $res;
-
 
         $limit = $request->input('limit', 15);
         $page = $request->input('page', 1);
@@ -90,6 +87,15 @@ class MaintenanceController extends Controller
         if ($keyword) {
             $qb->where('order', 'like', '%' . $keyword . '%');
         }
+
+        $eventCheck = $request->input('eventCheck');
+        // var_export($eventCheck); die;
+
+        if($eventCheck == 'true') {
+            $qb->whereRaw("DATE_FORMAT(created_at,'%m/%d/%Y') > DATE_FORMAT(deadline_date,'%m/%d/%Y')");
+        }
+
+
 
         if ($shop_id != 0) {
             $qb->where('shop_id', $shop_id);
@@ -112,6 +118,15 @@ class MaintenanceController extends Controller
         return response(['data' => $maintenances, 'meta' => ['total' => $total]]);
     }
 
+    public function eventCheckCountfunc(){
+        $eventCheckCnt = Maintenance::whereRaw("DATE_FORMAT(created_at,'%m/%d/%Y') > DATE_FORMAT(deadline_date,'%m/%d/%Y')")->count();
+        return response($eventCheckCnt);
+    }
+
+    public function csvExport($tableName){
+        echo $tableName;
+    }
+
     public function classHistory(Request $request)
     {
         if ($request->input('sub_category_id') == NULL) return array();
@@ -121,8 +136,21 @@ class MaintenanceController extends Controller
         $page = $request->input('page', 1);
         $offset = $limit * ($page - 1);
 
-        $qb = Maintenance::with(['shop.business_category', 'orderType', 'progress', 'user'])->whereNotNull('shop_id')->where('sub_category_id', $request->input('sub_category_id'));
+        $business_category_id = Shop::where('shop_id', $request->input('shop_id'))->first()->business_category_id;
+        // var_export($business_category_id); die;
 
+        $qb = Maintenance::with(['shop',  'orderType', 'progress', 'user'])
+                    ->whereNotNull('shop_id')
+                    ->where('shop_id', $request->input('shop_id'))
+                    // ->where('business_category_id', $business_category_id)
+                    ->where('sub_category_id', $request->input('sub_category_id'));
+        // var_export($)
+        // $books = $qb->get();
+        // foreach ($books as $book) {
+        //     var_export($book->shop->business_category_id);
+        //     echo "===========================";
+        // }
+        // die;
         $total = $qb->count();
 
         $qb->offset($offset)->limit($limit);
@@ -180,6 +208,12 @@ class MaintenanceController extends Controller
         $maintenance->progress_id = $request->input('progress_id');
         if($request->input('progress_id') == 21) {
             $maintenance->completed_date = $maintenance_progress[0]['updated_at'];
+        } else {
+            $maintenance->completed_date = null;
+        }
+
+        if($request->input('deadline_date')) {
+            $maintenance->deadline_date = $request->input('deadline_date');
         }
         $maintenance->save();
 
@@ -212,24 +246,68 @@ class MaintenanceController extends Controller
         return response($quotation_info);
     }
 
+    public function getAccountingSubjects($maintenance_id, Request $request){
+        $subjectsList = Accounting_subjects::where('business_category_id', $request->input('business_category_id'))->get();
+        return response($subjectsList);
+    }
+
     public function createAccounting(Request $request, $maintenance_id)
     {
-        $row = new Accounting_info();
-        $row->maintenance_id = $maintenance_id;
-        $row->accounting_year = $request->input('accounting_year');
-        $row->relation_code = $request->input('relation_code');
-        $row->relation_name = $request->input('relation_name');
-        $row->accounting_amount = $request->input('accounting_amount');
-        $row->including_price = $request->input('including_price');
-        $row->unincluding_price = $request->input('unincluding_price');
-        $row->employee = $request->input('employee');
-        $row->editor = $request->input('editor');
-        // $row->entered_by = $request->user()->user_id;
-        $row->save();
+        if($request->input('accounting_info_id') > 0){
+            Accounting_info::where('accounting_info_id', $request->input('accounting_info_id'))
+            ->update([
+                'relation_code' => $request->input('relation_code'),
+                'relation_name' => $request->input('accounting_amount'),
+                'accounting_year' => $request->input('accounting_year'),
+                'accounting_amount' => $request->input('accounting_amount'),
+                'including_price' => $request->input('including_price'),
+                'unincluding_price' => $request->input('unincluding_price'),
+                'accounting_subjects_id' => $request->input('accounting_subjects_id'),
+             ]);
+        } else{
+            $row = new Accounting_info();
+            $row->maintenance_id = $maintenance_id;
+            $row->accounting_year = $request->input('accounting_year');
+            $row->relation_code = $request->input('relation_code');
+            $row->relation_name = $request->input('relation_name');
+            $row->accounting_amount = $request->input('accounting_amount');
+            $row->including_price = $request->input('including_price');
+            $row->unincluding_price = $request->input('unincluding_price');
+            $row->accounting_subjects_id = $request->input('accounting_subjects_id');
+            $row->editor = $request->input('editor');
+            // $row->entered_by = $request->user()->user_id;
+            $row->save();
+        }
 
         $accounting_info = Accounting_info::where('maintenance_id', $maintenance_id)->get();
         return response($accounting_info);
     }
+
+    public function editAccountingId(Request $request, $maintenance_id)
+    {
+        Accounting_info::where('accounting_info_id', $request->input('accounting_info_id'))
+        ->update([
+            'relation_code' => $request->input('relation_code'),
+            'relation_name' => $request->input('accounting_amount'),
+            'accounting_amount' => $request->input('accounting_amount'),
+            'including_price' => $request->input('including_price'),
+            'unincluding_price' => $request->input('unincluding_price'),
+            'accounting_subjects_id' => $request->input('accounting_subjects_id'),
+         ]);
+
+        $accounting_info = Accounting_info::where('maintenance_id',  $maintenance_id)->get();
+        return response($accounting_info);
+    }    
+
+
+    public function deleteAccountingId(Request $request, $accounting_info_id)
+    {
+        Accounting_info::where('accounting_info_id', $accounting_info_id)
+        ->delete();
+
+        $accounting_info = Accounting_info::where('maintenance_id', $request->input('maintenance_id'))->get();
+        return response($accounting_info);
+    } 
 
     public function uploadReport(Request $request, $maintenance_id)
     {
@@ -318,6 +396,55 @@ class MaintenanceController extends Controller
             $reportFile->file_name = $file_name;
             $reportFile->maintenance_id = $maintenance_id;
             $reportFile->kind = 'photo';
+            $reportFile->save();
+
+
+
+            return response()->json([
+                "success" => true,
+                "message" => "File successfully uploaded",
+                "file" => $file_name,
+            ]);
+        }
+    }
+
+    public function uploadQuotationPhoto(Request $request, $maintenance_id)
+    {
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'file' => 'required|mimes:jpg,jpeg,png|max:204800',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+        if ($request->file('file')) {
+
+
+            $file_name = $request->file('file')->getClientOriginalName();
+            $file_data =  $request->file('file');
+
+            if (!Storage::disk('s3')->exists('/zensho-mainte/quotation_photo_files/'.$maintenance_id)) {
+                Storage::disk('s3')->makeDirectory('/zensho-mainte/quotation_photo_files/'.$maintenance_id);
+            }
+
+            $filePath = '/zensho-mainte/quotation_photo_files/'.$maintenance_id.'/'. $file_name;
+            Storage::disk('s3')->put($filePath, file_get_contents($file_data), 'private');
+
+
+
+            //store your file into database
+            $quotationId = Quotation_info::latest()->first();
+            $reportFile = new Uploading_files();
+
+            $reportFile->file_name = $file_name;
+            $reportFile->maintenance_id = $maintenance_id;
+            $reportFile->info_id = $quotationId['quotation_info_id'];
+            $reportFile->kind = 'quotation_photo';
             $reportFile->save();
 
 
@@ -483,6 +610,10 @@ class MaintenanceController extends Controller
     public  function deleteQuotationId(Request $request, $quotation_info_id)
     {
         Quotation_info::where('quotation_info_id', $quotation_info_id)->delete();
+
+        Uploading_files::where('kind', 'quotation_photo')
+                        ->where('maintenance_id', $request->input('maintenance_id'))
+                        ->where('info_id', $quotation_info_id)->delete();
 
         $result = Quotation_info::where('maintenance_id', $request->input('maintenance_id'))->get();
 

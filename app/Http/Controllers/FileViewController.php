@@ -78,4 +78,12 @@ class FileViewController extends Controller
 		// header('Content-type: image/jpeg');
 		// echo $file;
 	}
+
+	//qphoto file image get 
+	public function getQPhotoFile($maintenance_id,$file_name)
+	{
+		// $file = Storage::disk('s3')->get("zensho-mainte/quotation_photo_files/$maintenance_id/$file_name"); 
+		// header('Content-type: image/jpeg');
+		// echo $file;
+	}
 }

@@ -107,7 +107,7 @@ export default {
 }
 
 
-@media screen and (max-width: 520px) {
+@media screen and (max-width: 720px) {
 
   #app > div > div.main-container > section > div > div:nth-child(1) {
     left: 195px!important;

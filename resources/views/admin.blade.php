@@ -30,12 +30,12 @@
 </head>
 
 <body>
-    <div class="logout-class">
+    <!-- <div class="logout-class">
         <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
             <i class="material-icons">&#xe879;</i>
         </a>
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>
-    </div>
+    </div> -->
     <div id="app">
         <app></app>
     </div>

@@ -14,6 +14,15 @@
             <svg-icon icon-class="warning" /> 災害（地震・台風・大雨など）
           </span>
         </li>
+        <li>
+          <span class="el-tag el-tag--medium el-tag--light" style="color: #DE38B8; background-color: #FCE5F7; border: 1px solid #E4B4D9" >
+            <el-checkbox v-model="query.eventCheck" @change="handleFilter()" style="color: #DE38B8; background-color: #FCE5F7;"><i style="color: #DE38B8; padding-right: 5px" class="fa">&#xf017;</i><span  style="color: #DE38B8;">対応期限切れ</span>  </el-checkbox>
+            <span class="badge">  
+              <span id="eventcheckCount">{{ eventcheckCount }}</span>  
+            </span>
+          </span>
+
+        </li>
 
         <li class="pull-right">
           <ElSelectAll v-model="query.progress_id" clearable filterable multiple collapse-tags :options="mdoptionsList" placeholder="ステータス" class="filter-item"  v-on:change="handleFilter()"/>
@@ -149,11 +158,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="設備名">
+      <!-- <el-table-column align="center" label="設備名">
         <template slot-scope="scope">
           <span>{{ scope.row.equipment }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 <!-- 
       <el-table-column align="center" label="Order">
         <template slot-scope="scope">
@@ -164,6 +173,13 @@
       <el-table-column align="center" label="経過ステータス">
         <template slot-scope="scope">
           <span>{{ scope.row.progress.status }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="対応期限">
+        <template slot-scope="scope">
+          <!-- <span>{{ scope.row.updated_at }}</span> -->
+          <span>{{ scope.row.deadline_date }}</span>
         </template>
       </el-table-column>
 
@@ -194,9 +210,20 @@
   </div>
 </template>
 <style>
+.badge {
+  position: absolute;
+  top: 73px;
+  /* right: -10px; */
+  padding-top: 2px!important;
+  line-height: 20px;
+  padding: 0px 6px;
+  border-radius: 50%;
+  background-color: #C91313;
+  color: white;
+}
 
 .custom-highlight-row{
-  background-color: pink!important;
+  background-color: #f7b8f0!important;
 }
 
 .custom-danger-row{
@@ -207,7 +234,6 @@
 
 .custom-warning-row{
   background-color: #ffdbdb!important;
-  
 }
 </style>
 <script>
@@ -227,6 +253,7 @@ export default {
   directives: { waves },
   data() {
     return {
+      eventcheckCount: 0,
       storeCodes: '',
       list: null,
       total: 0,
@@ -236,6 +263,7 @@ export default {
         limit: 15,
         keyword: '',
         role: '',
+        eventCheck: '',
         progress_id:'',
         business_category_id: null,
         shop_id: null,
@@ -268,22 +296,12 @@ export default {
       ],
     };
   },
-  watch:{
-      citys:function(val,oldval){
-          //获取val和oldval里all的索引,如果没有则返回-1
-          let newindex = val.indexOf('all'),oldindex = oldval.indexOf('all'); 
-          if(newindex!=-1 && oldindex==-1 && val.length>1) //如果新的选择里有勾选了选择所有选择所有 则 只直线勾选所有整个选项
-              this.query.progress_id=['all']; else if(newindex!=-1 && oldindex!=-1 && val.length>1) //如果操作前有勾选了选择所有且当前也选中了勾选所有且勾选数量大于
-              //remove checkout
-              this.query.progress_id.splice(val.indexOf('all'),1)                    
-      }
-  },
   computed: {
     
   },
   created() {
     this.getList();
-
+    this.eventcheckCountfunc();
     // var totoalTxt = document.getElementsByClassName('el-pagination__total')[0].textContent;
     // var split_tt = totoalTxt.split(' ');
     // totoalTxt = '全' + split_tt[1] + '件';
@@ -293,6 +311,12 @@ export default {
 
   },
   methods: {
+    eventcheckCountfunc(){
+      resource.eventcheckCountfunc().then(res => {
+        this.eventcheckCount = res;
+      });
+    },
+
     pp(a) {
       if( this.query.progress_id === 'All') {
           this.cities.forEach(loc => {
@@ -303,6 +327,14 @@ export default {
       }
     },
 
+  // checkDeadline($event) {
+  //   if($event) {
+  //     alert(this.query.eventCheck)      
+  //   } else {
+  //     alert(this.query.eventCheck)
+  //   }
+  // },
+
    tableRowClassName({row, rowIndex}) {
     //  console.log(row.order_type_id);
        if(row.is_emergency > 0) {
@@ -311,11 +343,16 @@ export default {
        if(row.is_disaster > 0) {
          return 'custom-danger-row';
        }
+       var createDate = row.created_at;
+
+      if(createDate.split(' ')[0] > row.deadline_date) {
+        return 'custom-highlight-row';
+      }
+
     return;
   },
 
     async getList() {
-          
       const { limit, page } = this.query;
       this.loading = true;
       const { data, meta } = await resource.list(this.query);
@@ -329,12 +366,16 @@ export default {
           if(element.is_disaster > 0) {
              element.maintenance_code = '<i style="color: #ffba00; padding-right: 5px" class="fa">&#xf071;</i>' + element.maintenance_code; 
           }
+          var createDate = element.created_at;
+          if(createDate.split(' ')[0] > element.deadline_date) {
+            element.maintenance_code = '<i style="color: #DE38B8; padding-right: 5px" class="fa">&#xf017;</i>' + element.maintenance_code;
+          }
       });
       this.total = meta.total;
       this.loading = false;
     },
     handleFilter(val,oldval) {
-
+      
       
       this.query.page = 1;
       this.getList();

@@ -20,7 +20,7 @@
                     minute: '2-digit',
                     hour12: false,
                   }"
-                  :phrases="{ ok: 'Continue', cancel: 'Exit' }"
+                  :phrases="{ ok: 'OK', cancel: 'Cancel' }"
                   :hour-step="1"
                   :minute-step="60"
                   :week-start="7"
@@ -133,9 +133,9 @@
               <th>写真</th>
               <td style="border: none; padding: 0 5px">
                 <el-upload
-                  ref="uploadPhoto"
+                  ref="uploadQuotationPhoto"
                   :action="
-                    '/api/v2/maintenance/upload/photo/' + detail.maintenance_id
+                    '/api/v2/maintenance/uploadQuotation/photo/' + detail.maintenance_id
                   "
                   :auto-upload="false"
                   :multiple="false"
@@ -363,24 +363,28 @@ export default {
       return this.quotationKind[row.kind];
     },
     save() {
-
+      
       // this.$refs.uploadReport.submit();
-      this.$refs.uploadPhoto.submit();
+      var quotatioPhotoCnt = this.$refs.uploadQuotationPhoto.uploadFiles.length;
+      var quotationCnt = this.$refs.uploadQuotation.length;
+      this.$refs.uploadQuotationPhoto.submit();
       this.$refs.uploadQuotation.submit();
       const insertData = {
         date: DateTime.fromISO(this.date).toFormat('yyyy-MM-dd hh:mm'),
         comment: this.comment,
         amount: this.amount,
         kind: this.kind,
-        quotation_files_cnt: this.$route.params['q_cnt'],
+        quotation_files_cnt: quotatioPhotoCnt,
         // report_files_cnt: this.$route.params['r_cnt'],
-        photo_files_cnt: this.$route.params['p_cnt'],
+        photo_files_cnt: quotationCnt,
         editor: this.userName,
       };
       resource
         .createQuotation(this.detail.maintenance_id, insertData)
         .then((res) => {
           this.detail.quotation_info = res;
+          // this.$refs.uploadQuotationPhoto.reset();
+          // this.$refs.uploadQuotation.reset();
           // this.detail.progress_id = this.progressId;
           // this.detail.progress = {
           //   progress_id: this.progressId,

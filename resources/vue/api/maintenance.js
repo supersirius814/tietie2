@@ -53,6 +53,13 @@ class MaintenanceResource extends Resource {
         });
     }
 
+    editAccountingId(id, updateData) {
+        return request({
+            url: this.baseUrl + this.uri + '/' + id + '/accounting/update',
+            method: 'post',
+            data: updateData,
+        });
+    }
 
     update(id, updateData) {
         return request({
@@ -122,10 +129,41 @@ class MaintenanceResource extends Resource {
         });
     }
 
+    deleteAccountingId(id, data) {
+        return request({
+            url: this.baseUrl + this.uri + '/' + id + '/deleteAccountingId',
+            method: 'post',
+            data: data,
+        });
+    }
+
+    getAccountingSubjects(id, data) {
+        return request({
+            url: this.baseUrl + this.uri + '/' + id + '/getAccountingSubjects',
+            method: 'post',
+            data: data,
+        });
+    }
+
     depart_name(id) {
         return request({
             url: this.baseUrl + this.uri + '/' + id + '/depart_name',
             method: 'get',
+        });
+    }
+
+    eventcheckCountfunc() {
+        return request({
+            url: this.baseUrl + this.uri + '/eventcheckCountfunc',
+            method: 'get',
+        });
+    }
+
+    csvExport(data) {
+        return request({
+            url: this.baseUrl + this.uri + '/csv/export',
+            method: 'post',
+            data: data,
         });
     }
 }
