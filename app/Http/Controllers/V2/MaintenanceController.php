@@ -144,13 +144,6 @@ class MaintenanceController extends Controller
                     ->where('shop_id', $request->input('shop_id'))
                     // ->where('business_category_id', $business_category_id)
                     ->where('sub_category_id', $request->input('sub_category_id'));
-        // var_export($)
-        // $books = $qb->get();
-        // foreach ($books as $book) {
-        //     var_export($book->shop->business_category_id);
-        //     echo "===========================";
-        // }
-        // die;
         $total = $qb->count();
 
         $qb->offset($offset)->limit($limit);
