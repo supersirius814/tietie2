@@ -13,6 +13,10 @@ import '@/permission'; // permission control
 
 import * as filters from './filters'; // global filters
 
+import ViewUI from 'view-design';
+import 'view-design/dist/styles/iview.css';
+Vue.use(ViewUI);
+
 Vue.use(ElementUI, VueCurrencyInput, {
     size: Cookies.get('size') || 'medium', // set element-ui default size
     i18n: (key, value) => i18n.t(key, value),

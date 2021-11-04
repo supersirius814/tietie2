@@ -13,6 +13,9 @@ class Accounting_info extends Model
 	{
 		return $this->belongsTo('App\Maintenance');
 	}
-	
+
+	public function accounting_info(){
+        return $this->belongsTo('App\User', 'modified_by', 'user_id');
+    }
 
 }

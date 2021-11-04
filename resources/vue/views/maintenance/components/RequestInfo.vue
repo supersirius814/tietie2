@@ -1,5 +1,6 @@
 <template>
   <el-card class="box-card">
+    <!-- {{detail.accounting_info}} -->
     <div slot="header">
       <span>依頼情報</span>
 

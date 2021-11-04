@@ -7,7 +7,7 @@
           <tbody>
             <tr>
               <th>請求元取引コード</th>
-              <td class="input-td"><input value="" v-model="relation_code" class="el-input__inner"/></td>
+              <td class="input-td"><input value="" v-model="partner_id" class="el-input__inner"/></td>
               <!-- <td class="input-td"><input value="110000060" /></td> -->
             </tr>
           </tbody>
@@ -34,7 +34,7 @@
             <tr>
               <th>請求元取引先名</th>
               <td class="input-td">
-                <input value="" v-model="relation_name" class="el-input__inner"/>                
+                <input value="" v-model="partner_name" class="el-input__inner"/>                
                 <!-- <input value="パナ産機（あじさい銀行）" /> -->
               </td>
             </tr>
@@ -53,7 +53,7 @@
         :default-year="2020"
                   :format="format"
                   ></month-picker-input> -->
-                  	<vue-monthly-picker :monthLabels="localeMonth"	inputClass="input" v-model="accounting_year" />
+                  	<vue-monthly-picker :monthLabels="localeMonth"	 v-model="accounting_year" />
                 </td>
             </tr>
           </tbody>
@@ -66,8 +66,23 @@
           <tbody>
             <tr>
               <th>請求金額（税抜）</th>
-              <td class="input-td">
-                <input type="text" v-model="unincluding_price" class="el-input__inner" @change="calUnin()"/>
+              <td  class="input-td">
+                <InputNumber
+                  @on-change="calUnin"
+                  size="large"
+                  style="width: 100%"
+                  editable
+                  v-model="unincluding_price"
+                  :formatter="value => `¥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                  :parser="value => value.replace(/\¥\s?|(,*)/g, '')"></InputNumber>
+                <!-- <InputNumber
+               
+                  style="width: 100%"
+                  size="large"
+                  v-model="unincluding_price"
+                  :formatter="value => `¥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                  :parser="value => value.replace(/\$\s?|(,*)/g, '')">
+                </InputNumber> -->
                 <!-- <currency-input v-model="unincluding_price" :options="{ currency: 'JPY' }"  class="el-input__inner" @change="calUnin()"/> -->
               </td>
             </tr>
@@ -82,8 +97,16 @@
             <tr>
               <th>消費税</th>
               <td class="input-td">
+                <InputNumber
+                  @on-change="calTax"
+                  size="large"
+                  style="width: 100%"
+                  v-model="tax"
+                  :editable="true"
+                  :formatter="value => `¥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                  :parser="value => value.replace(/\¥\s?|(,*)/g, '')"></InputNumber>
                 <!-- ¥{{ accounting_amount }} -->
-                <input v-model="accounting_amount" class="el-input__inner" disabled/>
+                <!-- <input v-model="tax" class="el-input__inner" disabled/> -->
                 <!-- <currency-input :value="accounting_amount" :formattedValue="accounting_amount" :options="{ currency: 'JPY' }" class="el-input__inner"/> -->
               </td>
             </tr> 
@@ -98,7 +121,15 @@
             <tr>
               <th>請求金額（税込）</th>
               <td class="input-td">
-                <input v-model="including_price" class="el-input__inner" @change="calIn()"/>
+                <InputNumber
+                  @on-change="calIn"
+                  size="large"
+                  style="width: 100%"
+                  v-model="including_price"
+                  editable
+                  :formatter="value => `¥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                  :parser="value => value.replace(/\¥\s?|(,*)/g, '')"></InputNumber>
+                <!-- <input v-model="including_price" class="el-input__inner" @change="calIn()"/> -->
                 <!-- <currency-input v-model="including_price" :options="{ currency: 'JPY' }"  class="el-input__inner" @change="calIn()"/> -->
               </td>
             </tr>
@@ -113,7 +144,7 @@
             <tr>
               <th>科目</th>
               <!-- <td class="input-td"><input v-model="accounting_subjects_id" class="el-input__inner"/></td> -->
-              <td class="select-td">
+              <td class="input-td">
                 <el-select
                   size="small"
                   v-model="subjects_id"
@@ -152,48 +183,51 @@
       </el-table-column>
       <el-table-column align="center" prop="unincluding_price" label="請求金額（税抜）" >
         <template slot-scope="scope">
-          <el-input v-model="scope.row.unincluding_price" placeholder="" @change="calUninChange(scope.row)"/>
+          <InputNumber
+            v-model="scope.row.unincluding_price"
+            :editable="false"
+            :step="0"
+            :formatter="value => `¥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+            :parser="value => value.replace(/\¥\s?|(,*)/g, '')"></InputNumber>
           <!-- <currency-input v-model="scope.row.unincluding_price" :options="{ currency: 'JPY' }" class="el-input__inner" /> -->
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="accounting_amount" label="消費税">
+      <el-table-column align="center" prop="tax" label="消費税">
         <template slot-scope="scope">
-          <el-input v-model="scope.row.accounting_amount" placeholder="" @change="calAmountChange(scope.row)"/>
-          <!-- <currency-input v-model="scope.row.accounting_amount" :options="{ currency: 'JPY' }" class="el-input__inner"/> -->
+          <InputNumber
+            v-model="scope.row.tax"
+            :editable="false"
+            :step="0"
+            :formatter="value => `¥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+            :parser="value => value.replace(/\¥\s?|(,*)/g, '')"></InputNumber>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="including_price" label="請求金額（税込）">
+      <el-table-column align="center" prop="including_price" label="請求金額（税込）" class="input-td">
         <template slot-scope="scope">
-          <input v-model="scope.row.including_price" class="el-input__inner" @change="calInChange(scope.row)"/>
-          <!-- <currency-input v-model="scope.row.including_price" :options="{ currency: 'JPY' }" class="el-input__inner"/> -->
+          <InputNumber
+            v-model="scope.row.including_price"
+            :editable="false"
+            :step="0"
+            :size="large"
+            style="width: 100%"
+            :formatter="value => `¥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+            :parser="value => value.replace(/\¥\s?|(,*)/g, '')"></InputNumber>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="accounting_subjects_id" label="科目" :formatter="formatterSubject">
+      <el-table-column align="center" prop="accounting_subject_id" label="科目" :formatter="formatterSubject">
         <!-- <template slot-scope="scope">
           <el-input v-model="scope.row.accounting_subjects_id" placeholder=""/>
         </template> -->
       </el-table-column>
-      <el-table-column align="center" prop="editor" label="入力者">
+      <el-table-column align="center" prop="accounting_info.name" label="入力者">
       </el-table-column>
       <el-table-column align="center" label="編集/削除" >
           <template slot-scope="scope">
             <div style="display: inline-flex; padding 0px; margin: 0px">
-                  <!-- <el-button size="small" type="primary" @click="editAccountingId(scope.row)"  style="background-color: #13ce66; padding: 0px; margin: 0px;
-          border: 0px;">edit</el-button>
-
-                  <el-button size="small" type="primary"  style="background-color: #13ce66; padding: 0px; margin: 0px;
-          border: 0px;">delete</el-button> -->
 
                   <el-button size="small" type="primary" @click="editAccountingId(scope.row)"  style="background-color: transparent; padding: 0px; margin: 0px;
           border: 0px;"><i class="material-icons" style="font-size:30px;color:#1890ff">&#xe254;</i></el-button>
 
-                  <!-- <el-button size="small" type="primary" @click="dialogVisible=true"  style="background-color: transparent; padding: 0px; margin: 0px;
-          border: 0px;"><i class="material-icons" style="font-size:30px;color:#1890ff">&#xe254;</i></el-button>
-                      <el-dialog
-                        width="700px"
-                        :modal="false"
-                        :visible.sync="dialogVisible">
-                      </el-dialog> -->
 
                   <el-button size="small" type="primary" @click="deleteAccountingId(scope.row.accounting_info_id)" style="background-color: transparent; padding: 0px; margin: 0px;
           border: 0px;"><i class="material-icons" style="font-size:30px;color:red">&#xe92b;</i></el-button>
@@ -243,12 +277,13 @@ export default {
       accounting_year:'',
       format: "yyyy/MM/ddd",
       userName: '',
-      accounting_amount: null,
-      including_price: null,
-      unincluding_price: null,
-      relation_name: '',
-      relation_code: '',
-      accounting_subjects_id: '',
+      userId: '',
+      tax: 0,
+      including_price: 0,
+      unincluding_price: 0,
+      partner_name: '',
+      partner_id: '',
+      accounting_subject_id: '',
       faxedToClient: 0,
       faxedToShop: 0,
       progressId: 1,
@@ -280,6 +315,7 @@ export default {
   },
   created(){
     this.$store.dispatch('user/getInfo').then(user => {
+      this.userId = user.id;
       this.userName = user.name;
     });
   },
@@ -288,10 +324,11 @@ export default {
     // alert(this.$route.params['accounting_info_id']);
   },
   methods: {
+
     formatterSubject(row, column){
-      if(row.accounting_subjects_id == '') return;
+      if(row.accounting_subject_id == '') return;
       else {
-        return this.subjectsList[row.accounting_subjects_id];
+        return this.subjectsList[row.accounting_subject_id];
       }
     },
     getAccountingSubjects(){
@@ -307,46 +344,40 @@ export default {
     },
 
     calUnin() {
-      // alert(this.unincluding_price)
-      if(this.unincluding_price.includes('¥')){
-        this.accounting_amount = '¥' + Number((this.unincluding_price.split('¥')[1] * 0.1).toFixed(0)) ;
-        this.including_price = '¥' +  Number((this.unincluding_price.split('¥')[1] * 1.1).toFixed(0));
-      } else{
-        this.accounting_amount = '¥' + Number((this.unincluding_price * 0.1).toFixed(0));
-        this.including_price = '¥' +  Number((this.unincluding_price * 1.1).toFixed(0));
-        this.unincluding_price = '¥' + this.unincluding_price;
-      }
+      this.tax = (this.unincluding_price * 0.1).toFixed(0);
+      this.including_price = (this.unincluding_price * 1.1).toFixed(0);
     },
-    calUninChange(row) {
+    calIn() {
+      this.unincluding_price = (this.including_price / 1.1).toFixed(0);
+      this.tax = (this.including_price / 1.1 * 0.1).toFixed(0);      
+    },
+    calTax() {
+      this.unincluding_price = (this.tax * 10).toFixed(0);
+      this.including_price = (this.tax * 11).toFixed(0);
+    },
+    calTaxdd(row) {
+
       if(row.unincluding_price.includes('¥')){
-        row.accounting_amount = '¥' + Number((row.unincluding_price.split('¥')[1] * 0.1).toFixed(0)) ;
+        row.tax = '¥' + Number((row.unincluding_price.split('¥')[1] * 0.1).toFixed(0)) ;
         row.including_price = '¥' +  Number((row.unincluding_price.split('¥')[1] * 1.1).toFixed(0));
       } else{
-        row.accounting_amount = '¥' + Number((row.unincluding_price * 0.1).toFixed(0));
+        row.tax = '¥' + Number((row.unincluding_price * 0.1).toFixed(0));
         row.including_price = '¥' +  Number((row.unincluding_price * 1.1).toFixed(0));
         row.unincluding_price = '¥' + row.unincluding_price;
-      }
-    },
-    calIn(){
-      if(this.including_price.includes('¥')){
-        this.unincluding_price = '¥' + Number((this.including_price.split('¥')[1] / 1.1).toFixed(0));
-        this.accounting_amount = '¥' + Number((this.including_price.split('¥')[1] / 1.1 * 0.1).toFixed(0));
-      } else{
-        this.unincluding_price = '¥' + Number((this.including_price / 1.1).toFixed(0));
-        this.accounting_amount = '¥' + Number((this.including_price / 1.1 * 0.1).toFixed(0));
-        this.including_price = '¥' + this.including_price.split('¥')[0];
       }
     },
     editAccountingId(row){
       // var ss = this.accounting_year.toISOString();
       // alert(DateTime.fromISO(ss).toFormat('yyyy-MM'));
+      this.partner_id = row.partner_id;
+      this.partner_name = row.partner_name;
       this.$route.params['accounting_info_id'] = row.accounting_info_id;
       this.accounting_year = row.accounting_year;
       this.unincluding_price = row.unincluding_price;
-      this.accounting_amount = row.accounting_amount;
+      this.tax = row.tax;
       this.including_price = row.including_price;
-      this.accounting_subjects_id = row.accounting_subjects_id;
-      this.subjects_id = this.subjectsList[row.accounting_subjects_id];
+      this.accounting_subject_id = row.accounting_subject_id;
+      this.subjects_id = this.subjectsList[row.accounting_subject_id];
       this.button_label = 'edit';
       // const updateData = {
       //   accounting_info_id: row.accounting_info_id,
@@ -386,10 +417,11 @@ export default {
     },
 
     save() {
+      // alert(this.subjects_id); return;
       var as_id = '';
-      if(typeof this.subjects_id === 'string') as_id = this.accounting_subjects_id;
+      if(typeof this.subjects_id === 'string') as_id = this.accounting_subject_id;
       else as_id = this.subjects_id;
-      var unincluding_priceF, including_priceF, accounting_amountF, tmp, yearMonth;
+      var tmp, yearMonth;
       var ss = this.accounting_year;
       if (String(ss).length > 20) {
         tmp = this.accounting_year.toISOString();
@@ -399,43 +431,28 @@ export default {
         yearMonth = ss;
       }
       
-      if(this.unincluding_price.includes('¥')){
-        unincluding_priceF = this.unincluding_price;
-      } else{
-        unincluding_priceF = '¥' + this.unincluding_price;
-      }
-
-      if(this.accounting_amount.includes('¥')){
-        accounting_amountF = this.accounting_amount;
-      } else{
-        accounting_amountF = '¥' + this.accounting_amount;
-      }
-
-      if(this.including_price.includes('¥')){
-        including_priceF = this.including_price;
-      } else{
-        including_priceF = '¥' + this.including_price;
-      }
 
       const insertData = {
         accounting_info_id: this.$route.params['accounting_info_id'],
-        relation_code: this.relation_code,
-        relation_name: this.relation_name,
-        unincluding_price: unincluding_priceF,
-        accounting_amount: accounting_amountF,
-        including_price: including_priceF,
+        partner_id: this.partner_id,
+        partner_name: this.partner_name,
+        unincluding_price: this.unincluding_price,
+        tax: this.tax,
+        including_price: this.including_price,
         accounting_year: yearMonth,
-        editor: this.userName,
-        accounting_subjects_id: as_id,
+        modified_by: this.userId,
+        accounting_subject_id: as_id,
       };
 
       resource.createAccounting(this.detail.maintenance_id, insertData).then(res => {
         this.$route.params['accounting_info_id'] = 0;
         this.accounting_year = '';
         this.unincluding_price = '';
-        this.accounting_amount = '';
+        this.tax = '';
+        this.partner_id = '';
+        this.partner_name = '';
         this.including_price = '';
-        this.accounting_subjects_id = '';
+        this.accounting_subject_id = '';
         this.subjects_id = '';
         this.detail.accounting_info = res;
         this.detail.progress_id = this.progressId;

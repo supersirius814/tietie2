@@ -68,6 +68,7 @@
         "screenfull": "^4.2.1",
         "sortablejs": "^1.10.2",
         "tui-editor": "^1.4.6",
+        "view-design": "^4.7.0-beta.11",
         "vue": "2.6.10",
         "vue-count-to": "^1.0.13",
         "vue-currency-input": "^2.1.2",

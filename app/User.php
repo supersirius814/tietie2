@@ -48,6 +48,10 @@ class User extends Authenticatable
 	{
 		return $this->belongsTo('App\Shop', 'shop_id');
 	}
+
+    public function accounting_info(){
+        return $this->hasMany('App\Accounting_info', 'user_id', 'modified_by');
+    }
 	
 	public function role()
 	{

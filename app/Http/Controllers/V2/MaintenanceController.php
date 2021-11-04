@@ -256,30 +256,30 @@ class MaintenanceController extends Controller
         if($request->input('accounting_info_id') > 0){
             Accounting_info::where('accounting_info_id', $request->input('accounting_info_id'))
             ->update([
-                'relation_code' => $request->input('relation_code'),
-                'relation_name' => $request->input('accounting_amount'),
+                'partner_id' => $request->input('partner_id'),
+                'partner_name' => $request->input('partner_name'),
                 'accounting_year' => $request->input('accounting_year'),
-                'accounting_amount' => $request->input('accounting_amount'),
+                'tax' => $request->input('tax'),
                 'including_price' => $request->input('including_price'),
                 'unincluding_price' => $request->input('unincluding_price'),
-                'accounting_subjects_id' => $request->input('accounting_subjects_id'),
+                'accounting_subject_id' => $request->input('accounting_subject_id'),
              ]);
         } else{
             $row = new Accounting_info();
             $row->maintenance_id = $maintenance_id;
             $row->accounting_year = $request->input('accounting_year');
-            $row->relation_code = $request->input('relation_code');
-            $row->relation_name = $request->input('relation_name');
-            $row->accounting_amount = $request->input('accounting_amount');
+            $row->partner_id = $request->input('partner_id');
+            $row->partner_name = $request->input('partner_name');
+            $row->tax = $request->input('tax');
             $row->including_price = $request->input('including_price');
             $row->unincluding_price = $request->input('unincluding_price');
-            $row->accounting_subjects_id = $request->input('accounting_subjects_id');
-            $row->editor = $request->input('editor');
+            $row->accounting_subject_id = $request->input('accounting_subject_id');
+            $row->modified_by = $request->input('modified_by');
             // $row->entered_by = $request->user()->user_id;
             $row->save();
         }
 
-        $accounting_info = Accounting_info::where('maintenance_id', $maintenance_id)->get();
+        $accounting_info = Accounting_info::with('accounting_info')->where('maintenance_id', $maintenance_id)->get();
         return response($accounting_info);
     }
 
@@ -287,12 +287,12 @@ class MaintenanceController extends Controller
     {
         Accounting_info::where('accounting_info_id', $request->input('accounting_info_id'))
         ->update([
-            'relation_code' => $request->input('relation_code'),
-            'relation_name' => $request->input('accounting_amount'),
-            'accounting_amount' => $request->input('accounting_amount'),
+            'partner_id' => $request->input('partner_id'),
+            'partner_name' => $request->input('partner_name'),
+            'tax' => $request->input('tax'),
             'including_price' => $request->input('including_price'),
             'unincluding_price' => $request->input('unincluding_price'),
-            'accounting_subjects_id' => $request->input('accounting_subjects_id'),
+            'accounting_subject_id' => $request->input('accounting_subject_id'),
          ]);
 
         $accounting_info = Accounting_info::where('maintenance_id',  $maintenance_id)->get();
@@ -782,7 +782,7 @@ class MaintenanceController extends Controller
             'maintenanceMatters.matter_value',
             'maintenanceMatters.matter_option',
             'uploadingFiles',
-            'quotationInfo', 'accountingInfo'
+            'quotationInfo', 'accountingInfo.accounting_info'
         ])->find($maintenance_id);
 
 

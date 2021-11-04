@@ -16,7 +16,7 @@
       />
       <el-table-column
         align="center"
-        prop="accounting_amount"
+        prop="tax"
         label="消費税"
       />
       <el-table-column
@@ -24,10 +24,10 @@
         prop="including_price"
         label="請求金額（税込）"
       />
-      <el-table-column align="center" prop="accounting_subjects_id" label="科目" :formatter="formatterSubject"/>
+      <el-table-column align="center" prop="accounting_subject_id" label="科目" :formatter="formatterSubject"/>
       <el-table-column
         align="center"
-        prop="editor"
+        prop="accounting_info.name"
         label="入力者"
         width="100"
       />
@@ -118,7 +118,7 @@ export default {
 
   methods: {
     formatterSubject(row, column){
-      return this.subjectsList[row.accounting_subjects_id]
+      return this.subjectsList[row.accounting_subject_id]
     },
     isMobile() {
       var check = true;
