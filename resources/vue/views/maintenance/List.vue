@@ -15,15 +15,12 @@
           </span>
         </li>
         <li>
-          <span class="el-tag el-tag--medium el-tag--light" style="color: #DE38B8; background-color: #FCE5F7; border: 1px solid #E4B4D9" >
-            <el-checkbox v-model="query.eventCheck" @change="handleFilter()" style="color: #DE38B8; background-color: #FCE5F7;"><i style="color: #DE38B8; padding-right: 5px" class="fa">&#xf017;</i><span  style="color: #DE38B8;">対応期限切れ</span>  </el-checkbox>
-            <span class="badge">  
-              <span id="eventcheckCount">{{ eventcheckCount }}</span>  
+          <el-badge :value="eventcheckCount" class="item">
+            <span class="el-tag el-tag--medium el-tag--light" style="color: #DE38B8; background-color: #FCE5F7; border: 1px solid #E4B4D9" >
+              <el-checkbox v-model="query.eventCheck" @change="handleFilter()" style="color: #DE38B8; background-color: #FCE5F7;"><i style="color: #DE38B8; padding-right: 5px" class="fa">&#xf017;</i><span  style="color: #DE38B8;">対応期限切れ</span>  </el-checkbox>
             </span>
-          </span>
-
+          </el-badge>
         </li>
-
         <li class="pull-right">
           <ElSelectAll v-model="query.progress_id" clearable filterable multiple collapse-tags :options="mdoptionsList" placeholder="ステータス" class="filter-item"  v-on:change="handleFilter()"/>
           <el-select v-model="query.progress_id" :multiple="true" collapse-tags  placeholder="ステータス" clearable style="width: 350px" class="filter-item" v-on:change="handleFilter()">
@@ -241,6 +238,7 @@ import Pagination from '@/components/Pagination'; // Secondary package based on 
 import MaintenanceResource from '@/api/maintenance';
 import ShopResource from '@/api/shop';
 import waves from '@/directive/waves'; // Waves directive
+import { DateTime } from 'luxon';
 
 import ElSelectAll from './selectAll.vue';
 
@@ -249,10 +247,11 @@ const shopResource = new ShopResource();
 
 export default {
   name: 'MaintenanceList',
-  components: { Pagination, ElSelectAll },
+  components: { Pagination, ElSelectAll, DateTime },
   directives: { waves },
   data() {
     return {
+      todayDate: '',
       eventcheckCount: 0,
       storeCodes: '',
       list: null,
@@ -302,6 +301,8 @@ export default {
   created() {
     this.getList();
     this.eventcheckCountfunc();
+    var today = new Date();
+    this.todayDate = today.getFullYear()+'-'+(((today.getMonth()+1) < 10)?"0":"") + (today.getMonth()+1)+'-'+ ((today.getDate() < 10)?"0":"") + today.getDate();
     // var totoalTxt = document.getElementsByClassName('el-pagination__total')[0].textContent;
     // var split_tt = totoalTxt.split(' ');
     // totoalTxt = '全' + split_tt[1] + '件';
@@ -345,7 +346,14 @@ export default {
        }
        var createDate = row.created_at;
 
-      if(createDate.split(' ')[0] > row.deadline_date) {
+
+      //  date = '2021-11-06';
+      //  console.log('new line');
+      //  console.log(date);
+      //  console.log('=========================');
+      //  console.log(row.deadline_date);
+
+      if(this.todayDate > row.deadline_date) {
         return 'custom-highlight-row';
       }
 
@@ -367,7 +375,7 @@ export default {
              element.maintenance_code = '<i style="color: #ffba00; padding-right: 5px" class="fa">&#xf071;</i>' + element.maintenance_code; 
           }
           var createDate = element.created_at;
-          if(createDate.split(' ')[0] > element.deadline_date) {
+          if(this.todayDate > element.deadline_date) {
             element.maintenance_code = '<i style="color: #DE38B8; padding-right: 5px" class="fa">&#xf017;</i>' + element.maintenance_code;
           }
       });

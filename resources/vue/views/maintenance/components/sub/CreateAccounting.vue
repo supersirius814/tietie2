@@ -265,6 +265,7 @@ export default {
   data() {
     return {
       button_label: '登録',
+      value: null,
       item: '',
       subjects: [],
       subjects_id: '',

@@ -119,7 +119,7 @@ class MaintenanceController extends Controller
     }
 
     public function eventCheckCountfunc(){
-        $eventCheckCnt = Maintenance::whereRaw("DATE_FORMAT(created_at,'%m/%d/%Y') > DATE_FORMAT(deadline_date,'%m/%d/%Y')")->count();
+        $eventCheckCnt = Maintenance::whereRaw("DATE_FORMAT(CURDATE(),'%m/%d/%Y') > DATE_FORMAT(deadline_date,'%m/%d/%Y')")->count();
         return response($eventCheckCnt);
     }
 
