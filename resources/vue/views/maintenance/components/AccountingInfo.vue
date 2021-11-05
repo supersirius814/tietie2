@@ -13,16 +13,20 @@
         align="center"
         prop="unincluding_price"
         label="請求金額（税抜）"
+        :formatter="formatterUnp"
       />
       <el-table-column
         align="center"
         prop="tax"
         label="消費税"
-      />
+        :formatter="formatterTax"
+      >
+      </el-table-column>
       <el-table-column
         align="center"
         prop="including_price"
         label="請求金額（税込）"
+        :formatter="formatterInp"
       />
       <el-table-column align="center" prop="accounting_subject_id" label="科目" :formatter="formatterSubject"/>
       <el-table-column
@@ -61,11 +65,12 @@
 <script>
 import CreateAccounting from './sub/CreateAccounting.vue';
 import MaintenanceResource from '@/api/maintenance';
+import CurrencyInput from './sub/CurrencyInput.vue';
 
 const resource = new MaintenanceResource();
 
 export default {
-  components: { CreateAccounting },
+  components: { CreateAccounting, CurrencyInput },
   props: {
     detail: {
       type: Object,
@@ -117,6 +122,24 @@ export default {
   },
 
   methods: {
+    formatterInp(row, column){
+      var rowValue = row.including_price;
+      rowValue = `¥ ${rowValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return rowValue;
+    },
+
+    formatterUnp(row, column){
+      var rowValue = row.unincluding_price;
+      rowValue = `¥ ${rowValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return rowValue;
+    },
+
+    formatterTax(row, column){
+      var rowValue = row.tax;
+      rowValue = `¥ ${rowValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return rowValue;
+    },
+
     formatterSubject(row, column){
       return this.subjectsList[row.accounting_subject_id]
     },

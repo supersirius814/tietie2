@@ -98,11 +98,11 @@
               <th>消費税</th>
               <td class="input-td">
                 <InputNumber
-                  @on-change="calTax"
                   size="large"
-                  style="width: 100%"
+                  style="width: 100%;"
                   v-model="tax"
-                  :editable="true"
+                  :editable="false"
+                  :step="0"
                   :formatter="value => `¥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                   :parser="value => value.replace(/\¥\s?|(,*)/g, '')"></InputNumber>
                 <!-- ¥{{ accounting_amount }} -->
@@ -181,29 +181,29 @@
           <el-input v-model="scope.row.accounting_year" placeholder="" />
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="unincluding_price" label="請求金額（税抜）" >
-        <template slot-scope="scope">
+      <el-table-column align="center" prop="unincluding_price" label="請求金額（税抜）" :formatter="formatterUnp">
+        <!-- <template slot-scope="scope">
           <InputNumber
             v-model="scope.row.unincluding_price"
             :editable="false"
             :step="0"
             :formatter="value => `¥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-            :parser="value => value.replace(/\¥\s?|(,*)/g, '')"></InputNumber>
+            :parser="value => value.replace(/\¥\s?|(,*)/g, '')"></InputNumber> -->
           <!-- <currency-input v-model="scope.row.unincluding_price" :options="{ currency: 'JPY' }" class="el-input__inner" /> -->
-        </template>
+        <!-- </template> -->
       </el-table-column>
-      <el-table-column align="center" prop="tax" label="消費税">
-        <template slot-scope="scope">
+      <el-table-column align="center" prop="tax" label="消費税" :formatter="formatterTax">
+        <!-- <template slot-scope="scope">
           <InputNumber
             v-model="scope.row.tax"
             :editable="false"
             :step="0"
             :formatter="value => `¥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
             :parser="value => value.replace(/\¥\s?|(,*)/g, '')"></InputNumber>
-        </template>
+        </template> -->
       </el-table-column>
-      <el-table-column align="center" prop="including_price" label="請求金額（税込）" class="input-td">
-        <template slot-scope="scope">
+      <el-table-column align="center" prop="including_price" label="請求金額（税込）" class="input-td" :formatter="formatterInp">
+        <!-- <template slot-scope="scope">
           <InputNumber
             v-model="scope.row.including_price"
             :editable="false"
@@ -212,7 +212,7 @@
             style="width: 100%"
             :formatter="value => `¥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
             :parser="value => value.replace(/\¥\s?|(,*)/g, '')"></InputNumber>
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column align="center" prop="accounting_subject_id" label="科目" :formatter="formatterSubject">
         <!-- <template slot-scope="scope">
@@ -325,7 +325,23 @@ export default {
     // alert(this.$route.params['accounting_info_id']);
   },
   methods: {
+    formatterInp(row, column){
+      var rowValue = row.including_price;
+      rowValue = `¥ ${rowValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return rowValue;
+    },
 
+    formatterUnp(row, column){
+      var rowValue = row.unincluding_price;
+      rowValue = `¥ ${rowValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return rowValue;
+    },
+
+    formatterTax(row, column){
+      var rowValue = row.tax;
+      rowValue = `¥ ${rowValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return rowValue;
+    },
     formatterSubject(row, column){
       if(row.accounting_subject_id == '') return;
       else {
@@ -418,6 +434,10 @@ export default {
     },
 
     save() {
+      if(this.partner_id == ''){
+        alert('入力フィールドを確認してください！');
+        return;
+      }
       // alert(this.subjects_id); return;
       var as_id = '';
       if(typeof this.subjects_id === 'string') as_id = this.accounting_subject_id;
