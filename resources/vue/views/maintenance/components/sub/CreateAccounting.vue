@@ -357,6 +357,7 @@ export default {
         res.forEach(el => {
           this.subjectsList[el.accounting_subjects_id] = el.name;
         });
+        console.log(this.subjectsList);
       });
     },
 
