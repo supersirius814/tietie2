@@ -123,7 +123,7 @@
     </div>
 
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%" :row-class-name="tableRowClassName">
-      <el-table-column align="center" label="メンテナンスNo">
+      <el-table-column align="center" label="メンテナンスNo" prop="maintenance_code">
         <template slot-scope="scope">
           <router-link :to="'/maintenance/detail/'+scope.row.maintenance_id" class="link-type">
             <span v-html="scope.row.maintenance_code"></span>
@@ -173,24 +173,20 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="対応期限">
-        <template slot-scope="scope">
-          <!-- <span>{{ scope.row.updated_at }}</span> -->
-          <span>{{ scope.row.deadline_date }}</span>
-        </template>
+      <el-table-column align="center" label="対応期限" prop="deadline_date" sortable>
       </el-table-column>
 
-      <el-table-column align="center" label="完了日">
+      <el-table-column align="center" label="完了日" prop="completed_date" sortable>
         <template slot-scope="scope">
           <!-- <span>{{ scope.row.updated_at }}</span> -->
           <span>{{ scope.row.completed_date }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="申請日">
-        <template slot-scope="scope">
+      <el-table-column align="center" label="申請日" prop="created_at" sortable>
+        <!-- <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
-        </template>
+        </template> -->
       </el-table-column>
 
       <!-- <el-table-column align="center" label="アクション">
