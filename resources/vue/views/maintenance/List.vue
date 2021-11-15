@@ -122,8 +122,14 @@
       </ul>
     </div>
 
-    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%" :row-class-name="tableRowClassName">
-      <el-table-column align="center" label="メンテナンスNo" prop="maintenance_code">
+    <el-table  @sort-change="sortChange" @header-click="headerClick"  v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%" :row-class-name="tableRowClassName">
+      <el-table-column align="center">
+        <template slot="header" slot-scope="scope"  >
+          <div>
+            メンテナンスNo
+            <span class="caret-wrapper"><i class="sort-caret ascending"></i><i class="sort-caret descending"></i></span>
+          </div>
+        </template>
         <template slot-scope="scope">
           <router-link :to="'/maintenance/detail/'+scope.row.maintenance_id" class="link-type">
             <span v-html="scope.row.maintenance_code"></span>
@@ -173,21 +179,47 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="対応期限" prop="deadline_date" sortable>
+      <el-table-column align="center">
+        <template slot="header" slot-scope="scope">
+          <div>
+            対応期限
+            <span class="caret-wrapper"><i class="sort-caret ascending"></i><i class="sort-caret descending"></i></span>
+          </div>
+        </template>
+        <template slot-scope="scope">
+          <span>{{ scope.row.deadline_date }}</span>
+        </template>
       </el-table-column>
 
-      <el-table-column align="center" label="完了日" prop="completed_date" sortable>
+      <el-table-column align="center" >
+        <template slot="header" slot-scope="scope">
+          <div>
+            完了日
+            <span class="caret-wrapper"><i class="sort-caret ascending"></i><i class="sort-caret descending"></i></span>
+          </div>
+        </template>
         <template slot-scope="scope">
-          <!-- <span>{{ scope.row.updated_at }}</span> -->
           <span>{{ scope.row.completed_date }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="申請日" prop="created_at" sortable>
-        <!-- <template slot-scope="scope">
+      <el-table-column align="center">
+        <template slot="header" slot-scope="scope"  >
+          <div>
+            申請日
+            <span class="caret-wrapper"><i class="sort-caret ascending"></i><i class="sort-caret descending"></i></span>
+          </div>
+        </template>
+        <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
-        </template> -->
+        </template>
       </el-table-column>
+
+      <!-- <el-table-column align="center" label="申請日" prop="created_at" :sortable="true"  :sort-method="sortCreat" >
+        <template slot-scope="scope">
+          <span>{{ scope.row.created_at }}</span>
+        </template>
+      </el-table-column> -->
 
       <!-- <el-table-column align="center" label="アクション">
         <template slot-scope="scope">
@@ -247,6 +279,11 @@ export default {
   directives: { waves },
   data() {
     return {
+      bycomplete: 0,
+      bycode: 0,
+      sortcount: 0,
+      bydeadline: 0,
+      bycreate: 0,
       todayDate: '',
       eventcheckCount: 0,
       storeCodes: '',
@@ -254,6 +291,10 @@ export default {
       total: 0,
       loading: true,
       query: {
+        bycomplete: 0,
+        bycode: 0,
+        bydeadline: 0,
+        bycreate: 0,
         page: 1,
         limit: 15,
         keyword: '',
@@ -308,6 +349,137 @@ export default {
 
   },
   methods: {
+  sortChange(sortProps){
+    this.headerClick(sortProps.column,event) //optional: trigger header-click event
+  },
+  headerClick(column, event){
+    console.log(column)
+
+    //completed_date
+    if(column.id == 'el-table_1_column_7'){
+      this.bycomplete ++;
+      if(this.bycomplete % 3 == 1){
+        this.query.bycomplete = 1;
+        document.getElementsByClassName('el-table_1_column_7')[0].classList.add('ascending');
+        document.getElementsByClassName('el-table_1_column_7')[0].classList.remove('descending');
+      }
+      if(this.bycomplete % 3 == 2){
+        this.query.bycomplete = 2;
+        document.getElementsByClassName('el-table_1_column_7')[0].classList.remove('ascending');
+        document.getElementsByClassName('el-table_1_column_7')[0].classList.add('descending');
+      }
+      if(this.bycomplete % 3 == 0){
+        this.query.bycomplete = 0;
+        document.getElementsByClassName('el-table_1_column_7')[0].classList.remove('ascending');
+        document.getElementsByClassName('el-table_1_column_7')[0].classList.remove('descending');
+        this.bycomplete = 0;
+      }
+    }
+
+    //maintenance_code
+    if(column.id == "el-table_1_column_1"){
+      this.bycode ++;
+      if(this.bycode % 3 == 1){
+        this.query.bycode = 1;
+        document.getElementsByClassName('el-table_1_column_1')[0].classList.add('ascending');
+        document.getElementsByClassName('el-table_1_column_1')[0].classList.remove('descending');
+      }
+      if(this.bycode % 3 == 2){
+        this.query.bycode = 2;
+        document.getElementsByClassName('el-table_1_column_1')[0].classList.remove('ascending');
+        document.getElementsByClassName('el-table_1_column_1')[0].classList.add('descending');
+      }
+      if(this.bycode % 3 == 0){
+        this.query.bycomplete = 0;
+        document.getElementsByClassName('el-table_1_column_1')[0].classList.remove('ascending');
+        document.getElementsByClassName('el-table_1_column_1')[0].classList.remove('descending');
+        this.bycode = 0;
+      }
+    }
+
+    //deadline_date
+    if(column.id == "el-table_1_column_6"){
+      this.bydeadline ++;
+      if(this.bydeadline % 3 == 1){
+        this.query.bydeadline = 1;
+        document.getElementsByClassName('el-table_1_column_6')[0].classList.add('ascending');
+        document.getElementsByClassName('el-table_1_column_6')[0].classList.remove('descending');
+      }
+      if(this.bydeadline % 3 == 2){
+        this.query.bydeadline = 2;
+        document.getElementsByClassName('el-table_1_column_6')[0].classList.remove('ascending');
+        document.getElementsByClassName('el-table_1_column_6')[0].classList.add('descending');
+      }
+      if(this.bydeadline % 3 == 0){
+        this.query.bydeadline = 0;
+        document.getElementsByClassName('el-table_1_column_6')[0].classList.remove('ascending');
+        document.getElementsByClassName('el-table_1_column_6')[0].classList.remove('descending');
+        this.bydeadline = 0;
+      }
+    }
+
+    //created_at
+    if(column.id == "el-table_1_column_8"){
+      this.bycreate ++;
+      if(this.bycreate % 3 == 1){
+        this.query.bycreate = 1;
+        document.getElementsByClassName('el-table_1_column_8')[0].classList.add('ascending');
+        document.getElementsByClassName('el-table_1_column_8')[0].classList.remove('descending');
+      }
+      if(this.bycreate % 3 == 2){
+        this.query.bycreate = 2;
+        document.getElementsByClassName('el-table_1_column_8')[0].classList.remove('ascending');
+        document.getElementsByClassName('el-table_1_column_8')[0].classList.add('descending');
+      }
+      if(this.bycreate % 3 == 0){
+        this.query.bycreate = 0;
+        document.getElementsByClassName('el-table_1_column_8')[0].classList.remove('ascending');
+        document.getElementsByClassName('el-table_1_column_8')[0].classList.remove('descending');
+        this.bycreate = 0;
+      }
+    }
+
+    this.query.page = 1;
+    this.getList();
+  },
+    sortBycomplete(){
+      this.bycomplete ++;
+      if(this.bycomplete % 3 == 1){
+        this.query.bycomplete = 1;
+      }
+      if(this.bycomplete % 3 == 2){
+        this.query.bycomplete = 2;
+      }
+      if(this.bycomplete % 3 == 0){
+        this.query.bycomplete = 0;
+      }
+
+      this.query.page = 1;
+      this.getList();
+    },
+    sortDeadline(obj1, obj2){
+      if (obj1.deadline_date > obj2.deadline_date) {
+        return -1
+      } else {
+        return 1
+      }
+    },
+    sortCreat(obj1, obj2){
+      if (obj1.created_at > obj2.created_at) {
+        return -1
+      } else {
+        return 1
+      }
+    },
+    codeSort(){
+      alert('code')
+    },
+      sortMethod(obj1, obj2) {
+        console.log('===================');
+        console.log(obj1, obj2);
+  this.sortcount ++;
+  console.log(this.sortcount);
+      },
     eventcheckCountfunc(){
       resource.eventcheckCountfunc().then(res => {
         this.eventcheckCount = res;
@@ -361,6 +533,7 @@ export default {
       this.loading = true;
       const { data, meta } = await resource.list(this.query);
       this.list = data;
+     
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
 
@@ -377,6 +550,8 @@ export default {
       });
       this.total = meta.total;
       this.loading = false;
+
+      // this.bycomplete = 0;
     },
     handleFilter(val,oldval) {
       

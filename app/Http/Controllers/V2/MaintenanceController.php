@@ -96,7 +96,6 @@ class MaintenanceController extends Controller
         }
 
 
-
         if ($shop_id != 0) {
             $qb->where('shop_id', $shop_id);
         } else {
@@ -114,8 +113,40 @@ class MaintenanceController extends Controller
 
         $qb->offset($offset)->limit($limit);
 
+        //compeleted_date sort
+        $bycomplete = $request->input('bycomplete');
+        if($bycomplete == 1){
+            $maintenances = $qb->orderBy('completed_date', 'asc');
+        } else if($bycomplete == 2){
+            $maintenances = $qb->orderBy('completed_date', 'desc');
+        } 
+
+        //maintenance_code sort
+        $bycode = $request->input('bycode');
+        if($bycode == 1){
+            $maintenances = $qb->orderBy('maintenance_code', 'asc');
+        } else if($bycode == 2){
+            $maintenances = $qb->orderBy('maintenance_code', 'desc');
+        } 
+
+        //deadline_date sort
+        $bydeadline = $request->input('bydeadline');
+        if($bydeadline == 1){
+            $maintenances = $qb->orderBy('deadline_date', 'asc');
+        } else if($bydeadline == 2){
+            $maintenances = $qb->orderBy('deadline_date', 'desc');
+        } 
+
+        //created_at sort
+        $bycreate = $request->input('bycreate');
+        if($bycreate == 1){
+            $maintenances = $qb->orderBy('created_at', 'asc');
+        } else if($bycreate == 2){
+            $maintenances = $qb->orderBy('created_at', 'desc');
+        } 
+       
         $maintenances = $qb->orderBy('maintenance_id', 'desc')->take($limit)->get();
-        return response(['data' => $maintenances, 'meta' => ['total' => $total]]);
+        return response(['data' => $maintenances,'meta' => ['total' => $total]]);
     }
 
     public function eventCheckCountfunc(){
