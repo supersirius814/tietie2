@@ -74,7 +74,14 @@
             <tr>
               <th>対応期限*</th>
               <td class="input-td">
-                <datetime v-model="time1" valueType="format" placeholder="日付を選択してください。" ></datetime>
+                <!-- <datetime v-model="time1" valueType="format" placeholder="日付を選択してください。" ></datetime> -->
+                <el-date-picker
+                  v-model="time1"
+                  type="date"
+                  format="yyyy/MM/dd"
+                  value-format="yyyy-MM-dd"
+                  placeholder="日付を選択してください。">
+                </el-date-picker>
               </td>
             </tr>
           </tbody>

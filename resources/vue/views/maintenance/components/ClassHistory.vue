@@ -1,6 +1,7 @@
 <template>
   <div>
     <h3>同一中分類過去履歴</h3>
+    <!-- {{ list  }} -->
     <el-table :data="list" :show-header="true" border style="width: 100%">
       <el-table-column align="center" class-name="history-td" label="緊/重">
         <template slot-scope="scope">
@@ -19,13 +20,13 @@
           <span>{{ scope.row.progress.status }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" class-name="history-td" prop="created_at" label="依頼日" />
+      <el-table-column align="center" class-name="history-td" prop="created_at" :formatter="formatterCreate"  label="依頼日" />
       <el-table-column align="center" class-name="history-td" label="完了日">
         <template slot-scope="scope">
           <span>{{ scope.row.completed_date }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" class-name="history-td" prop="customer_code" :formatter="formatterName" label="取引先名">
+      <el-table-column align="center" class-name="history-td" prop="partner_code" :formatter="formatterName" label="取引先名">
         <!-- <template slot-scope="scope">
           <span prop="scope.row.customer_code"></span>
         </template> -->
@@ -37,12 +38,12 @@
       </el-table-column>
       <el-table-column align="center" class-name="history-td" label="会計年月">
         <template slot-scope="scope">
-          <span>{{ '' }}</span>
+          <span>{{ computedYm(scope.row.accounting_info) }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" class-name="history-td" label="請求金額（税抜）">
         <template slot-scope="scope">
-          <span>{{ '' }}</span>
+          <span>{{ computedUnprice(scope.row.accounting_info) }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -72,6 +73,8 @@ export default {
   },
   data() {
     return {
+      timer: undefined,
+      accounting_info_cnt: 0,
       list: null,
       total: 0,
       loading: true,
@@ -88,12 +91,68 @@ export default {
     this.customsList();
     this.getList();
   },
+
+  beforeMount() {
+    this.timer = setInterval(this.getList, 2000);
+  },
+
+  beforeUnmount() {
+    clearInterval(this.timer);
+  },
+
+  updated(){
+    // this.getList();
+  },
+
   methods: {
+    computedYm(accounting_info){
+      if(accounting_info && accounting_info.length){
+        var cnt = accounting_info.length;
+        var date = accounting_info[0].accounting_year;
+        var date_arr;
+        if(date){
+          date_arr = date.split('-');
+          return date_arr[0] + '/' + date_arr[1];
+        }
+      }
+      return '';
+    },
+
+    computedUnprice(accounting_info){
+      if(accounting_info && accounting_info.length){
+        var cnt = accounting_info.length;
+        var price = accounting_info[0].unincluding_price;
+        var price_yen;
+        if(price){
+          price_yen = `¥ ${price}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+          return price_yen;
+        }
+      }
+      return '';
+    },
+
+    formatterCreate(row, column){
+      var crt = row.created_at;
+      var crt_arr;
+      if(crt != '' && crt != null){
+        crt_arr = crt.split('-')
+        return crt_arr[0] + '/' + crt_arr[1] + '/' + crt[2];
+      }
+    },
+    formatterYm(row, column){
+      var ym = row.accounting_ym;
+      var ym_arr;
+      if(ym != '' && ym != null){
+        ym_arr = ym.split('-')
+        return ym_arr[0] + '/' + ym_arr[1];
+      }
+    },
+
     formatterName(row, column) {
       // console.log(row.customer_code);
-      if(row.customer_code == '') return;
+      if(row.partner_code == '') return;
       else {
-        return this.customs[row.customer_code];
+        return this.customs[row.partner_code];
       }
     },
     async customsList() {

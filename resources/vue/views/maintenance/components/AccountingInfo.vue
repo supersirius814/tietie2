@@ -8,7 +8,7 @@
       border
       style="width: 100%"
     >
-      <el-table-column align="center" prop="accounting_year" label="会計年月" />
+      <el-table-column align="center" prop="accounting_year" :formatter="formatterYear" label="会計年月" />
       <el-table-column
         align="center"
         prop="unincluding_price"
@@ -143,6 +143,18 @@ export default {
     formatterSubject(row, column){
       return this.subjectsList[row.accounting_subject_id]
     },
+
+    formatterYear(row, column){
+      var year = row.accounting_year;
+      var year_arr;
+      if(year != '' && year != null){
+        year_arr = year.split('-');
+        return year_arr[0] + '/' + year_arr[1];
+      }
+
+      return;
+    },
+
     isMobile() {
       var check = true;
       if(document.querySelector("body").clientWidth > 737) check = false;

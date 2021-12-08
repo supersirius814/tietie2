@@ -23,7 +23,7 @@ class CsvController extends Controller
 		
 		$table = $request->table;
 
-		// var_export($table); die;
+		var_export($table); die;
 		
 		return new StreamedResponse(
 			function () use ($table) {

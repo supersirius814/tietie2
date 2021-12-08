@@ -129,8 +129,8 @@
           <tbody>
             <tr>
               <th>取引先コード</th>
-              <td v-if="detail.customer_code">
-                {{ detail.customer_code }}
+              <td v-if="detail.partner_code">
+                {{ detail.partner_code }}
                 <!-- <el-select v-model="progressId" size="small" :multiple="false" placeholder="中分類名" clearable style="width: 100%" class="filter-item">
                     <el-option
                       v-for="item in detail.customerInformation"
@@ -164,9 +164,7 @@
               <th>取引先名</th>
               <td colspan="2">
                 {{
-                  detail.customerInformation[
-                    detail.customerInformation.length - 1
-                  ].customer_name
+                  detail.partner_name
                 }}
               </td>
             </tr>
@@ -174,16 +172,12 @@
               <th>TEL/FAX</th>
               <td>
                 {{
-                  detail.customerInformation[
-                    detail.customerInformation.length - 1
-                  ].TEL
+                  detail.TEL
                 }}
               </td>
               <td>
                 {{
-                  detail.customerInformation[
-                    detail.customerInformation.length - 1
-                  ].FAX
+                  detail.FAX
                 }}
               </td>
             </tr>
@@ -471,18 +465,18 @@
       :visible.sync="createMailVisible"
       :width="mailDialogWidth"
     >
-      <create-client-mail />
+      <create-client-mail :detail="detail" />
       <span slot="footer" class="dialog-footer">
-        <span>宛先とCC宛先、それぞれ選択してください。</span>
-        <a
+        <!-- <span>宛先とCC宛先、それぞれ選択してください。</span> -->
+        <!-- <a
           target="_blank"
           href="mailto:name@email.com?cc=name1@email.com;name2@mail.com"
           >Link text</a
-        >
-        <el-button type="primary" @click="createMailVisible = false"
+        > -->
+        <!-- <el-button type="primary" @click="createMailVisible = false"
           >メーラー起動</el-button
-        >
-        <el-button @click="createMailVisible = false">閉じる</el-button>
+        > -->
+        <!-- <el-button @click="createMailVisible = false">閉じる</el-button> -->
       </span>
     </el-dialog>
 
@@ -550,7 +544,7 @@ export default {
       mailDialogWidth: '45%',
       // customerInformation: this.detail.customerInformation,
       firstimage: '',
-      customer_name: '',
+      partner_name: '',
       secondimage: '',
       thirdimage: '',
       createMailVisible: false,

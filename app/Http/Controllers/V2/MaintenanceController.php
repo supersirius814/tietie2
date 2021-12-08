@@ -23,7 +23,7 @@ use App\Report_file;
 use App\Quotation_file;
 use App\Uploading_files;
 use App\Bmcategory_table;
-use App\Customer_information;
+use App\Partner;
 use App\General_manager;
 use App\Department;
 use App\District;
@@ -37,6 +37,8 @@ use App\Category;
 use DB;
 use Log;
 use Validator;
+
+use Carbon\Carbon;
 
 class MaintenanceController extends Controller
 {
@@ -80,7 +82,21 @@ class MaintenanceController extends Controller
         $page = $request->input('page', 1);
         $offset = $limit * ($page - 1);
 
-        $qb = Maintenance::with(['shop.business_category', 'orderType', 'progress', 'user'])->whereNotNull('shop_id');
+        $qb = Maintenance::with(['shop.business_category', 'orderReasons', 'orderType', 'category', 'subCategory', 'progress', 'user'])->whereNotNull('shop_id');
+
+        // $maintenance = Maintenance::with([
+        //     'shop.business_category',
+        //     'orderType', 'progress',
+        //     'user',
+        //     'maintenanceProgress.entered_by',
+        //     'maintenanceImages',
+        //     'orderReasons',
+        //     'category', 'subCategory',
+        //     'maintenanceMatters.matter_value',
+        //     'maintenanceMatters.matter_option',
+        //     'uploadingFiles',
+        //     'quotationInfo', 'accountingInfo.accounting_info'
+        // ])->find($maintenance_id);
 
         $keyword = $request->input('keyword');
 
@@ -92,7 +108,8 @@ class MaintenanceController extends Controller
         // var_export($eventCheck); die;
 
         if($eventCheck == 'true') {
-            $qb->whereRaw("DATE_FORMAT(created_at,'%m/%d/%Y') > DATE_FORMAT(deadline_date,'%m/%d/%Y')");
+            $qb->whereDate('deadline_date', '<', Carbon::today())->where('progress_id', '!=', 21)->get();
+            // $qb->whereRaw("DATE_FORMAT(created_at,'%m/%d/%Y') > DATE_FORMAT(deadline_date,'%m/%d/%Y')");
         }
 
 
@@ -116,7 +133,7 @@ class MaintenanceController extends Controller
         //compeleted_date sort
         $bycomplete = $request->input('bycomplete');
         if($bycomplete == 1){
-            $maintenances = $qb->orderBy('completed_date', 'asc');
+            $maintenances = $qb->orderBy(DB::raw('ISNULL(completed_date), completed_date'), 'ASC');
         } else if($bycomplete == 2){
             $maintenances = $qb->orderBy('completed_date', 'desc');
         } 
@@ -132,7 +149,7 @@ class MaintenanceController extends Controller
         //deadline_date sort
         $bydeadline = $request->input('bydeadline');
         if($bydeadline == 1){
-            $maintenances = $qb->orderBy('deadline_date', 'asc');
+            $maintenances = $qb->orderBy(DB::raw('ISNULL(deadline_date), deadline_date'), 'asc');
         } else if($bydeadline == 2){
             $maintenances = $qb->orderBy('deadline_date', 'desc');
         } 
@@ -149,9 +166,198 @@ class MaintenanceController extends Controller
         return response(['data' => $maintenances,'meta' => ['total' => $total]]);
     }
 
+    public function exportTables(Request $request){
+        $progress_ids = $request->input('progress_id');
+        $business_category_id = $request->input('business_category_id', 0);
+        $shop_id = $request->input('shop_id', 0);
+        $startdate = $request->startdate;
+        $completedate = $request->completedate;
+        
+        $flag = 0;
+        $res = '';
+        if (is_array($progress_ids)) {
+
+            foreach ($progress_ids as $key => $value) {
+                if ($flag > 0) {
+                    $res .= ',' . $value;
+                } else {
+                    $res = $value;
+                    $flag++;
+                }
+            }
+
+        }
+
+        $progress_id = $res;
+
+        $qb = Maintenance::with([
+            'shop.business_category', 'orderReasons', 'orderType', 
+            'category', 'subCategory', 'progress', 'user', 'quotationInfo', 
+            'accountingInfo.accounting_info'
+        ])->whereNotNull('shop_id');
+
+        if ($shop_id != 0) {
+            $qb->where('shop_id', $shop_id);
+        } else {
+            if ($business_category_id != 0) {
+                $qb = Maintenance::with(['shop.business_category', 'orderType', 'progress', 'user'])->join('shops', 'shops.shop_id', '=', 'maintenances.shop_id')->join('business_categories', 'business_categories.business_category_id', '=', 'shops.business_category_id')->where('shops.business_category_id', $business_category_id);
+            }
+        }
+
+        if($startdate && $completedate){
+            $qb->whereBetween('created_at', [$startdate, $completedate]);
+        }
+
+        if ($progress_id != 0) {
+            $progress_id = explode(',', $progress_id);
+            $qb->whereIn('progress_id', $progress_id);
+        }
+
+        $statement = 'SELECT maintenance_id, maintenance_code, partners.partner_name, maintenances.partner_code FROM maintenances LEFT JOIN partners on maintenances.partner_code = partners.partner_code GROUP BY maintenance_id ORDER BY maintenance_id DESC';
+
+
+        $partners = DB::select($statement);
+
+        $limit = $request->input('limit', 15);
+        $page = $request->input('page', 1);
+        $offset = $limit * ($page - 1);
+
+        $total = $qb->count();
+
+        // $qb->offset($offset)->limit($limit);
+        $tblsData = $qb->orderBy('maintenance_id', 'desc')->get();
+        // $tblsData = $qb->orderBy('maintenance_id', 'desc')->take($limit)->get();
+
+        return response(['data' => $tblsData, 'meta' => ['total' => $total], 'partners' => $partners]);
+    }
+
+    public function importTables(Request $request){
+        $csv_data = $request->csvdata;
+        $valid = $request->valid;
+        $userId = $request->userId;
+        // if(array_sum($valid) == 0) return response(0);
+        // echo $userId; die;
+        foreach ($csv_data as $key => $line) {
+            // if(count($line) < 2) continue;
+            // if($valid[$key] > 0) continue;
+            // echo $line['取引先コード']."<br/>";
+            $partners = DB::table('partners')->where('partner_code', $line['取引先コード'])->first();
+            $pname = $partners->partner_name;
+            $pid = $partners->partner_id;
+            $tax = $line['請求金額（税込）'] - $line['請求金額（税抜）'];
+            $maintenances = DB::table('maintenances')->where('maintenance_code', $line['メンテナンスNO'])->first()->completed_date;
+            $cmp_check = $maintenances->completed_date;
+            $maintenance_id = $maintenances->maintenance_id;
+            $shop_id = DB::table('shops')->where('shop_code', $line['店舗コード'])->first()->shop_id;
+
+            //maintenances table update
+
+            if(!$cmp_check){
+                $comment = $line['完了日']." 請求情報取り込みにより登録";
+                $progress_id = 21;
+                $completed_date = $line['完了日'];
+
+                //maintenace_progress table insert
+                $row_mprogress = new Maintenance_progress();
+                $row_mprogress->maintenance_id = $maintenance_id;
+                $row_mprogress->progress_id = $progress_id;
+                $row_mprogress->comment = $comment;
+                $row_mprogress->save();
+                
+
+                $row_main = new Maintenance();
+                $row_main->maintenance_id = $maintenance_id;
+                $row_main->maintenance_code = $line['メンテナンスNO'];
+                $row_main->shop_id = $shop_id;
+                $row_main->partner_code = $line['取引先コード'];
+                $row_main->progress_id = $progress_id;
+                $row_main->comment = $comment;  
+                $row_main->completed_date = $completed_date;
+                $row_main->save();
+            } else{
+                $row_main = new Maintenance();
+                $row_main->maintenance_id = $maintenance_id;
+                $row_main->maintenance_code = $line['メンテナンスNO'];
+                $row_main->shop_id = $shop_id;
+                $row_main->partner_code = $line['取引先コード'];
+                $row_main->save();
+            }
+            
+            
+
+            //accounting_info table insert
+            $row_accinfo = new Accounting_info();
+            $row_accinfo->maintenance_id = $line['メンテナンスNO'];
+            $row_accinfo->partner_id = $pid;
+            $row_accinfo->partner_name = $pname;
+            $row_accinfo->tax = $tax;
+            $row_accinfo->unincluding_price = $line['請求金額（税抜）'];
+            $row_accinfo->including_price = $line['請求金額（税込）'];
+            $row_accinfo->modified_by = $userId;
+            $row_accinfo->accounting_year = $line['会計年月'];
+            $row_accinfo->save();
+        }
+
+        return response(1);
+    }
+
     public function eventCheckCountfunc(){
-        $eventCheckCnt = Maintenance::whereRaw("DATE_FORMAT(CURDATE(),'%m/%d/%Y') > DATE_FORMAT(deadline_date,'%m/%d/%Y')")->count();
+        $eventCheckCnt = Maintenance::whereRaw("DATE_FORMAT(CURDATE(),'%m/%d/%Y') > DATE_FORMAT(deadline_date,'%m/%d/%Y') and progress_id != 21")->count();
         return response($eventCheckCnt);
+    }
+
+    public function getParents(Request $request){
+        $partner_code = $request->partner_code;//partner_code to parent_id
+        $data = DB::table('partners')->select('partner_code', 'partner_id', 'partner_name')->where('parent_id', $partner_code)->get();
+        return response($data);
+    }
+
+    
+    public function getPartners_staff(Request $request){
+        $partner_id = $request->partner_id;//partner_code to parent_id
+        $data = DB::table('partners_staff')->where('partner_id', $partner_id);
+        $name_arr = $data->pluck('name');
+        $email_arr = $data->pluck('email');
+
+        foreach($name_arr as $key => $val){
+            $rlt[$key]['name'] = $name_arr[$key];
+            $rlt[$key]['email'] = $email_arr[$key];
+            $rlt[$key]['to'] = false;
+            $rlt[$key]['cc'] = false;
+        }
+        return response($rlt);
+    }
+
+    public function chkMaintenanceId(){
+        $result = Maintenance::join('shops', 'shops.shop_id', '=', 'maintenances.shop_id')->wherenotNull('maintenance_code');
+        $id = $result->pluck('maintenance_id');
+        $code = $result->pluck('maintenance_code');
+        $shop_code = $result->pluck('shop_code');
+        foreach ($code as $key => $value) {
+            $rlt_code[$value] = $id[$key];
+            $rlt_shop[$value] = $shop_code[$key];
+        }
+        return response()->json(['code' => $rlt_code, 'shop' => $rlt_shop]);
+    }
+
+    public function chkShopCode(){
+        $result = Shop::groupBy('shop_code');
+        $id = $result->pluck('shop_id');
+        $code = $result->pluck('shop_code');
+        foreach ($code as $key => $value) {
+            $rlt[$value] = $id[$key];
+        }
+        return response($rlt);
+    }
+
+    public function chkpartner(){
+        $result = Partner::groupBy('partner_code');
+        $id = $result->pluck('partner_id');
+        $code = $result->pluck('partner_code');
+        foreach ($code as $key => $value) {
+            $rlt[$value] = $id[$key];
+        }
+        return response($rlt);
     }
 
     public function csvExport($tableName){
@@ -170,7 +376,7 @@ class MaintenanceController extends Controller
         $business_category_id = Shop::where('shop_id', $request->input('shop_id'))->first()->business_category_id;
         // var_export($business_category_id); die;
 
-        $qb = Maintenance::with(['shop',  'orderType', 'progress', 'user'])
+        $qb = Maintenance::with(['accountingInfo', 'shop',  'orderType', 'progress', 'user'])
                     ->whereNotNull('shop_id')
                     ->where('shop_id', $request->input('shop_id'))
                     // ->where('business_category_id', $business_category_id)
@@ -191,7 +397,7 @@ class MaintenanceController extends Controller
         $page = $request->input('page', 1);
         $offset = $limit * ($page - 1);
 
-        $qb = Maintenance::with(['shop.business_category', 'orderType', 'progress', 'user'])
+        $qb = Maintenance::with(['shop.business_category', 'accountingInfo', 'orderType', 'progress', 'user'])
         ->whereNotNull('shop_id')->where('shop_id', $request->input('shop_id'));
 
         $total = $qb->count();
@@ -204,12 +410,12 @@ class MaintenanceController extends Controller
 
 
     public function customsList(Request $request) {
-        $customerNC = Customer_information::select('customer_name', 'customer_code')
-                        ->groupBy('customer_code')
+        $customerNC = Partner::select('partner_name', 'partner_code')
+                        ->groupBy('partner_code')
                         ->get();
         
         foreach ($customerNC as $key => $value) {
-            $result[$value['customer_code']] = $value['customer_name'];
+            $result[$value['partner_code']] = $value['partner_name'];
         }
         return response($result);
     }
@@ -271,12 +477,19 @@ class MaintenanceController extends Controller
     }
 
     public function getAccountingSubjects($maintenance_id, Request $request){
-        $subjectsList = Accounting_subjects::where('business_category_id', $request->input('business_category_id'))->get();
+        $subjectsList = Accounting_subjects::where('business_category_id', $request->input('business_category_id'))->orderBy('accounting_subjects_id', 'desc')->get();
         return response($subjectsList);
+    }
+
+    public function getSubjects(){
+        $subjectsList = Accounting_subjects::orderBy('accounting_subjects_id', 'desc')->get();
+        return response($subjectsList);        
     }
 
     public function createAccounting(Request $request, $maintenance_id)
     {
+        $accounting_info_id = $request->input('accounting_info_id');
+        $accounting_year = $request->input('accounting_year');
         if($request->input('accounting_info_id') > 0){
             Accounting_info::where('accounting_info_id', $request->input('accounting_info_id'))
             ->update([
@@ -288,6 +501,8 @@ class MaintenanceController extends Controller
                 'unincluding_price' => $request->input('unincluding_price'),
                 'accounting_subject_id' => $request->input('accounting_subject_id'),
              ]);
+
+            //  DB::statement("UPDATE maintenances LEFT JOIN accounting_info ON maintenances.maintenance_id = accounting_info.maintenance_id SET accounting_ym = '$accounting_year' WHERE accounting_info_id = '$accounting_info_id'");
         } else{
             $row = new Accounting_info();
             $row->maintenance_id = $maintenance_id;
@@ -299,11 +514,12 @@ class MaintenanceController extends Controller
             $row->unincluding_price = $request->input('unincluding_price');
             $row->accounting_subject_id = $request->input('accounting_subject_id');
             $row->modified_by = $request->input('modified_by');
-            // $row->entered_by = $request->user()->user_id;
             $row->save();
+
+            // DB::statement("UPDATE maintenances  SET accounting_ym = '$accounting_year' WHERE maintenance_id = '$maintenance_id'");
         }
 
-        $accounting_info = Accounting_info::with('accounting_info')->where('maintenance_id', $maintenance_id)->get();
+        $accounting_info = Accounting_info::with('accounting_info')->where('maintenance_id', $maintenance_id)->orderBy('updated_at', 'desc')->get();
         return response($accounting_info);
     }
 
@@ -329,7 +545,7 @@ class MaintenanceController extends Controller
         Accounting_info::where('accounting_info_id', $accounting_info_id)
         ->delete();
 
-        $accounting_info = Accounting_info::where('maintenance_id', $request->input('maintenance_id'))->get();
+        $accounting_info = Accounting_info::where('maintenance_id', $request->input('maintenance_id'))->orderBy('updated_at', 'desc')->get();
         return response($accounting_info);
     } 
 
@@ -525,57 +741,42 @@ class MaintenanceController extends Controller
     }
 
 
-
-    // public function customCodeSearch(Request $request, $custom_code)
-    // {
-    //     $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
-    //         ->distinct()
-    //         ->where('customer_code', $custom_code)
-    //         ->get();
-    //     if (Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
-    //         ->distinct()
-    //         ->where('customer_code', $custom_code)->exists()
-    //     ) {
-    //         return response($result);
-    //     } else return response(0);
-    // }
-
     public function ultimateCustomSearch($maintenance_id, Request $request)
     {
-        $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
+        $result = Partner::select('partner_code', 'partner_name', 'partner_id', 'TEL', 'FAX', 'name_alias')
             ->distinct()
-            ->groupBy('customer_code');
-        if ($request->input('customer_code')) {
-            $result->where('customer_code', 'like', '%' . $request->input('customer_code') . '%');
+            ->groupBy('partner_code');
+        if ($request->input('partner_code')) {
+            $result->where('partner_code', 'like', '%' . $request->input('partner_code') . '%');
         }
 
-        if ($request->input('id')) {
-            $result->where('customer_code', 'like', '%' . $request->input('id') . '%');
+        if ($request->input('partner_id')) {
+            $result->where('partner_id', 'like', '%' . $request->input('partner_id') . '%');
         }
 
-        if ($request->input('customer_name')) {
-            $result->where('customer_name', 'like', '%' . $request->input('customer_name') . '%');
+        if ($request->input('partner_name')) {
+            $result->where('partner_name', 'like', '%' . $request->input('partner_name') . '%');
         }
 
-        if ($request->input('customer_tel')) {
-            $result->where('TEL', 'like', '%' . $request->input('customer_tel') . '%');
+        if ($request->input('partner_tel')) {
+            $result->where('TEL', 'like', '%' . $request->input('partner_tel') . '%');
         }
 
-        if ($request->input('customer_alias')) {
-            $result->where('customer_alias', 'like', '%' . $request->input('customer_alias') . '%');
+        if ($request->input('name_alias')) {
+            $result->where('name_alias', 'like', '%' . $request->input('name_alias') . '%');
         }
 
-        if ($request->input('customer_fax')) {
-            $result->where('FAX', 'like', '%' . $request->input('customer_fax') . '%');
+        if ($request->input('partner_fax')) {
+            $result->where('FAX', 'like', '%' . $request->input('partner_fax') . '%');
         }
 
-        if ($request->input('customergroup_code')) {
-            $result->where('customergroup_code', 'like', '%' . $request->input('customergroup_code') . '%');
-        }
+        // if ($request->input('customergroup_code')) {
+        //     $result->where('customergroup_code', 'like', '%' . $request->input('customergroup_code') . '%');
+        // }
 
-        if ($request->input('customergroup')) {
-            $result->where('customergroup', 'like', '%' . $request->input('customergroup') . '%');
-        }
+        // if ($request->input('customergroup')) {
+        //     $result->where('customergroup', 'like', '%' . $request->input('customergroup') . '%');
+        // }
 
         $result_again = $result->get();
         if ($result_again->count()) {
@@ -645,22 +846,22 @@ class MaintenanceController extends Controller
     }
     
 
-    public function depart_name(Request $request, $customergroup_code)
-    {
-        $result = Customer_information::select('customergroup')
-            ->distinct()
-            ->where('customergroup_code', $customergroup_code)
-            ->groupBy('customergroup')
-            ->get();
+    // public function depart_name(Request $request, $customergroup_code)
+    // {
+    //     $result = Partner::select('customergroup')
+    //         ->distinct()
+    //         ->where('customergroup_code', $customergroup_code)
+    //         ->groupBy('customergroup')
+    //         ->get();
 
-        if ($result->isEmpty()) {
-            $result[0] = array(
-                'customergroup_code' => '',
-            );
-        }
-        // echo $result;
-        return response($result);
-    }
+    //     if ($result->isEmpty()) {
+    //         $result[0] = array(
+    //             'customergroup_code' => '',
+    //         );
+    //     }
+    //     // echo $result;
+    //     return response($result);
+    // }
 
 
 
@@ -679,36 +880,34 @@ class MaintenanceController extends Controller
 
     public function update_customerid(Request $request, $maintenance_id)
     {
-        $id = $request->input('id');
-        if ($id > 0) {
-            $custom_code = $request->input('customer_code');
+        $partner_id = $request->input('partner_id');
+        if ($partner_id > 0) {
+            $partner_code = $request->input('partner_code');
         } else {
-
-
-            $row = new Customer_information();
-            $row->customer_code = $request->input('customer_code');
-            $row->customer_name = $request->input('customer_name');
-            $row->customer_alias = $request->input('customer_alias');
-            $row->customergroup = $request->input('customergroup');
-            $row->customergroup_code = $request->input('customergroup_code');
-            $row->TEL = $request->input('customer_tel');
-            $row->FAX = $request->input('customer_fax');
+            $row = new Partner();
+            $row->partner_code = $request->input('partner_code');
+            $row->partner_name = $request->input('partner_name');
+            $row->name_alias = $request->input('name_alias');
+            // $row->customergroup = $request->input('customergroup');
+            // $row->customergroup_code = $request->input('customergroup_code');
+            $row->TEL = $request->input('partner_tel');
+            $row->FAX = $request->input('partner_fax');
             $row->save();
 
-            $custom_code = $request->input('customer_code');
+            $partner_code = $request->input('partner_code');
             $maintenance = Maintenance::find($maintenance_id);
-            $maintenance->customer_code = $request->input('customer_code');
+            $maintenance->partner_code = $request->input('partner_code');
             $maintenance->save();
         }
 
 
-        $files = Maintenance::where('maintenance_id', $maintenance_id)->update(['customer_code' => $custom_code]);
+        $files = Maintenance::where('maintenance_id', $maintenance_id)->update(['partner_code' => $partner_code]);
 
 
-        $result = Customer_information::select('customer_code', 'customer_name', 'id', 'TEL', 'FAX', 'customer_alias', 'customergroup', 'customergroup_code')
+        $result = Partner::select('partner_code', 'partner_name', 'partner_id', 'TEL', 'FAX', 'name_alias')
             ->distinct()
-            ->where('customer_code', $custom_code)
-            ->groupBy('customer_code')
+            ->where('partner_code', $partner_code)
+            ->groupBy('partner_code')
             ->get();
         return response($result);
     }
@@ -809,6 +1008,13 @@ class MaintenanceController extends Controller
             'quotationInfo', 'accountingInfo.accounting_info'
         ])->find($maintenance_id);
 
+        $qb_maintenanceTopartners =  DB::select("SELECT partner_id, partner_no, partner_name, TEL, FAX FROM `maintenances` LEFT JOIN partners ON maintenances.partner_code=partners.partner_code WHERE maintenance_id= ?", [$maintenance_id]);
+
+        $maintenance['partner_id'] = $qb_maintenanceTopartners['0']->partner_id;
+        $maintenance['partner_no'] = $qb_maintenanceTopartners['0']->partner_no;
+        $maintenance['partner_name'] = $qb_maintenanceTopartners['0']->partner_name;
+        $maintenance['TEL'] = $qb_maintenanceTopartners['0']->TEL;
+        $maintenance['FAX'] = $qb_maintenanceTopartners['0']->FAX;
 
         $block_ids = Shop::select('block_id')->where('shop_id', $maintenance['shop_id'])->get();
         $block_names = Block::select('block_name')->where('block_id', $block_ids[0]['block_id'])->get();
@@ -834,31 +1040,31 @@ class MaintenanceController extends Controller
         $maintenance['department_names'] = $department_names;
 
 
-        $quotationcus = Customer_information::select('customer_code', 'customer_name', 'customer_id', 'TEL', 'FAX')
-            ->distinct()
-            ->where('customer_code', $maintenance['customer_code'])
-            ->groupBy('customer_code')
-            ->get();
+        // $quotationcus = Partner::select('partner_code', 'partner_name', 'partner_id', 'TEL', 'FAX')
+        //     ->distinct()
+        //     ->where('partner_code', $maintenance['partner_code'])
+        //     ->groupBy('partner_code')
+        //     ->get();
 
 
-        if ($quotationcus->isEmpty()) {
-            $quotationcus[0] = array(
-                'customer_code' => '',
-                'customer_name' => '',
-                'customer_id' => '',
-                'TEL' => '',
-                'FAX' => '',
-            );
-        }
+        // if ($quotationcus->isEmpty()) {
+        //     $quotationcus[0] = array(
+        //         'partner_code' => '',
+        //         'customer_name' => '',
+        //         'customer_id' => '',
+        //         'TEL' => '',
+        //         'FAX' => '',
+        //     );
+        // }
 
-        $maintenance['customerInformation'] = $quotationcus;
+        // $maintenance['customerInformation'] = $quotationcus;
 
-        $customgroup_list = Customer_information::select('customergroup',  'customergroup_code')
-            ->distinct()
-            ->whereNotNull('customergroup_code')
-            ->get();
+        // $customgroup_list = Partner::select('customergroup',  'customergroup_code')
+        //     ->distinct()
+        //     ->whereNotNull('customergroup_code')
+        //     ->get();
 
-        $maintenance['customgroup_list'] = $customgroup_list;
+        // $maintenance['customgroup_list'] = $customgroup_list;
             
         $order_reason = Order_reason::select('order_reason_id', 'reason')
             ->distinct()

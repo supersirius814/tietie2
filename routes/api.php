@@ -68,6 +68,8 @@ Route::post('v1/admin/clients', 'ClientController@index');
 Route::post('v1/admin/csv/export', 'CsvController@export');
 Route::get('v1/admin/csv/export', 'CsvController@export');
 
+
+
 Route::get('v1/maintenance/{maintenance_id}/changeprogress', 'MaintenanceController@changeProgress')->middleware('auth');
 
 
@@ -97,8 +99,16 @@ Route::group(['namespace' => 'V2'], function () {
     Route::post('v2/maintenance/{mantenance_id}/selectreason', 'MaintenanceController@selectreason');
     Route::post('v2/maintenance/{mantenance_id}/getAccountingSubjects', 'MaintenanceController@getAccountingSubjects');
 
+    Route::get('v2/maintenance/getSubjects', 'MaintenanceController@getSubjects');
+
     Route::post('v2/maintenance/csv/export', 'CsvController@export');
     Route::get('v2/maintenance/csv/export', 'CsvController@export');
+
+    //csv import & export
+    Route::post('v2/maintenance/csv/loadexport', 'MaintenanceController@exportTables');
+    Route::post('v2/maintenance/csv/import', 'MaintenanceController@importTables');
+    
+
 
     
 
@@ -112,7 +122,7 @@ Route::group(['namespace' => 'V2'], function () {
     Route::post('v2/maintenance/{mantenance_id}/deleteQuotationId', 'MaintenanceController@deleteQuotationId');
     
     
-    Route::get('v2/maintenance/{mantenance_id}/depart_name', 'MaintenanceController@depart_name');
+    // Route::get('v2/maintenance/{mantenance_id}/depart_name', 'MaintenanceController@depart_name');
     
     Route::post('v2/maintenance/{mantenance_id}/update_customerid', 'MaintenanceController@update_customerid');
     Route::get('v2/maintenance/{mantenance_id}/customCodeSearch', 'MaintenanceController@customCodeSearch');
@@ -128,6 +138,12 @@ Route::group(['namespace' => 'V2'], function () {
     Route::get('v2/maintenance/{mantenance_id}/report_files', 'MaintenanceController@getReportFiles');
     Route::get('v2/maintenance/{mantenance_id}/quotation_files', 'MaintenanceController@getQuotationFiles');//tie9.5 add
 
+    
+    Route::post('v2/maintenance/getParents', 'MaintenanceController@getParents');
+    Route::post('v2/maintenance/getPartners_staff', 'MaintenanceController@getPartners_staff');
+    Route::get('v2/maintenance/chkMaintenanceId', 'MaintenanceController@chkMaintenanceId');
+    Route::get('v2/maintenance/chkShopCode', 'MaintenanceController@chkShopCode');
+    Route::get('v2/maintenance/chkpartner', 'MaintenanceController@chkpartner');
 
     Route::post('v2/maintenance/post', 'MaintenanceController@post');
 

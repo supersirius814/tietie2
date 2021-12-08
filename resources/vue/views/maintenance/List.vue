@@ -112,7 +112,7 @@
           <el-select v-model="query.shop_id" placeholder="店舗" clearable style="width: 100px" class="filter-item">
             <el-option label="全店舗" :value="0" />
             <el-option v-for="item in shops" :key="item.shop_id" :label="item.shop_name" :value="item.shop_id" />
-          </el-select>
+          </el-select>  
 
           <el-input v-model="query.keyword" placeholder="フリーワード" style="width: 200px;" class="filter-item" />
           <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
@@ -280,6 +280,7 @@ export default {
   data() {
     return {
       bycomplete: 0,
+      deadline_list: [],
       bycode: 0,
       sortcount: 0,
       bydeadline: 0,
@@ -336,10 +337,11 @@ export default {
     
   },
   created() {
+    
     this.getList();
     this.eventcheckCountfunc();
     var today = new Date();
-    this.todayDate = today.getFullYear()+'-'+(((today.getMonth()+1) < 10)?"0":"") + (today.getMonth()+1)+'-'+ ((today.getDate() < 10)?"0":"") + today.getDate();
+    this.todayDate = today.getFullYear()+'/'+(((today.getMonth()+1) < 10)?"0":"") + (today.getMonth()+1)+'/'+ ((today.getDate() < 10)?"0":"") + today.getDate();
     // var totoalTxt = document.getElementsByClassName('el-pagination__total')[0].textContent;
     // var split_tt = totoalTxt.split(' ');
     // totoalTxt = '全' + split_tt[1] + '件';
@@ -349,6 +351,12 @@ export default {
 
   },
   methods: {
+    getStatusDeadline(){
+      resource.getStatusDeadline().then(res => {
+        this.deadline_list = res;
+      });
+    },
+
   sortChange(sortProps){
     this.headerClick(sortProps.column,event) //optional: trigger header-click event
   },
@@ -471,15 +479,7 @@ export default {
         return 1
       }
     },
-    codeSort(){
-      alert('code')
-    },
-      sortMethod(obj1, obj2) {
-        console.log('===================');
-        console.log(obj1, obj2);
-  this.sortcount ++;
-  console.log(this.sortcount);
-      },
+
     eventcheckCountfunc(){
       resource.eventcheckCountfunc().then(res => {
         this.eventcheckCount = res;
@@ -506,6 +506,7 @@ export default {
 
    tableRowClassName({row, rowIndex}) {
     //  console.log(row.order_type_id);
+    if(row.completed_date == '' || row.completed_date == null){
        if(row.is_emergency > 0) {
          return 'custom-warning-row';
        } 
@@ -521,9 +522,11 @@ export default {
       //  console.log('=========================');
       //  console.log(row.deadline_date);
 
-      if(this.todayDate > row.deadline_date) {
+      if(this.todayDate > row.deadline_date && row.progress_id != 21) {
         return 'custom-highlight-row';
       }
+    }
+
 
     return;
   },
@@ -537,16 +540,37 @@ export default {
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
 
+        var dead = element.deadline_date;
+        var deads;
+        if(dead != null & dead != ''){
+          deads = dead.split('-');
+          element.deadline_date = deads[0] + '/' + deads[1] + '/' + deads[2];
+        }
+
+        if(element.completed_date == '' || element.completed_date == null){
           if(element.is_emergency > 0) {
             element.maintenance_code = '<i class="el-icon-info" style="color: #ff4949;  padding-right: 5px"></i>' + element.maintenance_code;
           } 
           if(element.is_disaster > 0) {
              element.maintenance_code = '<i style="color: #ffba00; padding-right: 5px" class="fa">&#xf071;</i>' + element.maintenance_code; 
           }
-          var createDate = element.created_at;
+
           if(this.todayDate > element.deadline_date) {
             element.maintenance_code = '<i style="color: #DE38B8; padding-right: 5px" class="fa">&#xf017;</i>' + element.maintenance_code;
           }
+        }
+
+          var createDate = element.created_at;
+          var crd = createDate.split('-');
+          element.created_at = crd[0] + '/' + crd[1] + '/' + crd[2];
+
+          var comp = element.completed_date;
+          var comps;
+          if(comp != null & comp != ''){
+            comps = comp.split('-');
+            element.completed_date = comps[0] + '/' + comps[1] + '/' + comps[2];
+          }
+
       });
       this.total = meta.total;
       this.loading = false;

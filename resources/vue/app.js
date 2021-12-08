@@ -4,6 +4,8 @@ import Vue from 'vue';
 import VueCurrencyInput from "vue-currency-input";
 import Cookies from 'js-cookie';
 import ElementUI from 'element-ui';
+import lang from 'element-ui/lib/locale/lang/ja';
+import locale from 'element-ui/lib/locale';
 import App from './views/App';
 import store from './store';
 import router from '@/router';
@@ -22,6 +24,8 @@ Vue.use(ElementUI, VueCurrencyInput, {
     i18n: (key, value) => i18n.t(key, value),
 });
 
+locale.use(lang);
+
 // register global utility filters.
 Object.keys(filters).forEach(key => {
     Vue.filter(key, filters[key]);
@@ -37,4 +41,4 @@ new Vue({
     render: h => h(App),
 });
 
-i18n.locale = 'ja'
+i18n.locale = 'ja';

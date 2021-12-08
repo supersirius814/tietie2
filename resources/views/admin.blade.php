@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="ja">
 
 <head>
     <meta charset="UTF-8">
@@ -52,6 +52,15 @@
             top: 20px;
             right: 50px;
             color: red;
+        }
+
+        body * {
+            font-family: Hiragino Kaku Gothic ProN !important;
+        }
+
+        /* use browser's monospace font */
+        pre {
+            font-family: monospace !important;
         }
 
         .material-icons {

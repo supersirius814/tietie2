@@ -279,7 +279,9 @@ export default {
     getBreakDate(row, column) {
       for (let i = 0; i < this.detail.maintenance_progress.length; i++) {
         var aa = this.detail.maintenance_progress[i].created_at.split(' ');
-        var dd = aa[0] + '<br>' + aa[1];
+        // var dd = aa[0] + '<br>' + aa[1];
+        var ymd = aa[0].split('-');
+        var dd = ymd[0] + '/' + ymd[1] + '/' + ymd[2] + '<br>' + aa[1];
         this.detail.maintenance_progress[i].created_at = dd;
       }
     },

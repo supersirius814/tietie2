@@ -60,12 +60,12 @@
           <tbody>
             <tr>
               <th>取引先名</th>
-              <td colspan="2">{{ detail.customerInformation[detail.customerInformation.length - 1].customer_name }}</td>
+              <td colspan="2">{{ detail.partner_name }}</td>
             </tr>
             <tr>
               <th>TEL/FAX</th>
-              <td>{{detail.customerInformation[detail.customerInformation.length - 1].TEL}}</td>
-              <td>{{detail.customerInformation[detail.customerInformation.length - 1].FAX}}</td>
+              <td>{{detail.TEL}}</td>
+              <td>{{detail.FAX}}</td>
             </tr>
           </tbody>
         </table>

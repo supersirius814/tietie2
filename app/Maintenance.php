@@ -63,7 +63,7 @@ class Maintenance extends Model
 
 	public function accountingInfo()
 	{
-		return $this->hasMany('App\Accounting_info');
+		return $this->hasMany('App\Accounting_info')->orderBy('updated_at', 'desc');
 	}
 	public function maintenanceImages()
 	{
@@ -110,9 +110,9 @@ class Maintenance extends Model
 		return $this->hasMany('App\Bmcategory_table');
 	}
 
-	public function customerInformation()
+	public function partner()
 	{
-		return $this->hasMany('App\Customer_information');
+		return $this->hasMany('App\Partner');
 	}
 
 	public function uploadingFiles()
@@ -123,5 +123,10 @@ class Maintenance extends Model
 	public function generalManager()
 	{
 		return $this->hasMany('App\General_manager');
+	}
+
+	public function customersMain()
+	{
+		return $this->belongsToMany('App\Partner', 'partner_code', 'partner_code');
 	}
 }

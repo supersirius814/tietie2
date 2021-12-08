@@ -1,19 +1,24 @@
 <template>
 
   <div>
+    <!-- {{ pname }} -->
+
     <el-row :gutter="20">
       <el-col :span="10">
         <table class="detail-table">
           <tbody>
             <tr>
               <th>請求元取引コード</th>
-              <td class="input-td"><input value="" v-model="partner_id" class="el-input__inner"/></td>
-              <!-- <td class="input-td"><input value="110000060" /></td> -->
+              <td  v-if="parents && parents.length > 0" class="input-td" >
+                <input value="" v-model="pvalue" disabled class="el-input__inner"/>
+              </td>
+              <td v-else class="input-td"><input value="" v-model="detail.partner_code" disabled class="el-input__inner"/></td>
+
             </tr>
           </tbody>
         </table>
       </el-col>
-      <el-col :span="3">
+      <el-col :span="3" style="display: none">
         <el-button type="info" size="small">検索</el-button>
       </el-col>
       <el-col :span="11">
@@ -33,10 +38,12 @@
           <tbody>
             <tr>
               <th>請求元取引先名</th>
-              <td class="input-td">
-                <input value="" v-model="partner_name" class="el-input__inner"/>                
-                <!-- <input value="パナ産機（あじさい銀行）" /> -->
+              <td  v-if="parents && parents.length > 0" class="select-td" >
+                <el-select  size="small" v-model="pname" placeholder="" clearable style="width: 100%" class="filter-item" v-on:change="getPvalue()">
+                  <el-option v-for="item in parents" :key="item.partner_id" :label="item.partner_name" :value="item.partner_name" />
+                </el-select>
               </td>
+              <td v-else class="input-td"><input value="" v-model="detail.partner_name" disabled class="el-input__inner"/></td>
             </tr>
           </tbody>
         </table>
@@ -53,7 +60,13 @@
         :default-year="2020"
                   :format="format"
                   ></month-picker-input> -->
-                  	<vue-monthly-picker :monthLabels="localeMonth"	 v-model="accounting_year" />
+                  <el-date-picker
+                    v-model="accounting_year"
+                    type="month"
+                    format="yyyy/MM"
+                  >
+                  </el-date-picker>
+                  	<!-- <vue-monthly-picker :monthLabels="localeMonth"	 v-model="accounting_year" /> -->
                 </td>
             </tr>
           </tbody>
@@ -70,7 +83,7 @@
                 <InputNumber
                   @on-change="calUnin"
                   size="large"
-                  style="width: 100%"
+                  style="width: 100%; font-family: Ionicons!important"
                   editable
                   v-model="unincluding_price"
                   :formatter="value => `¥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
@@ -99,7 +112,7 @@
               <td class="input-td">
                 <InputNumber
                   size="large"
-                  style="width: 100%;"
+                  style="width: 100%; font-family: Ionicons!important"
                   v-model="tax"
                   :editable="false"
                   :step="0"
@@ -176,10 +189,7 @@
       border
       style="width: 100%; margin: auto"
     >
-      <el-table-column align="center" prop="accounting_year" label="会計年月">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.accounting_year" placeholder="" />
-        </template>
+      <el-table-column align="center" prop="accounting_year" label="会計年月" :formatter="formatterYear">
       </el-table-column>
       <el-table-column align="center" prop="unincluding_price" label="請求金額（税抜）" :formatter="formatterUnp">
         <!-- <template slot-scope="scope">
@@ -226,11 +236,11 @@
             <div style="display: inline-flex; padding 0px; margin: 0px">
 
                   <el-button size="small" type="primary" @click="editAccountingId(scope.row)"  style="background-color: transparent; padding: 0px; margin: 0px;
-          border: 0px;"><i class="material-icons" style="font-size:30px;color:#1890ff">&#xe254;</i></el-button>
+          border: 0px;"><i class="material-icons" style="font-family: Material Icons!important; font-size:30px;color:#1890ff">&#xe254;</i></el-button>
 
 
                   <el-button size="small" type="primary" @click="deleteAccountingId(scope.row.accounting_info_id)" style="background-color: transparent; padding: 0px; margin: 0px;
-          border: 0px;"><i class="material-icons" style="font-size:30px;color:red">&#xe92b;</i></el-button>
+          border: 0px;"><i class="material-icons" style="font-family: Material Icons!important; font-size:30px;color:red">&#xe92b;</i></el-button>
             </div>
           </template>
       </el-table-column>
@@ -264,6 +274,9 @@ export default {
   },
   data() {
     return {
+      pvalue: '',
+      pname: '',
+      parents: [],
       button_label: '登録',
       value: null,
       item: '',
@@ -315,16 +328,48 @@ export default {
     };
   },
   created(){
+    this.getParents();
     this.$store.dispatch('user/getInfo').then(user => {
       this.userId = user.id;
       this.userName = user.name;
     });
+    
   },
   mounted() {
     this.getAccountingSubjects();
+    
+    // this.$root.$on('ClassHistory', () => {
+    //     // your code goes here
+    //     this.getList()
+    // });
+
+    // this.$root.$on('StoreHistory', () => {
+    //     // your code goes here
+    //     this.getList()
+    // });
     // alert(this.$route.params['accounting_info_id']);
   },
   methods: {
+    getPvalue(){
+      this.parents.forEach(el => {
+        console.log(this.pvalue);
+        if(el.partner_name == this.pname){
+          this.pvalue = el.partner_code;
+          return;
+        }
+      });
+    },
+    formatterYear(row, column){
+      var year = row.accounting_year;
+      var year_arr;
+      if(year != '' && year != null){
+        year_arr = year.split('-');
+        return year_arr[0] + '/' + year_arr[1];
+      }
+
+      return;
+    },
+
     formatterInp(row, column){
       var rowValue = row.including_price;
       rowValue = `¥ ${rowValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -348,6 +393,16 @@ export default {
         return this.subjectsList[row.accounting_subject_id];
       }
     },
+    getParents(){
+        var data = {
+          partner_code: this.detail.partner_code,
+        };
+        resource.getParents(data).then(res => {
+          this.parents = res;
+          // if(this.parents.length > 0) this.chkparent = true;
+          // console.log(res);
+        });
+    },
     getAccountingSubjects(){
       var data = {
         business_category_id: this.detail.shop.business_category.business_category_id,
@@ -357,7 +412,7 @@ export default {
         res.forEach(el => {
           this.subjectsList[el.accounting_subjects_id] = el.name;
         });
-        console.log(this.subjectsList);
+        // console.log(this.subjectsList);
       });
     },
 
@@ -435,10 +490,10 @@ export default {
     },
 
     save() {
-      if(this.partner_id == ''){
-        alert('入力フィールドを確認してください！');
-        return;
-      }
+      // if(this.partner_id == ''){
+      //   alert('入力フィールドを確認してください！');
+      //   return;
+      // }
       // alert(this.subjects_id); return;
       var as_id = '';
       if(typeof this.subjects_id === 'string') as_id = this.accounting_subject_id;
@@ -453,11 +508,18 @@ export default {
         yearMonth = ss;
       }
       
-
+      var partner_id, partner_name;
+      if(this.parents && this.parents.length > 0){
+        partner_id = this.pvalue;
+        partner_name = this.pname;
+      } else{
+        partner_id = this.detail.partner_id;
+        partner_name = this.detail.partner_name;
+      }
       const insertData = {
         accounting_info_id: this.$route.params['accounting_info_id'],
-        partner_id: this.partner_id,
-        partner_name: this.partner_name,
+        partner_id: partner_id,
+        partner_name: partner_name,
         unincluding_price: this.unincluding_price,
         tax: this.tax,
         including_price: this.including_price,
@@ -466,7 +528,11 @@ export default {
         accounting_subject_id: as_id,
       };
 
+
       resource.createAccounting(this.detail.maintenance_id, insertData).then(res => {
+
+        this.$route.params.accounting_ym = true;
+
         this.$route.params['accounting_info_id'] = 0;
         this.accounting_year = '';
         this.unincluding_price = '';

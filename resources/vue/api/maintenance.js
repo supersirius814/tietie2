@@ -145,12 +145,19 @@ class MaintenanceResource extends Resource {
         });
     }
 
-    depart_name(id) {
+    getSubjects() {
         return request({
-            url: this.baseUrl + this.uri + '/' + id + '/depart_name',
+            url: this.baseUrl + this.uri + '/getSubjects',
             method: 'get',
         });
     }
+
+    // depart_name(id) {
+    //     return request({
+    //         url: this.baseUrl + this.uri + '/' + id + '/depart_name',
+    //         method: 'get',
+    //     });
+    // }
 
     eventcheckCountfunc() {
         return request({
@@ -164,6 +171,55 @@ class MaintenanceResource extends Resource {
             url: this.baseUrl + this.uri + '/csv/export',
             method: 'post',
             data: data,
+        });
+    }
+
+    csvImport(data) {
+        return request({
+            url: this.baseUrl + this.uri + '/csv/import',
+            method: 'post',
+            data: data,
+        });
+    }
+
+    getParents(data) {
+        return request({
+            url: this.baseUrl + this.uri + '/getParents',
+            method: 'post',
+            data: data,
+        });
+    }
+    getPartners_staff(data) {
+        return request({
+            url: this.baseUrl + this.uri + '/getPartners_staff',
+            method: 'post',
+            data: data,
+        });
+    }
+
+    chkMaintenanceId() {
+        return request({
+            url: this.baseUrl + this.uri + '/chkMaintenanceId',
+            method: 'get',
+        });
+    }
+    chkShopCode() {
+        return request({
+            url: this.baseUrl + this.uri + '/chkShopCode',
+            method: 'get',
+        });
+    }
+    chkpartner() {
+        return request({
+            url: this.baseUrl + this.uri + '/chkpartner',
+            method: 'get',
+        });
+    }
+
+    getStatusDeadline() {
+        return request({
+            url: this.baseUrl + this.uri + '/getStatusDeadline',
+            method: 'get',
         });
     }
 }

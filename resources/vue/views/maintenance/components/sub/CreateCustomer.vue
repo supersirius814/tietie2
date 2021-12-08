@@ -18,7 +18,7 @@
                 <!-- <input value="" v-model="id" class="el-input__inner" style="display:none"/> -->
                 <input
                   value=""
-                  v-model="customer_code"
+                  v-model="partner_code"
                   class="el-input__inner"
                 />
 
@@ -48,7 +48,7 @@
               <td class="input-td">
                 <input
                   value=""
-                  v-model="customer_name"
+                  v-model="partner_name"
                   class="el-input__inner"
                 />
                 <!-- <input value="パナ産機（あじさい銀行）" /> -->
@@ -67,7 +67,7 @@
               <td class="input-td">
                 <input
                   value=""
-                  v-model="customer_alias"
+                  v-model="name_alias"
                   class="el-input__inner"
                 />
                 <!-- <input value="パナ産機（あじさい銀行）" /> -->
@@ -82,7 +82,7 @@
         </table>
       </el-col>
     </el-row>
-    <el-row :gutter="0">
+    <!-- <el-row :gutter="0">
       <el-col :span="10">
         <table class="detail-table" style="display: none">
           <tbody>
@@ -106,8 +106,6 @@
                   />
                 </el-select>
               </td>
-              <!-- <td class="input-td"><input value="" v-model="customergroup_code" class="el-input__inner"/></td> -->
-              <!-- <td class="input-td"><input value="110000060" /></td> -->
             </tr>
           </tbody>
         </table>
@@ -117,7 +115,6 @@
           <tbody>
             <tr>
               <th>区分</th>
-              <!-- <td class="input-td"><input value="" v-model="customergroup" class="el-input__inner"/></td> -->
               <el-select
                 size="small"
                 v-model="customergroup"
@@ -137,7 +134,7 @@
           </tbody>
         </table>
       </el-col>
-    </el-row>
+    </el-row> -->
 
     <el-row :gutter="0">
       <el-col :span="10">
@@ -148,7 +145,7 @@
               <td class="input-td">
                 <input
                   value=""
-                  v-model="customer_tel"
+                  v-model="partner_tel"
                   class="el-input__inner"
                 />
               </td>
@@ -169,7 +166,7 @@
               <td class="input-td">
                 <input
                   value=""
-                  v-model="customer_fax"
+                  v-model="partner_fax"
                   class="el-input__inner"
                 />
               </td>
@@ -212,9 +209,9 @@
           @click="rowSelect(key)"
         >
           <td align="center">{{ key + 1 }}</td>
-          <td align="center">{{ citem.customer_code }}</td>
-          <td align="center">{{ citem.customer_name }}</td>
-          <td align="center">{{ citem.customer_alias }}</td>
+          <td align="center">{{ citem.partner_code }}</td>
+          <td align="center">{{ citem.partner_name }}</td>
+          <td align="center">{{ citem.name_alias }}</td>
           <!-- <td align="center">{{ citem.customergroup }}</td> -->
           <td align="center">{{ citem.TEL }}</td>
           <td align="center">{{ citem.FAX }}</td>
@@ -302,19 +299,19 @@ export default {
       tt: 353,
       accounting_year: new Date(),
       format: 'yyyy/MM/ddd',
-      customer_code: '',
+      partner_code: '',
       custom: '',
       // customer_code: this.detail.customer_code,
       id: 0,
       citem: '',
       item: '',
       // detail: [],
-      customer_name: '',
-      customer_tel: '',
-      customer_fax: '',
-      customer_alias: '',
-      customergroup_code: '',
-      customergroup: '',
+      partner_name: '',
+      partner_tel: '',
+      partner_fax: '',
+      name_alias: '',
+      // customergroup_code: '',
+      // customergroup: '',
       faxedToClient: 0,
       faxedToShop: 0,
       progressId: 1,
@@ -357,45 +354,39 @@ export default {
       this.selectedRow = '';
       document.getElementById('createcustomerVisible').click();
     },
-    depart_name() {
-      if (!this.customergroup_code) {
-        this.customergroup = '';
-        return;
-      }
-      resource.depart_name(this.customergroup_code).then((res) => {
-        this.customergroup = res[0].customergroup;
-      });
-    },
+    // depart_name() {
+    //   if (!this.customergroup_code) {
+    //     this.customergroup = '';
+    //     return;
+    //   }
+    //   resource.depart_name(this.customergroup_code).then((res) => {
+    //     this.customergroup = res[0].customergroup;
+    //   });
+    // },
     select_one() {
-      this.detail.customer_code = this.custom[this.selectedRow].customer_code;
-      this.detail.customerInformation[
-        this.detail.customerInformation.length - 1
-      ].customer_name = this.custom[this.selectedRow].customer_name;
-      this.detail.customerInformation[
-        this.detail.customerInformation.length - 1
-      ].TEL = this.custom[this.selectedRow].TEL;
-      this.detail.customerInformation[
-        this.detail.customerInformation.length - 1
-      ].FAX = this.custom[this.selectedRow].FAX;
+      this.detail.partner_code = this.custom[this.selectedRow].partner_code;
+      this.detail.partner_name = this.custom[this.selectedRow].partner_name;
+      this.detail.TEL = this.custom[this.selectedRow].TEL;
+      this.detail.FAX = this.custom[this.selectedRow].FAX;
 
       const updatedata = {
-        id: this.custom[this.selectedRow].id,
-        customer_code: this.custom[this.selectedRow].customer_code,
-        customer_tel: this.custom[this.selectedRow].TEL,
-        customer_alias: this.custom[this.selectedRow].customer_alias,
-        customer_fax: this.custom[this.selectedRow].FAX,
-        customergroup_code: this.custom[this.selectedRow].customergroup_code,
-        customergroup: this.custom[this.selectedRow].customergroup,
-        customer_name: this.custom[this.selectedRow].customer_name,
+        partner_id: this.custom[this.selectedRow].partner_id,
+        partner_code: this.custom[this.selectedRow].partner_code,
+        partner_tel: this.custom[this.selectedRow].TEL,
+        name_alias: this.custom[this.selectedRow].name_alias,
+        partner_fax: this.custom[this.selectedRow].FAX,
+        // customergroup_code: this.custom[this.selectedRow].customergroup_code,
+        // customergroup: this.custom[this.selectedRow].customergroup,
+        partner_name: this.custom[this.selectedRow].partner_name,
       };
 
-      this.customer_code = '';
-      this.customer_name = '';
-      this.customer_tel = '';
-      this.customer_alias = '';
-      this.customer_fax = '';
-      this.customergroup_code = '';
-      this.customergroup = '';
+      this.partner_code = '';
+      this.partner_name = '';
+      this.partner_tel = '';
+      this.name_alias = '';
+      this.partner_fax = '';
+      // this.customergroup_code = '';
+      // this.customergroup = '';
 
       // resource
       //   .customCodeSearch(this.custom[this.selectedRow].customer_code)
@@ -404,11 +395,11 @@ export default {
       //       this.id = 0;
       //     } else this.id = res[res.length - 1].id;
 
-          resource
-            .update_customerid(this.detail.maintenance_id, updatedata)
-            .then((res) => {
-              console.log('custom_code select success');
-            });
+      resource
+        .update_customerid(this.detail.maintenance_id, updatedata)
+        .then((res) => {
+          console.log('custom_code select success');
+        });
         // });
     },
     rowSelect(idx) {
@@ -424,13 +415,13 @@ export default {
       // customer_code = this.customer_code;
       const search_data = {
         // id: this.id,
-        customer_code: this.customer_code,
-        customer_name: this.customer_name,
-        customer_tel: this.customer_tel,
-        customer_alias: this.customer_alias,
-        customer_fax: this.customer_fax,
-        customergroup_code: this.customergroup_code,
-        customergroup: this.customergroup,
+        partner_code: this.partner_code,
+        partner_name: this.partner_name,
+        partner_tel: this.partner_tel,
+        name_alias: this.name_alias,
+        partner_fax: this.partner_fax,
+        // customergroup_code: this.customergroup_code,
+        // customergroup: this.customergroup,
       };
       resource
         .ultimateCustomSearch(this.detail.maintenance_id, search_data)

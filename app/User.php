@@ -68,5 +68,7 @@ class User extends Authenticatable
 		return $this->hasMany('App\Maintenance_progress', 'user_id', 'entered_by');
 	}
 	
-
+    public function partner(){
+        return $this->belongsTo('App\Partner', 'partner_code');
+    }
 }

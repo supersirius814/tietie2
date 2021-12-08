@@ -5,9 +5,16 @@
         <table class="detail-table">
           <tbody>
             <tr>
-              <th>日時</th>
+              <th>受取日</th>
               <td class="input-td">
-                <datetime
+                <el-date-picker
+                  v-model="date"
+                  type="date"
+                  format="yyyy/MM/dd"
+                  value-format="yyyy-MM-dd"
+                  placeholder="日付を選択してください。">
+                </el-date-picker>
+                <!-- <datetime
                   v-model="date"
                   type="datetime"
                   input-class="my-class"
@@ -20,12 +27,12 @@
                     minute: '2-digit',
                     hour12: false,
                   }"
-                  :phrases="{ ok: 'OK', cancel: 'Cancel' }"
+                  :phrases="{ ok: 'OKss', cancel: 'Cancel' }"
                   :hour-step="1"
                   :minute-step="60"
                   :week-start="7"
                   auto
-                ></datetime>
+                ></datetime> -->
               </td>
             </tr>
           </tbody>
@@ -187,7 +194,7 @@
       border
       style="width: 100%; margin-top: 2%"
     >
-      <el-table-column align="center" prop="date" label="日時" />
+      <el-table-column align="center"  prop="date" label="受取日" width="200" :formatter="formatterDate"/>
       <el-table-column align="center" prop="kind" :formatter="formatterKind" label="種類" />
       <el-table-column
         align="center"
@@ -213,7 +220,7 @@
         <template slot-scope="scope">
           <!-- <router-link :to="'/maintenance/deleteQuotationId/'+scope.row.quotation_info_id" class="link-type"> -->
             <el-button size="small" type="primary" @click="deleteQuotationId(scope.row.quotation_info_id)" style="    background-color: transparent;
-    border: 0px;"><i class="material-icons" style="font-size:48px;color:red">&#xe92b;</i></el-button>
+    border: 0px;"><i class="material-icons" style="font-family: Material Icons!important; font-size:48px;color:red">&#xe92b;</i></el-button>
           <!-- </router-link> -->
         </template>
       </el-table-column>
@@ -322,6 +329,17 @@ export default {
     
   },
   methods: {
+    formatterDate(row, column){
+      var date = row.date;
+      var date_arr;
+      if(date != null && date != ''){
+        date_arr = date.split('-');
+        return date_arr[0] + '/' + date_arr[1] + '/' + date_arr[2];
+      }
+
+      return;
+    },
+
     deleteQuotationId(id){
       if(confirm('削除していいですか？')) {
         var data = {
@@ -355,7 +373,7 @@ export default {
 
     formatterCurrency(row, column) {
       if (row.amount == null) return;
-      return '¥' + row.amount;
+      return `¥ ${row.amount }`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
 
     formatterKind(row, column){
@@ -370,7 +388,8 @@ export default {
       this.$refs.uploadQuotationPhoto.submit();
       this.$refs.uploadQuotation.submit();
       const insertData = {
-        date: DateTime.fromISO(this.date).toFormat('yyyy-MM-dd hh:mm'),
+        date: this.date,
+        // date: DateTime.fromISO(this.date).toFormat('yyyy-MM-dd hh:mm'),
         comment: this.comment,
         amount: this.amount,
         kind: this.kind,

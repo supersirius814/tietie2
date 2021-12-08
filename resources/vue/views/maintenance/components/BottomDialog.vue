@@ -2,13 +2,19 @@
   <div style="padding-bottom:10px;margin-top:-58px" id="bottomDialog">
   
     <el-button type="primary" size="small" style="position:absolute;left:200px;top:10px;" @click="toggle()" v-text="btnText" />
-    <class-history v-if="view1" :sub-category-id="subCategoryId" :shop-id="shopId"/>
-    <store-history v-else :shop-id="shopId" />
+    <div class="bottom-s-c">
+      <class-history v-if="view1" :sub-category-id="subCategoryId" :shop-id="shopId"/>
+      <store-history v-else :shop-id="shopId" />
+    </div>
+
   </div>
 </template>
 
 
 <style>
+.bottom-s-c {
+  margin-top: 20px;
+}
   @media screen and (max-width: 720px) {
     #bottomDialog {
       margin-top: 0px;
@@ -38,6 +44,7 @@ export default {
     };
   },
   mounted() {
+    this.$route.params.accounting_ym = false;
     //pop up queryselect from bottom to up
     
     // const dialogs = document.querySelectorAll('.bottom-dialog');

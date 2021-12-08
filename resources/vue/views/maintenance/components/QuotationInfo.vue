@@ -9,7 +9,7 @@
       border
       style="width: 100%"
     >
-      <el-table-column align="center" prop="date" label="日時" />
+      <el-table-column align="center" prop="date" label="受取日" :formatter="formatterDate" />
       <el-table-column
         align="center"
         prop="amount"
@@ -134,7 +134,7 @@ export default {
       r_cnt: 0,
       p_cnt: 0,
       filedialogWidth: '700px',
-      editdialogWidth: '43%',
+      editdialogWidth: '45%',
     };
   },
   created() {
@@ -176,6 +176,16 @@ export default {
 
   },
   methods: {
+    formatterDate(row, column){
+      var date = row.date;
+      var date_arr;
+      if(date != null && date != ''){
+        date_arr = date.split('-');
+        return date_arr[0] + '/' + date_arr[1] + '/' + date_arr[2];
+      }
+
+      return;
+    },
     isMobile() {
       var check = true;
       if(document.querySelector("body").clientWidth > 737) check = false;
@@ -191,7 +201,7 @@ export default {
 
     formatterCurrency(row, column) {
       if (row.amount == null) return;
-      return '¥' + row.amount;
+      return `¥ ${row.amount }`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
 
   },
