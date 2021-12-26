@@ -107,10 +107,8 @@ Route::group(['namespace' => 'V2'], function () {
     //csv import & export
     Route::post('v2/maintenance/csv/loadexport', 'MaintenanceController@exportTables');
     Route::post('v2/maintenance/csv/import', 'MaintenanceController@importTables');
-    
 
-
-    
+  
 
     Route::post('v2/maintenance/upload/report/{mantenance_id}', 'MaintenanceController@uploadReport');
     Route::post('v2/maintenance/upload/photo/{mantenance_id}', 'MaintenanceController@uploadPhoto');
@@ -144,6 +142,8 @@ Route::group(['namespace' => 'V2'], function () {
     Route::get('v2/maintenance/chkMaintenanceId', 'MaintenanceController@chkMaintenanceId');
     Route::get('v2/maintenance/chkShopCode', 'MaintenanceController@chkShopCode');
     Route::get('v2/maintenance/chkpartner', 'MaintenanceController@chkpartner');
+
+    Route::get('v2/maintenance/getStatusDeadline', 'MaintenanceController@getStatusDeadline');
 
     Route::post('v2/maintenance/post', 'MaintenanceController@post');
 

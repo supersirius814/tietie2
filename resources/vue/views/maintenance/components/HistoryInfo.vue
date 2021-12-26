@@ -9,18 +9,18 @@
         >登録</el-button
       >
     </div>
-    <el-row :gutter="20">
-      <el-col :span="12">
+    <el-row :gutter="10">
+      <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="12">
         <table class="detail-table">
           <tbody>
             <tr>
               <th>最終ステータス</th>
-              <td>{{ detail.progress.status }}</td>
+              <td v-if="detail.progress">{{ detail.progress.status }}</td>
             </tr>
           </tbody>
         </table>
       </el-col>
-      <el-col :span="12">
+      <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="12" class="file-btn-cls" align="middle">
         <el-button type="info" size="mini" @click="quotationFilesVisible = true"
           >見積書({{ this.$route.params['q_cnt'] }})</el-button
         >
@@ -52,11 +52,11 @@
           <td align="center">{{ progress[item.progress_id] }}</td>
           <td align="center">{{ item.entered_by.name }}</td>
           <td align="center">{{ item.comment }}</td>
-          <td align="center" width="50px">
-            {{ item.faxed_to_client == 1 ? '済' : '' }}
+          <td align="center" width="50px" class="fax-chk-symbol">
+            {{ item.faxed_to_client == 1 ? '✔' : '' }}
           </td>
-          <td align="center" width="50px">
-            {{ item.faxed_to_shop == 1 ? '済' : '' }}
+          <td align="center" width="50px" class="fax-chk-symbol">
+            {{ item.faxed_to_shop == 1 ? '✔' : '' }}
           </td>
         </tr>
       </template>
@@ -129,14 +129,24 @@
  .slide-dialog {
    transition-delay: 2s!important;
  }
-  @media screen and (max-width: 720px) {
 
+ .fax-chk-symbol {
+    color: #0a890a;
+    font-weight: bold;
+    font-size: 18px!important;
+ }
+
+  @media screen and (max-width: 737px) {
+    .file-btn-cls button {
+      font-size: 7px!important;
+    }
   }
 
 
 </style>
 
 <style>
+
 @keyframes dialog-ffade-in {
   0% {
     transform: translate3d(-100%, 0, 0);
@@ -181,6 +191,9 @@ export default {
   data() {
     return {
       editVisible: false,
+      mailToClient: 0,
+      faxedToClient: 0,
+      faxedToShop: 0,
       quotationFilesVisible: false,
       photoFilesVisible: false,
       reportFilesVisible: false,

@@ -5,19 +5,34 @@
     <div class="filter-container">
       <ul class="list-inline">
         <li style="margin-left:40px;">
-          <span class="el-tag el-tag--danger el-tag--medium el-tag--light">
-            <i class="el-icon-info" /> 緊急・重要
-          </span>
+          <el-badge :value="emergencyCnt" class="item">
+            <span class="el-tag el-tag--danger el-tag--medium el-tag--light">
+              <!-- <i class="el-icon-info" />  -->
+              <el-checkbox v-model="query.emergencyCheck" @change="handleFilter()" style="color: #ff4949; background-color: #ffeded;">
+                <svg-icon style="color: #ff4949;" icon-class="sunWarning" /> 
+                <span style="color: #ff4949;">緊急・重要</span>
+              </el-checkbox>
+            </span>
+          </el-badge>
         </li>
         <li>
-          <span class="el-tag el-tag--warning el-tag--medium el-tag--light">
-            <svg-icon icon-class="warning" /> 災害（地震・台風・大雨など）
-          </span>
+          <el-badge :value="disasterCnt" class="item">
+            <span class="el-tag el-tag--warning el-tag--medium el-tag--light">
+              <el-checkbox v-model="query.disasterCheck" @change="handleFilter()" style="color: #ffba00; background-color: #fff8e6;">
+                <svg-icon style="color: #ffba00;" icon-class="warning" /> 
+                <span style="color: #ffba00;">災害（地震・台風・大雨など）</span>
+              </el-checkbox>
+            </span>
+          </el-badge>
         </li>
         <li>
           <el-badge :value="eventcheckCount" class="item">
             <span class="el-tag el-tag--medium el-tag--light" style="color: #DE38B8; background-color: #FCE5F7; border: 1px solid #E4B4D9" >
-              <el-checkbox v-model="query.eventCheck" @change="handleFilter()" style="color: #DE38B8; background-color: #FCE5F7;"><i style="color: #DE38B8; padding-right: 5px" class="fa">&#xf017;</i><span  style="color: #DE38B8;">対応期限切れ</span>  </el-checkbox>
+              <el-checkbox v-model="query.eventCheck" @change="handleFilter()" style="color: #DE38B8; background-color: #FCE5F7;">
+                <!-- <i style="color: #DE38B8; padding-right: 5px" class="fa">&#xf017;</i> -->
+                <svg-icon icon-class="deadline" />
+                <span  style="color: #DE38B8;">対応期限切れ</span>  
+              </el-checkbox>
             </span>
           </el-badge>
         </li>
@@ -175,7 +190,7 @@
 
       <el-table-column align="center" label="経過ステータス">
         <template slot-scope="scope">
-          <span>{{ scope.row.progress.status }}</span>
+          <span v-if="scope.row.progress">{{ scope.row.progress.status }}</span>
         </template>
       </el-table-column>
 
@@ -187,7 +202,8 @@
           </div>
         </template>
         <template slot-scope="scope">
-          <span>{{ scope.row.deadline_date }}</span>
+          <!-- <span>{{ scope.row.deadline_date }}</span> -->
+          <span>{{ displayDeadline(scope.row) }}</span>
         </template>
       </el-table-column>
 
@@ -287,6 +303,8 @@ export default {
       bycreate: 0,
       todayDate: '',
       eventcheckCount: 0,
+      emergencyCnt: 0,
+      disasterCnt: 0,
       storeCodes: '',
       list: null,
       total: 0,
@@ -300,7 +318,9 @@ export default {
         limit: 15,
         keyword: '',
         role: '',
-        eventCheck: '',
+        eventCheck: false,
+        emergencyCheck: false,
+        disasterCheck: false,
         progress_id:'',
         business_category_id: null,
         shop_id: null,
@@ -355,6 +375,41 @@ export default {
       resource.getStatusDeadline().then(res => {
         this.deadline_list = res;
       });
+    },
+
+    displayDeadline(row){
+      
+      if(row.shop.business_category_option[0] && row.shop.business_category_option[0].option_value != undefined){
+        var iniStatus = JSON.parse(row.shop.business_category_option[0].option_value);
+        var progress_id = row.progress_id;
+        var updated_at = new Date(row.updated_at);
+        var addDate = 0;
+        if(!row.completed_date){
+         if(!row.deadline_date){
+           if(progress_id == 12){
+             addDate = iniStatus.progress_id['12'];
+           } else if(progress_id == 14){
+             addDate = iniStatus.progress_id['14'];
+           } else if(progress_id == 15){
+             addDate = iniStatus.progress_id['15']
+           } else {
+             addDate = iniStatus.default;
+           }
+          console.log(`adddateCal: ${progress_id}====${addDate}`);
+
+          updated_at.setDate(updated_at.getDate() + addDate);
+
+          var dd = String(updated_at.getDate()).padStart(2, "0");
+          var mm = String(updated_at.getMonth() + 1).padStart(2, "0"); //January is 0!
+          var yyyy = updated_at.getFullYear();
+
+          var initDate = yyyy + "/" + mm + "/" + dd;
+
+          return initDate;
+         }
+        }
+        return row.deadline_date;
+      }
     },
 
   sortChange(sortProps){
@@ -482,7 +537,10 @@ export default {
 
     eventcheckCountfunc(){
       resource.eventcheckCountfunc().then(res => {
-        this.eventcheckCount = res;
+        this.eventcheckCount = res.eventCheckCnt;
+        this.emergencyCnt = res.emergencyCnt;
+        this.disasterCnt = res.disasterCnt;
+        // console.log(res);
       });
     },
 
@@ -549,14 +607,17 @@ export default {
 
         if(element.completed_date == '' || element.completed_date == null){
           if(element.is_emergency > 0) {
-            element.maintenance_code = '<i class="el-icon-info" style="color: #ff4949;  padding-right: 5px"></i>' + element.maintenance_code;
+            element.maintenance_code = '<svg style="margin-right: 5px; width: 1em; height: 1em;"  aria-hidden="true" class="svg-icon"><use  xlink:href="#icon-sunWarning"></use></svg>' + element.maintenance_code;
           } 
           if(element.is_disaster > 0) {
-             element.maintenance_code = '<i style="color: #ffba00; padding-right: 5px" class="fa">&#xf071;</i>' + element.maintenance_code; 
+            //  element.maintenance_code = '<i style="color: #ffba00; padding-right: 5px" class="fa">&#xf071;</i>' + element.maintenance_code; 
+            element.maintenance_code = '<svg style="color: #ffba00; margin-right: 5px" data-v-78325ff0="" data-v-7932ca1c="" aria-hidden="true" class="svg-icon"><use data-v-78325ff0="" xlink:href="#icon-warning"></use></svg>' + element.maintenance_code; 
           }
 
           if(this.todayDate > element.deadline_date) {
-            element.maintenance_code = '<i style="color: #DE38B8; padding-right: 5px" class="fa">&#xf017;</i>' + element.maintenance_code;
+            // element.maintenance_code = '<i style="color: #DE38B8; padding-right: 5px" class="fa">&#xf017;</i>' + element.maintenance_code;
+            element.maintenance_code = '<svg style="margin-right: 5px" data-v-78325ff0="" data-v-7932ca1c="" aria-hidden="true" class="svg-icon"><use data-v-78325ff0="" xlink:href="#icon-deadline"></use></svg>' + element.maintenance_code;
+            
           }
         }
 
@@ -628,7 +689,7 @@ export default {
   list-style: none;
   li {
     display: inline-block;
-    padding-right: 5px;
+    padding-right: 30px;
     padding-left: 5px;
     font-size: 13px;
   }

@@ -13,8 +13,8 @@
         </table>
       </el-col>
     </el-row>
-    <el-row :gutter="20">
-      <el-col :span="10">
+    <el-row :gutter="15">
+      <el-col :xl="10" :lg="10" :md="10" :sm="10" :xs="10">
         <table class="detail-table">
           <tbody>
             <tr>
@@ -26,17 +26,15 @@
           </tbody>
         </table>
       </el-col>
-      <el-col :span="2">
-        <p style="text-align: center">
-          <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-        </p>
+      <el-col :xl="2" :lg="2" :md="2" :sm="2" :xs="2" align="middle" style="line-height: 33px">
+        <svg-icon icon-class="left-progress-arrow" />
       </el-col>
-      <el-col :span="8">
-        <table class="detail-table">
+      <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="12">
+        <table class="detail-table" style="width: 80%">
           <tbody>
             <tr>
-              <th>変更後ステータス*</th>
-              <td class="select-td">
+              <th style="width: 40%">変更後ステータス*</th>
+              <td class="input-td">
                 <!-- <el-select v-model="progressId" size="small" :multiple="false" placeholder="一一一" clearable style="width: 100%" class="filter-item" v-on:change="selectProgressId()"> -->
                 <el-select v-model="progressId" size="small" :multiple="false" placeholder="一一一" clearable style="width: 100%" class="filter-item">
                   <el-option label="一一一" :value="0" />
@@ -67,28 +65,115 @@
         </table>
       </el-col>
     </el-row>
+
     <el-row :gutter="20">
-      <el-col :span="10">
+      <el-col :xl="12" :lg="12" :md="24" :sm="24" :xs="24" style="margin-bottom: 10px;">
+        <el-row>
+          <table class="detail-table" style="width: auto">
+            <tbody>
+              <tr>
+                <th>対応期限*</th>
+                <td class="input-td">
+                  <!-- <datetime v-model="time1" valueType="format" placeholder="日付を選択してください。" ></datetime> -->
+                  <el-date-picker
+                    v-model="time1"
+                    type="date"
+                    format="yyyy/MM/dd"
+                    value-format="yyyy-MM-dd"
+                    placeholder="日付を選択してください。">
+                  </el-date-picker>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </el-row>
+        <el-row>
+          <table class="detail-table">
+            <tbody>
+              <tr>
+                <th>写真</th>
+                <td style="border:none;padding:0 5px;">
+                  <el-upload ref="uploadPhoto" :action="'/api/v2/maintenance/upload/photo/' + detail.maintenance_id" :auto-upload="false" :multiple="false" :on-success="getUploadFiles()">
+                    <el-button slot="trigger" size="small" type="info">ファイル選択</el-button>
+                  </el-upload>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </el-row>
+        <el-row>
+          <!-- <el-col :span="10"> -->
+            <table class="detail-table">
+              <tbody>
+                <tr>
+                  <th>報告書</th>
+                  <td style="border:none;padding:0 5px;">
+                    <el-upload ref="uploadReport" :action="'/api/v2/maintenance/upload/report/' + detail.maintenance_id" :auto-upload="false" :multiple="false" :on-success="getUploadFiles()">
+                      <el-button slot="trigger" size="small" type="info">ファイル選択</el-button>
+                    </el-upload>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          <!-- </el-col> -->
+        </el-row>
+      </el-col>
+
+
+      <el-col :xl="12" :lg="12" :md="24" :sm="24" :xs="24" v-show="progressId == 10">
         <table class="detail-table">
           <tbody>
             <tr>
-              <th>対応期限*</th>
-              <td class="input-td">
-                <!-- <datetime v-model="time1" valueType="format" placeholder="日付を選択してください。" ></datetime> -->
-                <el-date-picker
-                  v-model="time1"
-                  type="date"
-                  format="yyyy/MM/dd"
-                  value-format="yyyy-MM-dd"
-                  placeholder="日付を選択してください。">
-                </el-date-picker>
+              <th style="width: 7%">取</th>
+              <th style="width: 25%">メンテ依頼票</th>
+              <td style="width: 20%"><el-checkbox v-model="faxedToClient" style="padding: 0px 5px;" />FAX</td>
+              <td><el-checkbox v-model="mailToClient" style="padding: 0px 5px" />メール</td>
+              <td style="border:none;padding:0 5px;">
+                <el-button type="info" size="small" @click="faxForpartner()">プレビュー</el-button>
+              </td>
+            </tr>
+            <tr>
+              <th>店</th>
+              <th>依頼完了通知</th>
+              <td><el-checkbox v-model="faxedToShop" style="padding: 0px 5px" />FAX</td>
+              <td>
+              </td>
+              <td style="border:none;padding:0 5px;">
+                <el-button type="info" size="small" @click="faxForshop()">プレビュー</el-button>
               </td>
             </tr>
           </tbody>
         </table>
       </el-col>
+
+      <el-col :xl="12" :lg="12" :md="24" :sm="24" :xs="24" v-show="progressId == 18">
+        <table class="detail-table">
+          <tbody>
+            <tr>
+              <th rowspan="2" style="width: 7%">店</th>
+              <th style="width: 25%">訪問予定日時</th>
+              <td style="width: 48%" class="input-td">
+                <el-date-picker
+                  v-model="visitTime"
+                  type="date"
+                  format="yyyy/MM/dd"
+                  value-format="yyyy/MM/dd"
+                  placeholder="日付を選択してください。">
+                </el-date-picker>
+              </td>
+              <td style="border:none;padding:0 5px;">
+                <el-button type="info" size="small" @click="faxForshopnext()">プレビュー</el-button>
+              </td>
+            </tr>
+            <tr>
+              <th>連絡事項</th>
+              <td class="input-td"><el-input v-model="visitComment"></el-input></td>
+            </tr>
+          </tbody>
+        </table>
+      </el-col>
     </el-row>
-    <el-row>
+    <!-- <el-row>
       <el-col :span="10">
         <table class="detail-table">
           <tbody>
@@ -103,23 +188,8 @@
           </tbody>
         </table>
       </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="10">
-        <table class="detail-table">
-          <tbody>
-            <tr>
-              <th>報告書</th>
-              <td style="border:none;padding:0 5px;">
-                <el-upload ref="uploadReport" :action="'/api/v2/maintenance/upload/report/' + detail.maintenance_id" :auto-upload="false" :multiple="false" :on-success="getUploadFiles()">
-                  <el-button slot="trigger" size="small" type="info">ファイル選択</el-button>
-                </el-upload>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </el-col>
-    </el-row>
+    </el-row> -->
+
     <el-row>
       <el-col :span="24">
         <table class="detail-table">
@@ -134,7 +204,7 @@
         </table>
       </el-col>
     </el-row>
-    <el-row>
+    <!-- <el-row>
       <el-col :span="1">
         <el-checkbox v-model="faxedToShop" style="padding:10px" />
       </el-col>
@@ -144,13 +214,13 @@
             <th style="width:40px;">店</th>
             <th>訪問予定連絡</th>
             <td style="border:none;padding:0 5px;">
-              <el-button type="info" size="small">プレビュー</el-button>
+              <el-button type="info" size="small" @click="faxForshop()">プレビュー</el-button>
             </td>
           </tr>
         </table>
       </el-col>
-    </el-row>
-    <el-row>
+    </el-row> -->
+    <!-- <el-row>
       <el-col :span="1">
         <el-checkbox v-model="faxedToClient" style="padding:10px" />
       </el-col>
@@ -160,15 +230,53 @@
             <th style="width:40px;">取</th>
             <th>進捗報告依頼</th>
             <td style="border:none;padding:0 5px;">
-              <el-button type="info" size="small">プレビュー</el-button>
+              <el-button type="info" size="small" @click="faxForpartner()">プレビュー</el-button>
             </td>
           </tr>
         </table>
       </el-col>
-    </el-row>
+    </el-row> -->
+
+
+    <!-- preview data of fax -->
+   <el-dialog
+      custom-class="cls-fax"
+     :append-to-body="true"
+     :width="faxWidth"
+     :visible.sync="previewFax">
+     <template slot="title">
+       <el-row>
+         <el-col :xl="12" :lg="24" :md="24" :sm="24" :xs="24" class="fax-title">
+           依頼票プレビュー
+         </el-col>
+         <el-col :xl="12" :lg="24" :md="24" :sm="24" :xs="24" class="btn-fax-two">
+           <el-button type="info" class="fax-view-btn" round @click="viewPartner()">取引先宛プレビュー</el-button>
+           <el-button type="info" class="fax-view-btn" round @click="viewStore()">店舗宛プレビュー</el-button>
+         </el-col>
+       </el-row>
+       <hr/>
+     </template>
+        <partner-fax v-if="visiblePartner" :detail="detail"/>
+        <store-fax v-else :detail="detail" />
+     <template slot="footer"></template>
+   </el-dialog>
+
+   <el-dialog
+      custom-class="cls-fax"
+     :append-to-body="true"
+     :width="faxWidth"
+     :visible.sync="previewFaxNext"
+   >
+     <template slot="title">訪問予定連絡FAXプレビュー</template>
+      <storenext-fax :detail="detail" :visittime="visitTime" :visitcomment="visitComment"></storenext-fax>
+     <template slot="footer"></template>
+   </el-dialog>
 
     <div style="text-align:right; padding-bottom: 15px;">
-      <el-button type="primary" size="small" @click="save()">登録</el-button>
+      <el-button type="primary" size="small" @click="save()">
+        <span v-if="progressId == 10 || progressId == 18">登録&送信</span>
+        <span v-else>登録</span>
+      </el-button>
       <el-button type="default" size="small"  @click="handleClose()"  ref="Dialog" >閉じる</el-button>
     </div>
       <table  class="detail-table">
@@ -193,8 +301,8 @@
             <td align="center">{{ progress[item.progress_id] }}</td>
             <td align="center">{{ item.entered_by.name }}</td>
             <td align="center">{{ item.comment }}</td>
-            <td align="center" width="50px">{{ item.faxed_to_client == 1 ? '済' : '' }}</td>
-            <td align="center" width="50px">{{ item.faxed_to_shop == 1 ? '済' : '' }}</td>
+            <td align="center" width="50px" class="fax-chk-symbol">{{ item.faxed_to_client == 1 ? '✔' : '' }}</td>
+            <td align="center" width="50px" class="fax-chk-symbol">{{ item.faxed_to_shop == 1 ? '✔' : '' }}</td>
           </tr>
         </template>
       </table>
@@ -207,6 +315,31 @@
 </template>
 
 <style>
+.fax-view-btn {
+  background-color: #E3E3E3;
+  color: #000000;
+}
+
+.fax-view-btn-clk {
+  background-color: #3C8DBC!important;
+  color: #ffffff;
+}
+
+.fax-view-btn:hover, .fax-view-btn:focus{
+  background-color: #3C8DBC!important;
+  color: #ffffff;
+}
+
+.cls-fax .el-dialog__body {
+  padding: 5px 20px;
+}
+
+.fax-title {
+  font-size: 28px;
+}
+  .btn-fax-two{
+    font-size: 16px;
+  }
   .close-css {
     display: none;
   }
@@ -233,6 +366,9 @@
 
 <script>
 import MaintenanceResource from '@/api/maintenance';
+import StoreFax from './StoreFax.vue';
+import StorenextFax from './StorenextFax.vue';
+import PartnerFax from './PartnerFax.vue';
   // import DatePicker from 'vue2-datepicker';
   // import 'vue2-datepicker/index.css';
   // import 'vue2-datepicker/locale/ja';
@@ -242,7 +378,7 @@ import { Datetime } from 'vue-datetime';
 const resource = new MaintenanceResource();
 
 export default {
-  components: { Datetime },
+  components: { Datetime, StoreFax, PartnerFax, StorenextFax },
   props: {
     detail: {
       type: Object,
@@ -253,16 +389,23 @@ export default {
   },
   data() {
     return {
+      faxWidth: '50%',
+      previewFax: false,
+      previewFaxNext: false,
+      visiblePartner: false,
+      visitTime: '',
+      visitComment: '',
         time1: null,
         time2: null,
         time3: null,
-      currentStatus: this.detail.progress.status,
+      currentStatus: '',
       date: '',
       cond1: true,
       userName: '',
       comment: '',
       faxedToClient: 0,
       faxedToShop: 0,
+      mailToClient: 0,
       progressId: 0,
       progress: {
         1: 'BM承認待ち',
@@ -294,9 +437,57 @@ export default {
     this.$store.dispatch('user/getInfo').then(user => {
       this.userName = user.name;
     });
+
+    if(this.detail.progress) this.currentStatus = this.detail.progress.status;
+
+    this.visitTime = this.detail.visit_schedule_date;
+
+  },
+
+  mounted(){
+    if(this.isMobile()) {
+      this.faxWidth = '100%';
+    }
   },
 
   methods: {
+    viewPartner(){
+      this.visiblePartner = true;
+      document.querySelectorAll('.fax-view-btn')[0].classList.add('fax-view-btn-clk');
+      document.querySelectorAll('.fax-view-btn')[1].classList.remove('fax-view-btn-clk');
+    },
+
+    viewStore(){
+      this.visiblePartner = false;
+      document.querySelectorAll('.fax-view-btn')[1].classList.add('fax-view-btn-clk');
+      document.querySelectorAll('.fax-view-btn')[0].classList.remove('fax-view-btn-clk');
+    },
+
+    faxForshopnext(){
+      this.previewFaxNext = true;
+    },
+
+    faxForshop(){
+      this.previewFax = true;
+      this.visiblePartner = false;
+      console.log(document.querySelectorAll('.fax-view-btn')[1]);
+      document.querySelectorAll('.fax-view-btn')[1].classList.add('fax-view-btn-clk');
+      document.querySelectorAll('.fax-view-btn')[0].classList.remove('fax-view-btn-clk');
+    },
+
+    faxForpartner(){
+      this.previewFax = true;
+      this.visiblePartner = true;
+      document.querySelectorAll('.fax-view-btn')[0].classList.add('fax-view-btn-clk');
+      document.querySelectorAll('.fax-view-btn')[1].classList.remove('fax-view-btn-clk');
+    },
+
+    isMobile() {
+      var check = true;
+      if(document.querySelector("body").clientWidth > 737) check = false;
+      return check;
+    },
+
     selectProgressId() {
       this.currentStatus = this.progress[this.progressId];
     },
@@ -312,12 +503,19 @@ export default {
       // } 
       this.$refs.uploadReport.submit();
       this.$refs.uploadPhoto.submit();
+      var other_comment = '';
+      if(this.progressId == 18){
+        other_comment = this.visitTime + ' ' + this.visitComment;
+      }
       const insertData = {
         progress_id: this.progressId,
         comment: this.comment,
+        visit_time: this.visitTime,
+        visit_comment: this.visitComment,
         faxed_to_client: this.faxedToClient,                                                                                                    
         faxed_to_shop: this.faxedToShop,
         deadline_date: this.time1,
+        mail_to_client: this.mailToClient,
       };
       resource.createProgress(this.detail.maintenance_id, insertData).then(res => {
         this.detail.maintenance_progress = res;
@@ -330,8 +528,11 @@ export default {
         };
        
         this.comment = '';
-        this.faxedToClient = false;
-        this.faxedToShop = false;
+        this.progressId = 0;
+        this.time1 = null;
+        this.faxedToClient = 0;
+        this.faxedToShop = 0;
+        this.mailToClient = 0;
         this.$emit('create');
       });
     },

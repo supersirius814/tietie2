@@ -641,7 +641,7 @@ export default {
         var type = this.detail.order_type.type,
           flag = 0;
         var reasons = this.detail.order_reasons;
-        if (reasons.length > 0) {
+        if (this.detail.order_type.order_type_id == 2 && reasons.length > 0) {
           reasons.forEach((el) => {
             if (flag > 0) {
               type += ',' + el.reason;

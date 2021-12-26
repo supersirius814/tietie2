@@ -75,6 +75,12 @@ Route::get('maintenance', function(Request $request) {
 
 Route::get('maintenance/error', 'MaintenanceController@error')->middleware('auth');
 
+//generate pdf
+
+Route::get('pdf', 'MaintenanceController@viewPdf_one');
+
+Route::get('tiemail', 'MaintenanceController@sendmail');
+
 Route::get('maintenance/image/{maintenance_id}/{file_name}', 'ImageController@getImage')->middleware('auth');
 // Route::get('zensho-mainte/images/{maintenance_id}/{file_name}', 'ImageController@getImage')->middleware('auth');
 

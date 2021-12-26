@@ -1,8 +1,9 @@
 <template>
   <div class="app-container">
     
-  <!-- {{ detail.customerInformation }} -->
-    <div style="position: fixed;top:10px;left:300px;z-index:10;">
+    <div v-show="detail.is_emergency && detail.is_emergency > 0" class="emergency-svg-cls"><svg-icon icon-class="sunWarning" /></div>
+    <div v-show="detail.is_disaster && detail.is_disaster> 0" class="disaster-svg-cls" ><svg-icon icon-class="warning" /></div>
+    <div class="history-btn-group-cls">
       <el-button type="primary" size="mini" @click="bottomVisible=true"><svg-icon icon-class="upload" />  同一中分類過去履歴</el-button>
       <el-button type="primary" size="mini" @click="qaVisible=true"><svg-icon icon-class="upload" style="transform: rotate(270deg);" />  見積 / 会計 情報</el-button>
     </div>
@@ -106,21 +107,51 @@ export default {
   }
 }
 
+.emergency-svg-cls{
+  position: fixed; 
+  top:5px; 
+  left:300px;
+  z-index:10; 
+  font-size: 27px;
+}
+
+.disaster-svg-cls {
+  position: fixed; 
+  top:5px; 
+  left:300px; 
+  z-index:10; 
+  font-size: 27px; 
+  color: #ffba00;
+}
+
+.history-btn-group-cls {
+  position: fixed;
+  top:10px;
+  left:350px;
+  z-index:10;
+}
+
 
 @media screen and (max-width: 720px) {
-
-  #app > div > div.main-container > section > div > div:nth-child(1) {
-    left: 195px!important;
-    font-size: 7px!important;
-    top: 13px!important;
+  .emergency-svg-cls {
+    left: 145px;
+    font-size: 10px;
+    top: 16px;
   }
 
-  #app > div > div.main-container > section > div > div:nth-child(1) button {
-    font-size: 7px!important;
-  }  
+  .disaster-svg-cls {
+    left: 145px;
+    font-size: 10px;
+    top: 16px;
+  }
+
+  .history-btn-group-cls {
+    left: 162px;
+  }
+
 
   #breadcrumb-container {
-    font-size: 10px;
+    font-size: 7px;
   }
 
   #app > div > div.main-container > section > div > div.el-row > div:nth-child(1) {
@@ -145,7 +176,7 @@ export default {
     padding: 5px;
   }
 
-  #app > div > div.main-container > section > div > div.el-row > div:nth-child(2) > div > div.el-card__body > div.el-row > div:nth-child(2) button{
+  #app .history-btn-group-cls button{
     font-size: 7px!important;
   }
 

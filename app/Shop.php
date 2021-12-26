@@ -13,6 +13,12 @@ class Shop extends Model
 		return $this->belongsTo('App\Business_category', 'business_category_id', 'business_category_id');
 	}
 
+	public function business_category_option()
+	{
+		return $this->hasMany('App\Business_category_option', 'business_category_id', 'business_category_id')->where('option_name', 'status_deadline_days');
+	}
+
+
 	public function block()
 	{
 		return $this->belongsTo('App\Block', 'block_id', 'block_id');
@@ -30,6 +36,6 @@ class Shop extends Model
 	
 	public function users()
 	{
-		return $this->hasMany('App\User');
+		return $this->hasOne('App\User');
 	}
 }

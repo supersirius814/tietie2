@@ -34,7 +34,10 @@ use App\Shop;
 use App\User;
 use App\Sub_category;
 use App\Category;
+use App\Maintenance_order_reason;
 use DB;
+use PDF;
+use Mail;
 use Log;
 use Validator;
 
@@ -82,7 +85,7 @@ class MaintenanceController extends Controller
         $page = $request->input('page', 1);
         $offset = $limit * ($page - 1);
 
-        $qb = Maintenance::with(['shop.business_category', 'orderReasons', 'orderType', 'category', 'subCategory', 'progress', 'user'])->whereNotNull('shop_id');
+        $qb = Maintenance::with(['shop.business_category', 'shop.business_category_option', 'orderReasons', 'orderType', 'category', 'subCategory', 'progress', 'user'])->whereNotNull('shop_id');
 
         // $maintenance = Maintenance::with([
         //     'shop.business_category',
@@ -108,8 +111,19 @@ class MaintenanceController extends Controller
         // var_export($eventCheck); die;
 
         if($eventCheck == 'true') {
-            $qb->whereDate('deadline_date', '<', Carbon::today())->where('progress_id', '!=', 21)->get();
+            $qb->whereDate('deadline_date', '<', Carbon::today())->where('progress_id', '!=', 21);
             // $qb->whereRaw("DATE_FORMAT(created_at,'%m/%d/%Y') > DATE_FORMAT(deadline_date,'%m/%d/%Y')");
+        }
+
+        $emergencyCheck = $request->input('emergencyCheck');
+        if($emergencyCheck == 'true') {
+            $qb->whereRaw("is_emergency > 0 and progress_id != 21");
+        }
+
+
+        $disasterCheck = $request->input('disasterCheck');
+        if($disasterCheck == 'true') {
+            $qb->whereRaw("is_disaster > 0 and progress_id != 21");
         }
 
 
@@ -117,7 +131,7 @@ class MaintenanceController extends Controller
             $qb->where('shop_id', $shop_id);
         } else {
             if ($business_category_id != 0) {
-                $qb = Maintenance::with(['shop.business_category', 'orderType', 'progress', 'user'])->join('shops', 'shops.shop_id', '=', 'maintenances.shop_id')->join('business_categories', 'business_categories.business_category_id', '=', 'shops.business_category_id')->where('shops.business_category_id', $business_category_id);
+                $qb = Maintenance::with(['shop.business_category', 'orderType', 'shop.business_category_option', 'progress', 'user'])->join('shops', 'shops.shop_id', '=', 'maintenances.shop_id')->join('business_categories', 'business_categories.business_category_id', '=', 'shops.business_category_id')->where('shops.business_category_id', $business_category_id);
             }
         }
 
@@ -303,7 +317,9 @@ class MaintenanceController extends Controller
 
     public function eventCheckCountfunc(){
         $eventCheckCnt = Maintenance::whereRaw("DATE_FORMAT(CURDATE(),'%m/%d/%Y') > DATE_FORMAT(deadline_date,'%m/%d/%Y') and progress_id != 21")->count();
-        return response($eventCheckCnt);
+        $emergencyCnt = Maintenance::whereRaw("is_emergency > 0 and progress_id != 21")->count();
+        $disasterCnt = Maintenance::whereRaw("is_disaster > 0 and progress_id != 21")->count();
+        return response()->json(['eventCheckCnt' => $eventCheckCnt, 'emergencyCnt' => $emergencyCnt, 'disasterCnt' => $disasterCnt]); 
     }
 
     public function getParents(Request $request){
@@ -419,10 +435,210 @@ class MaintenanceController extends Controller
         }
         return response($result);
     }
-
     
     public function createProgress(Request $request, $maintenance_id)
     {
+
+        // view()->share('employee',$data);
+        
+        // $pdf = PDF::loadView('pdf_view', $data);
+        // return $pdf->download('pdf_file.pdf');
+        // echo "alll================"."<br/>";
+        // var_export($fax_data);
+        $maintenance_data = Maintenance::with([
+            'shop.business_category',
+            'shop.business_category_option',
+            'shop.users',
+            'orderType', 'progress',
+            'user',
+            'maintenanceProgress.entered_by',
+            'maintenanceImages',
+            'orderReasons',
+            'category', 'subCategory',
+            'maintenanceMatters.matter_value',
+            'maintenanceMatters.matter_option',
+            'uploadingFiles',
+            'quotationInfo', 'accountingInfo.accounting_info'
+        ])->find($maintenance_id);
+
+        $qb_maintenanceTopartners =  DB::select("SELECT partner_id, partner_no, partner_name, TEL, FAX FROM `maintenances` LEFT JOIN partners ON maintenances.partner_code=partners.partner_code WHERE maintenance_id= ?", [$maintenance_id]);
+
+        $maintenance_data['partner_id'] = $qb_maintenanceTopartners['0']->partner_id;
+        // $maintenance_data['partner_no'] = $qb_maintenanceTopartners['0']->partner_no;
+        $maintenance_data['partner_name'] = $qb_maintenanceTopartners['0']->partner_name;
+        $maintenance_data['TEL'] = $qb_maintenanceTopartners['0']->TEL;
+        $maintenance_data['FAX'] = $qb_maintenanceTopartners['0']->FAX;
+
+        $partner_staff = DB::table('partners_staff')->where('partner_id', $maintenance_data['partner_id'])->first();
+
+        if(!empty($partner_staff)) {
+            $maintenance_data['partner_email'] = $partner_staff->email;
+        } else {
+            $maintenance_data['partner_email'] = '';
+        }
+
+        $order_reason = Order_reason::select('order_reason_id', 'reason')
+            ->distinct()
+            ->where('order_reason_id', $maintenance_data['order_reason_id'])
+            ->get();
+
+        if ($order_reason->isEmpty()) {
+            $order_reason[0] = array(
+                'order_reason_id' => '',
+                'reason' => '',
+            );
+        }
+
+        $maintenance_data['order_reason'] = $order_reason;
+
+        // before inputing comment
+        // $maintenance_data['visit_data'] = $request->input('comment');
+        $visit_data = $request->input('visit_time').' '.$request->input('visit_comment');
+        $maintenance_data['visit_data'] = $visit_data;
+        
+
+        
+        // return view('pdf_one', $maintenance_data);
+
+        $mytime = Carbon::now();
+
+        if($request->input('progress_id') == 10){
+            if($request->input('faxed_to_client') > 0){
+                $fax_count = DB::table('uploading_files')->where('kind', 'fax')->count();
+
+                $pdf_count = $fax_count + 1;
+
+                $flag = sprintf('%03d', $pdf_count);
+
+                $file_name = $maintenance_data['FAX'].'-'.$maintenance_data['partner_code'].'-'.$maintenance_data['partner_name'].'-'.$flag.'.pdf';
+                
+                $pdf = PDF::loadView('pdf_one', $maintenance_data)
+                // $pdf = PDF::loadView('pdf_two', $maintenance_data)
+                // $pdf = PDF::loadView('pdf_three', $maintenance_data)
+                ->setPaper('a4')
+                ->setWarnings(false)
+                ->setOptions(['isFontSubsettingEnabled' => true]);
+                Storage::put('public/pdf/'.$file_name, $pdf->output());
+
+                // Uploading_files table save  file history
+                $upload = new Uploading_files();
+                $upload->maintenance_id = $maintenance_id;
+                $upload->kind = 'fax';
+                $upload->file_name = $file_name;
+                $upload->save();
+
+
+            }
+
+            if($request->input('faxed_to_shop') > 0){
+
+                $fax_count = DB::table('uploading_files')->where('kind', 'fax')->count();
+
+                $pdf_count = $fax_count + 1;
+
+                $flag = sprintf('%03d', $pdf_count);
+                $file_name = $maintenance_data['FAX'].'-'.$maintenance_data['shop']['shop_id'].'-'.$maintenance_data['shop']['shop_name'].'-'.$flag.'.pdf';
+
+                $pdf = PDF::loadView('pdf_two', $maintenance_data)
+                ->setPaper('a4')
+                ->setWarnings(false)
+                ->setOptions(['isFontSubsettingEnabled' => true]);
+                Storage::put('public/pdf/'.$file_name, $pdf->output());
+
+
+                // Uploading_files table save  file history
+                $upload = new Uploading_files();
+                $upload->maintenance_id = $maintenance_id;
+                $upload->kind = 'fax';
+                $upload->file_name = $file_name;
+                $upload->save();
+
+            }
+
+            if($request->input('mail_to_client') > 0){
+                $mail_data["email"] = $maintenance_data['partner_email'];
+                $mail_data["title"] = "From ".$maintenance_data['user']['email'];
+                $mail_data["body"] = $maintenance_data['partner_code'].'-'.$maintenance_data['partner_name'];
+
+
+                // $file_name = $maintenance_data['partner_code'].'-'.$maintenance_data['partner_name'].'-'.$mytime->format('YmdHis').'.pdf';
+                
+                $pdf = PDF::loadView('pdf_one', $maintenance_data)
+                ->setPaper('a4')
+                ->setWarnings(false)
+                ->setOptions(['isFontSubsettingEnabled' => true]);
+
+                if($maintenance_data['partner_email'] && $maintenance_data['user']['email']){
+                    Mail::send('mail', $mail_data, function($message)use($mail_data, $pdf) {
+                        $message->to($mail_data["email"], $mail_data["email"])
+                                ->subject($mail_data["title"])
+                                ->attachData($pdf->output(), "partner-shop.pdf");
+                    });
+    
+                    echo "<script>console.log('Mail sent successfully')</script>";
+                }
+                
+                else{
+                    echo "<script>console.log('Mail don't send successfully')</script>";
+                }
+                
+                
+            }
+        }
+
+        if($request->input('progress_id') == 18) {
+            // if($request->input('faxed_to_shop') > 0){
+                $fax_count = DB::table('uploading_files')->where('kind', 'fax')->count();
+
+                $pdf_count = $fax_count + 1;
+
+                $flag = sprintf('%03d', $pdf_count);
+                $file_name = $maintenance_data['FAX'].'-'.$maintenance_data['shop']['shop_id'].'-'.$maintenance_data['shop']['shop_name'].'-'.$flag.'.pdf';
+
+
+                $pdf = PDF::loadView('pdf_three', $maintenance_data)
+                ->setPaper('a4')
+                ->setWarnings(false)
+                ->setOptions(['isFontSubsettingEnabled' => true]);
+                Storage::put('public/pdf/'.$file_name, $pdf->output());
+
+                // Uploading_files table save  file history
+                $upload = new Uploading_files();
+                $upload->maintenance_id = $maintenance_id;
+                $upload->kind = 'fax';
+                $upload->file_name = $file_name;
+                $upload->save();
+            // }
+        }
+        
+
+        // return view('pdf_one', $maintenance_data);
+        // return $pdf->stream();
+        
+
+        // $pdf = mb_convert_encoding($pdf, 'HTML-ENTITIES', 'UTF-8');
+        
+
+        // return $pdf->download('pdf_file.pdf');
+
+        // $view = view('pdf_one', $maintenance_data);
+        // $html = mb_convert_encoding($view, 'HTML-ENTITIES', 'UTF-8');
+        // $html_decode = html_entity_decode($html);
+        // $pdf = \PDF::loadHTML($view)
+        //     ->setPaper('a4', 'landscape')
+        //     ->setWarnings(false)
+        //     ->setOptions(['isFontSubsettingEnabled' => true]);
+        // // Storage::put('public/pdf/invoice.pdf', $pdf->output());
+        // return $pdf->download('pdf_file.pdf','UTF-8');
+        // return view('pdf_one', $maintenance_data);
+
+        // $path = public_path();
+        // $pdf = PDF::loadView('pdf_one');
+        // $pdf = mb_convert_encoding($pdf, 'HTML-ENTITIES', 'UTF-8');
+        // $pdf->save($path.'/my_pdf_name.pdf', 'UTF-8');
+        // return response()->download($path.'/my_pdf_name.pdf');
+
+        // die;
         $row = new Maintenance_progress();
         $row->maintenance_id = $maintenance_id;
         $row->progress_id = $request->input('progress_id');
@@ -436,6 +652,11 @@ class MaintenanceController extends Controller
 
         $maintenance = Maintenance::find($maintenance_id);
         $maintenance->progress_id = $request->input('progress_id');
+
+        if($request->input('progress_id') == 18){
+            $maintenance->visit_schedule_date = $request->input('visit_time');
+            $maintenance->remark = $request->input('visit_comment');
+        }
         if($request->input('progress_id') == 21) {
             $maintenance->completed_date = $maintenance_progress[0]['updated_at'];
         } else {
@@ -996,6 +1217,8 @@ class MaintenanceController extends Controller
     {
         $maintenance = Maintenance::with([
             'shop.business_category',
+            'shop.business_category_option',
+            'shop.users',
             'orderType', 'progress',
             'user',
             'maintenanceProgress.entered_by',
@@ -1015,6 +1238,16 @@ class MaintenanceController extends Controller
         $maintenance['partner_name'] = $qb_maintenanceTopartners['0']->partner_name;
         $maintenance['TEL'] = $qb_maintenanceTopartners['0']->TEL;
         $maintenance['FAX'] = $qb_maintenanceTopartners['0']->FAX;
+        
+
+        $partner_staff = DB::table('partners_staff')->where('partner_id', $maintenance['partner_id'])->first();
+
+        if(!empty($partner_staff)) {
+            $maintenance['partner_email'] = $partner_staff->email;
+        } else {
+            $maintenance['partner_email'] = '';
+        }
+
 
         $block_ids = Shop::select('block_id')->where('shop_id', $maintenance['shop_id'])->get();
         $block_names = Block::select('block_name')->where('block_id', $block_ids[0]['block_id'])->get();
@@ -1088,13 +1321,38 @@ class MaintenanceController extends Controller
         return response($maintenance);
     }
 
+    // public function getStatusDeadline()
+    // {
+    //     $qb = DB::table('business_category_options')->where('')
+    // }
+
     public function update(Request $request, $maintenance_id)
     {
         // $order                 = $equipment . ' ' . $manufacturer . ':' . $model_number . ' ' . $when . ' ' . $situation . '手配お願いします。';
 
+        // var_export($request->input('order_checkList'));
+
+
+
+        if($request->input('order_type_id') == 2 && $request->input('order_checkList')){
+            $delete_status = DB::table('maintenance_order_reasons')->where('maintenance_id', $maintenance_id)->delete();
+
+            $order_chkList = $request->input('order_checkList');
+            foreach ($order_chkList as $key => $value) {
+                $order_reason_id = DB::table('order_reasons')->where('reason', $value)->first()->order_reason_id;
+                $maintenance_reason = new Maintenance_order_reason();
+                $maintenance_reason->maintenance_id = $maintenance_id;
+                $maintenance_reason->order_reason_id = $order_reason_id;
+                $maintenance_reason->save();
+    
+            }
+        }
+
+
         $maintenance = Maintenance::find($maintenance_id);
         // if($request->input('is_disaster')) {
         $maintenance->is_disaster     = $request->input('is_disaster');
+        $maintenance->order_type_other_text = $request->input('order_type_other_text');
         // }
         // if($request->input('is_emergency')) {
         $maintenance->is_emergency    = $request->input('is_emergency');
@@ -1120,6 +1378,9 @@ class MaintenanceController extends Controller
         }
         if ($request->input('remark')) {
             $maintenance->remark          = $request->input('remark');
+        }
+        if ($request->input('order')) {
+            $maintenance->order           = $request->input('order');
         }
 
         $maintenance->save();

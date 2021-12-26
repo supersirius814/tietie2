@@ -136,7 +136,7 @@ export default {
       var crt_arr;
       if(crt != '' && crt != null){
         crt_arr = crt.split('-')
-        return crt_arr[0] + '/' + crt_arr[1] + '/' + crt[2];
+        return crt_arr[0] + '/' + crt_arr[1] + '/' + crt_arr[2];
       }
     },
     formatterYm(row, column){

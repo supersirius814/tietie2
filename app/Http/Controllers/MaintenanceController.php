@@ -39,8 +39,11 @@ use App\Mail\SendbackMail;
 use App\Mail\SuspendMail;
 use App\Mail\RejectMail;
 
+use App\Order_reason;
+
 use DB;
 use Log;
+use PDF;
 
 class MaintenanceController extends Controller
 {
@@ -106,6 +109,109 @@ class MaintenanceController extends Controller
 		$maintenances = Maintenance::with(['shop.business_category', 'orderType', 'progress', 'user'])->orderBy('maintenance_id', 'desc')->whereNotNull('shop_id')->get();
 		return response( $maintenances );
 		
+    }
+
+
+
+    public function viewPdf_one(){
+        $maintenance_id = 106;
+
+        $maintenance_data = Maintenance::with([
+            'shop.business_category',
+            'shop.business_category_option',
+            'shop.users',
+            'orderType', 'progress',
+            'user',
+            'maintenanceProgress.entered_by',
+            'maintenanceImages',
+            'orderReasons',
+            'category', 'subCategory',
+            'maintenanceMatters.matter_value',
+            'maintenanceMatters.matter_option',
+            'uploadingFiles',
+            'quotationInfo', 'accountingInfo.accounting_info'
+        ])->find($maintenance_id);
+
+        $qb_maintenanceTopartners =  DB::select("SELECT partner_id, partner_no, partner_name, TEL, FAX FROM `maintenances` LEFT JOIN partners ON maintenances.partner_code=partners.partner_code WHERE maintenance_id= ?", [$maintenance_id]);
+
+        $maintenance_data['partner_id'] = $qb_maintenanceTopartners['0']->partner_id;
+        $maintenance_data['partner_no'] = $qb_maintenanceTopartners['0']->partner_no;
+        $maintenance_data['partner_name'] = $qb_maintenanceTopartners['0']->partner_name;
+        $maintenance_data['TEL'] = $qb_maintenanceTopartners['0']->TEL;
+        $maintenance_data['FAX'] = $qb_maintenanceTopartners['0']->FAX;
+
+        $order_reason = Order_reason::select('order_reason_id', 'reason')
+            ->distinct()
+            ->where('order_reason_id', $maintenance_data['order_reason_id'])
+            ->get();
+
+        if ($order_reason->isEmpty()) {
+            $order_reason[0] = array(
+                'order_reason_id' => '',
+                'reason' => '',
+            );
+        }
+
+        // var_export($maintenance_data);
+
+        $maintenance_data['order_reason'] = $order_reason;
+        $pdf = PDF::loadView('pdf_one', $maintenance_data);
+        // Storage::put('public/pdf/invoice.pdf', $pdf->output());
+        // return $pdf->download('pdf_file.pdf');
+        // return $pdf->stream();
+        // return view('pdf_one', $maintenance_data);
+
+        $partner_staff = DB::table('partners_staff')->where('partner_id', $maintenance_data['partner_id'])->first();
+
+        if(!empty($partner_staff)) {
+            $maintenance_data['partner_email'] = $partner_staff->email;
+        } else {
+            $maintenance_data['partner_email'] = '';
+        }
+
+        $mail_data["email"] = $maintenance_data['partner_email'];
+        $mail_data["title"] = "From ".$maintenance_data['user']['email'];
+        $mail_data["body"] = $maintenance_data['partner_code'].'-'.$maintenance_data['partner_name'];
+
+        // if($maintenance_data['partner_email'] && $maintenance_data['user']['email']){
+        //     Mail::send('mail', $mail_data, function($message)use($mail_data, $pdf) {
+        //         $message->to($mail_data["email"], $mail_data["email"])
+        //                 ->subject($mail_data["title"])
+        //                 ->attachData($pdf->output(), "partner-shop.pdf");
+        //     });
+
+        //     echo "<script>console.log('Mail sent successfully')</script>";
+        // }
+
+        echo "<script>console.log('Mail sent successfully')</script>";
+
+        echo ("mail_parter ===================== ".$maintenance_data['partner_email'])."<br/>user_mail========================= ".$maintenance_data['user']['email'];
+        return view('pdf_one', $maintenance_data);
+    }
+
+
+    public function sendmail()
+    {
+        $data["email"] = "aatmaninfotech@gmail.com";
+        $data["title"] = "From ItSolutionStuff.com";
+        $data["body"] = "This is Demo";
+ 
+        // $files = [
+        //     public_path('files/160031367318.pdf'),
+        //     public_path('files/1599882252.png'),
+        // ];
+  
+        Mail::send('mail', $data, function($message)use($data) {
+            $message->to($data["email"], $data["email"])
+                    ->subject($data["title"]);
+ 
+            // foreach ($files as $file){
+            //     $message->attach($file);
+            // }
+            
+        });
+ 
+        dd('Mail sent successfully');
     }
 	
     /**

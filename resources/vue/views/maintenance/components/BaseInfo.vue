@@ -9,7 +9,8 @@
           <tbody>
             <tr>
               <th>店舗CD</th>
-              <td style="text-align:center">{{ detail.shop.shop_id }}</td>
+              <!-- <td style="text-align:center">{{ detail.shop.shop_id }}</td> -->
+              <td style="text-align:center">{{ detail.shop.shop_code }}</td>
               <td style="text-align:center">{{ detail.shop.business_category.business_category }}</td>
             </tr>
             <tr>

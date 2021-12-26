@@ -14,7 +14,7 @@
           <tbody>
             <tr>
               <th>大分類*</th>
-              <td class="select-td">
+              <td  class="input-td">
                 <el-select v-model="big_ca" size="small" placeholder="" clearable style="width: 100%" class="filter-item" v-on:change="big_middleconnect()">
                   <el-option v-for="item in categories" :key="item.category_id" :label="item.category_name" :value="item.category_id" />
                 </el-select>
@@ -22,7 +22,7 @@
             </tr>
             <tr>
               <th>中分類*</th>
-              <td class="select-td">
+              <td  class="input-td">
                 <el-select v-model="mid_ca" size="small" placeholder="" clearable style="width: 100%" class="filter-item" v-on:change="middle_bigconnect()">
                   <el-option v-for="item in subCategories" :key="item.sub_category_id" :label="item.sub_category_name" :value="item.sub_category_id" />
                 </el-select>
@@ -34,16 +34,32 @@
           <tbody>
             <tr>
               <th>依頼区分*</th>
-              <td>
-                {{detail.order_type.type}}
-                <!-- <el-select v-model="data.order_type_id" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
+              <td class="input-td">
+                <!-- {{detail.order_type.type}}
+                {{ orderTypes}} -->
+                <el-select v-model="current_order" size="small" placeholder="" clearable style="width: 100%" class="filter-item">
                   <el-option v-for="item in orderTypes" :key="item.order_type_id" :label="item.type" :value="item.order_type_id" />
-                </el-select> -->
+                </el-select>
               </td>
             </tr>
           </tbody>
         </table>
+        <div v-show="current_order == 2">
+          発注理由
+          <el-checkbox-group v-model="order_checkList">
+            <el-checkbox label="紛失"></el-checkbox>
+            <el-checkbox label="劣化"></el-checkbox>
+            <el-checkbox label="破損"></el-checkbox>
+            <el-checkbox label="追加"></el-checkbox>
+          </el-checkbox-group>
+        </div>
+        <el-input
+          v-show="current_order == 4"
+          placeholder="その他"
+          v-model="order_text">
+        </el-input>
       </el-col>
+
       <el-col :span="14">
         <table class="detail-table">
           <tbody>
@@ -71,22 +87,70 @@
         </table>
       </el-col>
     </el-row>
-    <table class="detail-table">
-      <tbody>
-        <tr>
-          <th>依頼内容*</th>
-          <td class="input-td">
-            <textarea v-model="data_re.order" readonly rows="10" />
-          </td>
-        </tr>
-        <tr>
-          <th>備考</th>
-          <td class="input-td">
-            <textarea v-model="data_re.remark" rows="5" />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <el-row :gutter="15">
+      <el-col :xl="12" :lg="12" :md="12" :sm="24" :xs="24">
+        <table class="detail-table">
+          <tbody>
+            <tr>
+              <th>依頼内容*</th>
+              <td class="input-td">
+                <!-- <textarea v-model="data_re.order" readonly rows="10" /> -->
+                <textarea v-model="data_re.order" rows="10" />
+              </td>
+            </tr>
+            <tr>
+              <th>備考</th>
+              <td class="input-td">
+                <textarea v-model="data_re.remark" rows="5" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </el-col>
+      <el-col :xl="12" :lg="12" :md="12" :sm="24" :xs="24">
+        <table class="detail-table">
+          <tbody>
+            <tr>
+              <th>何が</th>
+              <td>
+                {{ data_re.equipment }}
+              </td>
+            </tr>
+            <tr>
+              <th>メーカー名</th>
+              <td>
+                {{ data_re.manufacturer }}
+              </td>
+            </tr>
+            <tr>
+              <th>型式・品番</th>
+              <td>
+                {{ data_re.model_number }}
+              </td>
+            </tr>
+            <tr>
+              <th>いつから</th>
+              <td>
+                {{ data_re.when }}
+              </td>
+            </tr>
+            <tr>
+              <th>どんな状態</th>
+              <td class="input-td">
+                <textarea v-model="data_re.situation" readonly rows="5" />
+              </td>
+            </tr>
+            <tr>
+              <th>初期対応</th>
+              <td class="input-td">
+                <textarea v-model="data_re.first_handling" readonly rows="3" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </el-col>
+    </el-row>
+
     <table class="detail-table">
       <tbody>
         <tr>
@@ -203,6 +267,7 @@
       <template v-if="show">
         <el-dialog
           title="【取引先検索】"
+          :append-to-body="true"
           :visible.sync="show"
           :width="createdialogWidth"
           custom-class="slide-dialog"
@@ -237,6 +302,9 @@ export default {
   },
   data() {
     return {
+      order_Other: '',
+      order_checkList: [],
+      current_order: this.detail.order_type_id,
       createdialogWidth: '45%',
       show: false,
       show1: true,
@@ -244,6 +312,7 @@ export default {
       custom: null,
       custom_data: [],
       data_re: null,
+      order_text: this.detail.order_type_other_text,
       big_ca: this.detail.category_id,
       mid_ca: this.detail.sub_category_id,
       createCustomerVisible: false,
@@ -268,6 +337,7 @@ export default {
   created() {
     this.data_re = JSON.parse(JSON.stringify(this.detail));
     this.getList();
+    this.order_checkListDisplay();
     // this.$route.params.set('name', 'john');
   },
 
@@ -281,6 +351,17 @@ export default {
       var check = true;
       if(document.querySelector("body").clientWidth > 737) check = false;
       return check;
+    },
+
+    order_checkListDisplay(){
+        var reasons = this.detail.order_reasons;
+        if (this.detail.order_type.order_type_id == 2 && reasons.length > 0) {
+          reasons.forEach((el, index) => {
+            this.order_checkList[index] = el.reason;
+          });
+        }
+        // console.log('reason=======================');
+        // console.log(this.order_checkList);
     },
 
     createCustomerVisibleSetting() {
@@ -338,6 +419,9 @@ export default {
       // alert(this.big_ca);
       this.data_re.category_id = this.big_ca;
       this.data_re.sub_category_id = this.mid_ca;
+      this.data_re.order_type_id = this.current_order;
+      this.data_re.order_type_other_text = this.order_text;
+      this.data_re['order_checkList'] = this.order_checkList;
       await maintenanceResource.update(this.data_re.maintenance_id, this.data_re);
     },
   },
