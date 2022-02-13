@@ -30,7 +30,7 @@
         <svg-icon icon-class="left-progress-arrow" />
       </el-col>
       <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="12">
-        <table class="detail-table" style="width: 80%">
+        <table class="detail-table" style="width: auto">
           <tbody>
             <tr>
               <th style="width: 40%">変更後ステータス*</th>
@@ -272,6 +272,18 @@
      <template slot="footer"></template>
    </el-dialog>
 
+    <!-- mail sending with pdf file -->
+    <el-dialog
+      title="【取引先メール作成】"
+      :visible.sync="progressMailVisible"
+      :append-to-body="true"
+      :width="faxWidth"
+    >
+      <create-progress-mail :detail="detail" :maildata="maildata" />
+      <span slot="footer" class="dialog-footer">
+      </span>
+    </el-dialog>
+
     <div style="text-align:right; padding-bottom: 15px;">
       <el-button type="primary" size="small" @click="save()">
         <span v-if="progressId == 10 || progressId == 18">登録&送信</span>
@@ -369,6 +381,7 @@ import MaintenanceResource from '@/api/maintenance';
 import StoreFax from './StoreFax.vue';
 import StorenextFax from './StorenextFax.vue';
 import PartnerFax from './PartnerFax.vue';
+import CreateProgressMail from './CreateProgressMail.vue';
   // import DatePicker from 'vue2-datepicker';
   // import 'vue2-datepicker/index.css';
   // import 'vue2-datepicker/locale/ja';
@@ -378,7 +391,7 @@ import { Datetime } from 'vue-datetime';
 const resource = new MaintenanceResource();
 
 export default {
-  components: { Datetime, StoreFax, PartnerFax, StorenextFax },
+  components: { Datetime, StoreFax, PartnerFax, StorenextFax, CreateProgressMail },
   props: {
     detail: {
       type: Object,
@@ -406,6 +419,8 @@ export default {
       faxedToClient: 0,
       faxedToShop: 0,
       mailToClient: 0,
+      progressMailVisible: false,
+      maildata: null,
       progressId: 0,
       progress: {
         1: 'BM承認待ち',
@@ -501,6 +516,8 @@ export default {
       //   this.$emit('create');
       //   return;
       // } 
+      
+ 
       this.$refs.uploadReport.submit();
       this.$refs.uploadPhoto.submit();
       var other_comment = '';
@@ -517,7 +534,15 @@ export default {
         deadline_date: this.time1,
         mail_to_client: this.mailToClient,
       };
+
+     if(this.progressId == 10){
+        this.progressMailVisible = this.mailToClient;
+        this.maildata = insertData;
+      }
+      return;
       resource.createProgress(this.detail.maintenance_id, insertData).then(res => {
+
+
         this.detail.maintenance_progress = res;
         // console.log(res);
         this.detail.progress_id = this.progressId;

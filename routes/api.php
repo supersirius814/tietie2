@@ -139,6 +139,9 @@ Route::group(['namespace' => 'V2'], function () {
     
     Route::post('v2/maintenance/getParents', 'MaintenanceController@getParents');
     Route::post('v2/maintenance/getPartners_staff', 'MaintenanceController@getPartners_staff');
+
+    // progress mail
+    Route::post('v2/maintenance/progressSendMail', 'MaintenanceController@progressSendMail');
     Route::get('v2/maintenance/chkMaintenanceId', 'MaintenanceController@chkMaintenanceId');
     Route::get('v2/maintenance/chkShopCode', 'MaintenanceController@chkShopCode');
     Route::get('v2/maintenance/chkpartner', 'MaintenanceController@chkpartner');

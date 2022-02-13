@@ -189,9 +189,18 @@ class MaintenanceResource extends Resource {
             data: data,
         });
     }
+
     getPartners_staff(data) {
         return request({
             url: this.baseUrl + this.uri + '/getPartners_staff',
+            method: 'post',
+            data: data,
+        });
+    }
+
+    progressSendMail(data) {
+        return request({
+            url: this.baseUrl + this.uri + '/progressSendMail',
             method: 'post',
             data: data,
         });
@@ -222,6 +231,8 @@ class MaintenanceResource extends Resource {
             method: 'get',
         });
     }
+
+
 }
 
 export { MaintenanceResource as default };
